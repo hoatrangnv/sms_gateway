@@ -1,0 +1,123 @@
+.img_loading{width: 32px; height: 32px; background: url("../img/ajax-loader.gif") no-repeat -1px -1px; float: left; display: none}
+.marginTop10{margin-top:10px }
+.marginTop20{margin-top:20px }
+.marginTop30{margin-top:30px }
+.text-middle{vertical-align: middle!important;}
+.a_control:hover{color: red}
+
+/*Cpanel*/
+.no-skin small,
+.no-skin .small {
+    font-size: 70%;
+}
+.no-skin .user-info small {
+    display: inline-block;
+}
+.no-skin  .ace-nav > li {
+    height: 40px;
+    line-height: 40px;
+}
+.no-skin .navbar .navbar-brand {
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.no-skin .navbar {
+    min-height: 40px;
+}
+.no-skin .navbar-fixed-top + .main-container {
+    padding-top: 40px;
+}
+.no-skin .breadcrumbs {
+    line-height: 30px;
+    min-height: 30px;
+}
+.no-skin h1, .no-skin.h1, .no-skin h2, .no-skin .h2, .no-skin h3,.no-skin .h3 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+}
+.no-skin .box-body .thumbnail {
+    border-radius: 2px;
+}
+.no-skin .quick-btn:hover{
+    text-decoration: none;
+}
+.no-skin .sidebar-shortcuts img {
+    width: 85%;
+}
+#block_img_upload {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.block_img_upload > img {
+    height: 80px !important;
+    width: auto !important;
+}
+.clear {
+    clear: both;
+    display: inline-block;
+    width: 100%;
+}
+
+/*page Login*/
+.bg-cover {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+.bg-cover img{
+    width: 100%;
+    height: 100%;
+}
+.block_login_top .msg_support_top{float: left; width: 100%; height: 40px;background-color: #f7f7f7}
+.block_login_center{float: left; width: 100%; height: 660px; position: relative;
+    background: url("../img/login/SMS_login.png") no-repeat center;
+    /*background: url("../img/login/login.jpeg") left top no-repeat!important;*/
+    /*background-size: cover!important;*/
+    background-size: 100% 100%;
+}
+
+.msg_support{
+    position: absolute;
+    top: 130px;
+    left: 200px;
+    height: 150px;
+    text-align: center;
+    font-size: 30px; font-weight: bold;
+}
+.title_support{color: #000000}
+.phone_support{ color: #f8510c}
+
+.form_login{
+    position: absolute;
+    top: 100px;
+    right: 0px;
+    width: 400px;
+    text-align: center;
+    /*background: #ffffff;*/
+}
+
+.form_login_top{ float: left; width: 100%; height: 100px; background-color: #3b9dd7; text-align: center;
+    font-size: 40px;  color: #ffffff; font-weight: bold; padding: 20px;
+}
+
+.form_login_content{float: left;width: 100%; height:400px;  padding: 15px 40px; }
+.form_login_content .dangnhap{text-align: left; color: #f8510c; font-weight: bold; font-size: 25px}
+.form_login_content .msg_error{text-align: left; color: #f8510c; font-size: 12px}
+
+.form_login_content .form_login_input{float: left; width: 100%;height: 90px; }
+.form_login_content .form_login_input .label_input{float: left; color: #f8510c; font-weight: bold; font-size: 18px}
+.form_login_content .form_login_input .login_input{width: 100%; border: 1px solid #ccc; height: 52px; border-radius: 5px; padding-left: 25px}
+.form_login_content .form_login_input .login_input_checkbox{float: left; border: 1px solid #ccc; border-radius: 5px; }
+.form_login_content .form_login_input .remeber_account{float: left; font-weight: bold; margin: 2px 0 0 2px}
+.block_note{float:left; width: 100%;}
+.block_note .ngang{width: 100%; border-top: 1px solid #ccc; margin-bottom: -11px!important;}
+.note_login{width: 50px; margin: auto; background-color: #ffffff}
+.form_login_content .form_login_input .button_login{width: 100%; border: 1px solid #ccc; height: 52px; border-radius: 5px; margin-top:20px; background-color: #f8510c; color: #ffffff;font-weight: bold }
+.form_login_content .form_login_input .button_login:hover{background-color: #3b9dd7; color: #ffffff }
+
+.block_login_bottom{float: left; width: 100%; height: 100px;background-color: #f2f2f2;position: relative;}
+.block_login_bottom .imge_logo{ height: 42px; width: 104px; position: absolute; background: url("../img/login/lg2.png")left top no-repeat!important;
+    bottom: 25px;left: 150px;}
+
+.font-11{font-size:11px!important; }
