@@ -63,4 +63,7 @@ class Define{
     //Define
      ***************************************************************************************************************/
     const ERROR_PERMISSION = 1;
+
+    const VIETNAM_LANGUAGE = 1;
+    const ENGLISH_LANGUAGE = 2;
 }

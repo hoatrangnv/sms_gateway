@@ -5,6 +5,8 @@
  */
 namespace App\Library\AdminFunction;
 
+use App\library\AdminFunction\Define;
+
 class CGlobal{
     static $css_ver = 1;
     static $js_ver = 1;
@@ -43,5 +45,7 @@ class CGlobal{
     //is_login Customer
     const not_login = 0;
     const is_login = 1;
+
+    static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
 
 }
