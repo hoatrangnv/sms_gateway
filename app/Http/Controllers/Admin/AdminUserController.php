@@ -31,10 +31,10 @@ class AdminUserController extends BaseAdminController{
 
     public function __construct(){
         parent::__construct();
-        $this->getDataDefaul();
+        $this->getDataDefault();
     }
 
-    public function getDataDefaul(){
+    public function getDataDefault(){
         $this->arrStatus = array(
             CGlobal::status_hide => FunctionLib::controLanguage('status_all',$this->languageSite),
             CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),

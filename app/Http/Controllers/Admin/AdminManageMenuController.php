@@ -19,7 +19,7 @@ class AdminManageMenuController extends BaseAdminController
     private $permission_delete = 'menu_delete';
     private $permission_create = 'menu_create';
     private $permission_edit = 'menu_edit';
-    private $arrStatus = array(-1 => '--Chọn trạng thái--', CGlobal::status_hide => 'Ẩn',  CGlobal::status_show => 'Hiện');
+    private $arrStatus = array();
     private $error = array();
     private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
@@ -29,6 +29,14 @@ class AdminManageMenuController extends BaseAdminController
         parent::__construct();
         $this->arrMenuParent = MenuSystem::getAllParentMenu();
         CGlobal::$pageAdminTitle = 'Quản lý menu';
+        $this->getDataDefault();
+    }
+
+    public function getDataDefault(){
+        $this->arrStatus = array(
+            CGlobal::status_block => FunctionLib::controLanguage('status_choose',$this->languageSite),
+            CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
+            CGlobal::status_hide => FunctionLib::controLanguage('status_hidden',$this->languageSite));
     }
 
     public function getPermissionPage(){

@@ -8,8 +8,13 @@
     "status_hidden": "Ẩn",
     "status_block": "Khóa",
     "status_all": "Tất cả",
+    "status_choose": "--Chọn trạng thái--",
     "sex_girl": "Nữ",
     "sex_boy": "Nam",
+    "add": "Thêm mới",
+    "search": "Tìm kiếm",
+    "back": "Trở lại",
+    "save": "Lưu lại",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",
