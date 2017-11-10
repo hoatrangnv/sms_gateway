@@ -1,3 +1,6 @@
+<?php use App\Library\AdminFunction\CGlobal; ?>
+<?php use App\Library\AdminFunction\Define; ?>
+<?php use App\Library\AdminFunction\FunctionLib; ?>
 @extends('admin.AdminLayouts.index')
 @section('content')
 <div class="main-content-inner">
@@ -82,7 +85,11 @@
                                                        value="{{(int)$menu_id}}" />
                                             </td>
                                             <td class="text-left text-middle">
-                                                <b>{{$menu_name}}</b>
+                                                @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                                    <b>{{ $menu_name['menu_name'] }}</b>
+                                                @else
+                                                    <b>{{ $menu_name['menu_name_en'] }}</b>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

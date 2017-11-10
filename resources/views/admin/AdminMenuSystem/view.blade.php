@@ -1,4 +1,5 @@
 <?php use App\Library\AdminFunction\FunctionLib; ?>
+<?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
 @section('content')
 <div class="main-content-inner">
@@ -68,7 +69,14 @@
                         @foreach ($data as $key => $item)
                             <tr @if($item['parent_id'] == 0)style="background-color:#d6f6f6"@endif>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
-                                <td>{!! $item['padding_left'].$item['padding_left'].$item['menu_name']!!}</td>
+                                <td>
+                                    @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                        {!! $item['padding_left'].$item['padding_left'].$item['menu_name']!!}
+                                    @else
+                                        {!! $item['padding_left'].$item['padding_left'].$item['menu_name_en']!!}
+                                    @endif
+
+                                </td>
                                 <td class="text-center text-middle">
                                     @if($item['parent_id'] == 0)
                                         <i class="{!! $item['menu_icons'] !!} fa-3x "></i>

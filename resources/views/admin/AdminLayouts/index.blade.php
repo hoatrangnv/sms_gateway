@@ -168,7 +168,13 @@
                     <li class="@if(!empty($item['arr_link_sub']) && in_array(Route::currentRouteName(),$item['arr_link_sub']))active @endif">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon {{$item['icon']}}"></i>
-                            <span class="menu-text"> {{$item['name']}}</span>
+                            <span class="menu-text">
+                                @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                    {{ $item['name'] }}
+                                @else
+                                    {{ $item['name_en'] }}
+                                @endif
+                            </span>
                             <b class="arrow fa fa-angle-down"></b>
                         </a>
                         <b class="arrow"></b>
@@ -179,7 +185,11 @@
                                         <li class="@if(strcmp(Route::currentRouteName(),$sub['RouteName']) == 0) active @endif">
                                             <a href="{{URL::route($sub['RouteName'])}}">
                                                 <i class="menu-icon fa fa-caret-right"></i>
-                                                {{ $sub['name'] }}
+                                                @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                                    {{ $sub['name'] }}
+                                                @else
+                                                    {{ $sub['name_en'] }}
+                                                @endif
                                             </a>
                                             <b class="arrow"></b>
                                         </li>

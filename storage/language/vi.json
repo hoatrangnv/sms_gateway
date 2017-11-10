@@ -4,6 +4,12 @@
     "changePass": "Đổi mật khẩu",
     "logout": "Đăng xuất",
     "home": "Trang chủ",
+    "status_show": "Hiển thị",
+    "status_hidden": "Ẩn",
+    "status_block": "Khóa",
+    "status_all": "Tất cả",
+    "sex_girl": "Nữ",
+    "sex_boy": "Nam",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",

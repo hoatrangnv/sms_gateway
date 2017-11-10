@@ -25,14 +25,24 @@ class AdminUserController extends BaseAdminController{
     private $permission_edit = 'user_edit';
     private $permission_change_pass = 'user_change_pass';
     private $permission_remove = 'user_remove';
-    private $arrStatus = array(0 => 'Tất cả', 1 => 'Hoạt động', -1 => "Khóa");
-    private $arrSex = array(0 => 'Nữ', 1 => 'Nam');
+    private $arrStatus = array();
+    private $arrSex = array();
     private $error = array();
 
     public function __construct(){
         parent::__construct();
+        $this->getDataDefaul();
     }
 
+    public function getDataDefaul(){
+        $this->arrStatus = array(
+            CGlobal::status_hide => FunctionLib::controLanguage('status_all',$this->languageSite),
+            CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
+            CGlobal::status_block => FunctionLib::controLanguage('status_block',$this->languageSite));
+        $this->arrSex = array(
+            CGlobal::status_hide => FunctionLib::controLanguage('sex_girl',$this->languageSite),
+            CGlobal::status_show => FunctionLib::controLanguage('sex_boy',$this->languageSite));
+    }
     public function view(){
         CGlobal::$pageAdminTitle  = "Quản trị User | Admin CMS";
         //check permission
@@ -87,8 +97,8 @@ class AdminUserController extends BaseAdminController{
         }
 
         $arrGroupUser = GroupUser::getListGroupUser($this->is_boss);
-        //FunctionLib::debug($arrGroupUser);
         $menuAdmin = MenuSystem::getListMenuPermission();
+        //FunctionLib::debug($this->arrStatus);
 
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['user_status'])? $data['user_status']: CGlobal::status_show);
         $optionSex = FunctionLib::getOption($this->arrSex, isset($data['user_sex'])? $data['user_sex']: CGlobal::status_show);
@@ -123,6 +133,7 @@ class AdminUserController extends BaseAdminController{
         $data['user_name'] = Request::get('user_name', '');
 
         $this->validUser($id,$data);
+        //FunctionLib::debug($this->error);
         $groupUser = $data['user_group'] = Request::get('user_group', array());
         if ($groupUser) {
             $strGroupUser = implode(',', $groupUser);
@@ -188,14 +199,12 @@ class AdminUserController extends BaseAdminController{
 
     private function validUser($user_id =0, $data=array()) {
         if(!empty($data)) {
-            if($user_id == 0){
-                if(isset($data['user_name']) && trim($data['user_name']) == '') {
-                    $this->error[] = 'Tài khoản đăng nhập không được bỏ trống';
-                }elseif(isset($data['user_name']) && trim($data['user_name']) != ''){
-                    $checkIssetUser = User::getUserByName($data['user_name']);
-                    if($checkIssetUser && $checkIssetUser->user_id != $user_id){
-                        $this->error[] = 'Tài khoản này đã tồn tại, hãy tạo lại';
-                    }
+            if(isset($data['user_name']) && trim($data['user_name']) == '') {
+                $this->error[] = 'Tài khoản đăng nhập không được bỏ trống';
+            }elseif(isset($data['user_name']) && trim($data['user_name']) != ''){
+                $checkIssetUser = User::getUserByName($data['user_name']);
+                if($checkIssetUser && $checkIssetUser->user_id != $user_id){
+                    $this->error[] = 'Tài khoản này đã tồn tại, hãy tạo lại';
                 }
             }
 

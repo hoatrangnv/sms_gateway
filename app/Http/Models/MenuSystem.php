@@ -14,7 +14,7 @@ class MenuSystem extends BaseModel
     protected $primaryKey = 'menu_id';
     public $timestamps = false;
 
-    protected $fillable = array('parent_id', 'module', 'menu_url', 'menu_name', 'menu_type',
+    protected $fillable = array('parent_id', 'menu_name_en', 'menu_url', 'menu_name', 'menu_type',
         'role_id', 'showcontent','show_permission','show_menu','ordering','position','menu_icons','active','access_data','allow_guest');
 
     public static function createItem($data){
@@ -153,6 +153,7 @@ class MenuSystem extends BaseModel
                     if($menu['parent_id'] == 0){
                         $menuTree[$menu['menu_id']] = array(
                             'name'=>$menu['menu_name'],
+                            'name_en'=>$menu['menu_name_en'],
                             'show_menu'=>$menu['show_menu'],
                             'link'=>'javascript:void(0)',
                             'icon'=>$menu['menu_icons']
@@ -165,13 +166,13 @@ class MenuSystem extends BaseModel
 
                             //sub
                             $tempSub = $menuTree[$menu['parent_id']]['sub'];
-                            $arrSub = array('menu_id'=>$menu['menu_id'],'show_menu'=>$menu['show_menu'],'name'=>$menu['menu_name'],'RouteName'=>$menu['menu_url'],'icon'=>$menu['menu_icons'].' icon-4x','showcontent'=>$menu['showcontent'], 'permission'=>'');
+                            $arrSub = array('menu_id'=>$menu['menu_id'],'show_menu'=>$menu['show_menu'],'name'=>$menu['menu_name'],'name_en'=>$menu['menu_name_en'],'RouteName'=>$menu['menu_url'],'icon'=>$menu['menu_icons'].' icon-4x','showcontent'=>$menu['showcontent'], 'permission'=>'');
                             array_push($tempSub,$arrSub);
                             $menuTree[$menu['parent_id']]['sub'] = $tempSub;
                         }else{
                             $menuTree[$menu['parent_id']]['arr_link_sub'] = array($menu['menu_url']);
                             $menuTree[$menu['parent_id']]['sub'] = array(
-                                array('menu_id'=>$menu['menu_id'],'show_menu'=>$menu['show_menu'],'name'=>$menu['menu_name'],'RouteName'=>$menu['menu_url'],'icon'=>$menu['menu_icons'].' icon-4x','showcontent'=>$menu['showcontent'], 'permission'=>''),);
+                                array('menu_id'=>$menu['menu_id'],'show_menu'=>$menu['show_menu'],'name'=>$menu['menu_name'],'name_en'=>$menu['menu_name_en'],'RouteName'=>$menu['menu_url'],'icon'=>$menu['menu_icons'].' icon-4x','showcontent'=>$menu['showcontent'], 'permission'=>''),);
                         }
                     }
                 }
@@ -198,6 +199,7 @@ class MenuSystem extends BaseModel
                     'show_permission'=>$value->show_permission,
                     'show_menu'=>$value->show_menu,
                     'active'=>$value->active,
+                    'menu_name_en'=>$value->menu_name_en,
                     'menu_name'=>$value->menu_name);
             }
         }
@@ -214,21 +216,23 @@ class MenuSystem extends BaseModel
                 if((int)$val['parent_id'] == 0) {
                     $val['padding_left'] = '';
                     $val['menu_name_parent'] = '';
+                    $val['menu_name_parent_en'] = '';
                     $aryData[] = $val;
-                    self::showSubMenu($val['menu_id'],$val['menu_name'], $max, $aryDataInput, $aryData);
+                    self::showSubMenu($val['menu_id'],$val['menu_name'],$val['menu_name_en'], $max, $aryDataInput, $aryData);
                 }
             }
         }
         return $aryData;
     }
-    public static function showSubMenu($cat_id,$cat_name, $max, $aryDataInput, &$aryData) {
+    public static function showSubMenu($cat_id,$cat_name,$cat_name_en, $max, $aryDataInput, &$aryData) {
         if($cat_id <= $max) {
             foreach ($aryDataInput as $chk => $chval) {
                 if($chval['parent_id'] == $cat_id) {
                     $chval['padding_left'] = '--- ';
                     $chval['menu_name_parent'] = $cat_name;
+                    $chval['menu_name_parent_en'] = $cat_name_en;
                     $aryData[] = $chval;
-                    self::showSubMenu($chval['menu_id'],$chval['menu_name'], $max, $aryDataInput, $aryData);
+                    self::showSubMenu($chval['menu_id'],$chval['menu_name'],$chval['menu_name_en'], $max, $aryDataInput, $aryData);
                 }
             }
         }
@@ -243,7 +247,7 @@ class MenuSystem extends BaseModel
                 ->orderBy('parent_id','asc')->orderBy('ordering','asc')->get();
             if($result){
                 foreach($result as $itm) {
-                    $data[$itm['menu_id']] = $itm['menu_name'];
+                    $data[$itm['menu_id']] = $itm;
                 }
             }
             if($data && Define::CACHE_ON){

@@ -27,7 +27,7 @@
                 <div style="float: left; width: 50%">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="name" class="control-label">Tên menu<span class="red"> (*) </span></label>
+                            <label for="name" class="control-label">Tên menu Viet Nam<span class="red"> (*) </span></label>
                             <input type="text" placeholder="Tên menu" id="menu_name" name="menu_name"  class="form-control input-sm" value="@if(isset($data['menu_name'])){{$data['menu_name']}}@endif">
                         </div>
                     </div>
@@ -39,7 +39,13 @@
                     </div>
 
                     <div class="clearfix"></div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Tên menu English<span class="red"> (*) </span></label>
+                            <input type="text" placeholder="Tên menu" id="menu_name_en" name="menu_name_en"  class="form-control input-sm" value="@if(isset($data['menu_name_en'])){{$data['menu_name_en']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label for="name" class="control-label">Thuộc menu cha</label>
                             <select name="parent_id" id="parent_id" class="form-control input-sm">

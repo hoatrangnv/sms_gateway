@@ -4,6 +4,12 @@
     "changePass": "Change pass",
     "logout": "Logout",
     "home": "Home",
+    "status_show": "Show",
+    "status_hidden": "hidden",
+    "status_block": "Block",
+    "status_all": "All",
+    "sex_girl": "Girl",
+    "sex_boy": "Boy",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",

@@ -9,7 +9,6 @@ namespace App\Library\AdminFunction;
 
 use Illuminate\Support\Facades\Session;
 use App\library\AdminFunction\Define;
-use App\library\AdminFunction\CGlobal;
 
 class FunctionLib {
     static function bug($data,$die=true){
@@ -900,18 +899,34 @@ class FunctionLib {
         return $id;
     }
 
-    public static function getDirRoot(){
-        $dir_root = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'].(dirname($_SERVER['SCRIPT_NAME'])?dirname($_SERVER['SCRIPT_NAME']):''));
-        $dir_root.=$dir_root[strlen($dir_root)-1]!='/'?'/':'';
-        return $dir_root;
-    }
-
+    /**
+     * QuynhTM
+     * Dùng cho View
+     * @param $key
+     * @return string
+     */
     public static function viewLanguage($key){
         $lang = Session::get('languageSite');
         $lang = ((int)$lang > 0)? $lang : Define::VIETNAM_LANGUAGE;
-        $json = file_get_contents(FunctionLib::getDirRoot()."language/".CGlobal::$arrLanguage[$lang].".json");
+        $path = storage_path() . "/language/".Define::$arrLanguage[$lang].".json";
+        $json = file_get_contents($path);
         $json = mb_convert_encoding($json, 'UTF8', 'auto');
         $language = json_decode($json,true);
-        return $language[$key];
+        return isset($language[$key]) ? $language[$key]: '';
+    }
+
+    /**
+     * QuynhTM
+     * Dùng cho Controller
+     * @param $key
+     * @param int $lang
+     * @return string
+     */
+    public static function controLanguage($key,$lang = Define::VIETNAM_LANGUAGE){
+        $path = storage_path() . "/language/".Define::$arrLanguage[$lang].".json";
+        $json = file_get_contents($path);
+        $json = mb_convert_encoding($json, 'UTF8', 'auto');
+        $language = json_decode($json,true);
+        return isset($language[$key]) ? $language[$key]: '';
     }
 }

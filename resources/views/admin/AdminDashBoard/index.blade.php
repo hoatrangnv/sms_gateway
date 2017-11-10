@@ -35,7 +35,13 @@
                                             <div class="col-sm-6 col-md-3">
                                                 <a class="quick-btn a_control"  href="{{ URL::route($sub['RouteName']) }}">
                                                     <div class="thumbnail text-center">
-                                                        <i class="{{ $sub['icon'] }} fa-5x"></i><br>{{ $sub['name'] }}
+                                                        <i class="{{ $sub['icon'] }} fa-5x"></i>
+                                                        <br>
+                                                        @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                                            {{ $sub['name'] }}
+                                                        @else
+                                                            {{ $sub['name_en'] }}
+                                                        @endif
                                                     </div>
                                                 </a>
                                             </div>

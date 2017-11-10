@@ -46,6 +46,4 @@ class CGlobal{
     const not_login = 0;
     const is_login = 1;
 
-    static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
-
 }
