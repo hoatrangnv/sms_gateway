@@ -66,4 +66,8 @@ class Define{
 
     const VIETNAM_LANGUAGE = 1;
     const ENGLISH_LANGUAGE = 2;
+
+    const STATUS_SHOW = 1;
+    const STATUS_HIDE = 0;
+    const STATUS_BLOCK = -2;
 }

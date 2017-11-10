@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
-use App\library\AdminFunction\CGlobal;
 
 class MenuSystem extends BaseModel
 {
@@ -126,7 +125,7 @@ class MenuSystem extends BaseModel
         if (sizeof($data) == 0) {
             $menu = MenuSystem::where('menu_id', '>', 0)
                 ->where('parent_id',0)
-                ->where('active',CGlobal::status_show)
+                ->where('active',Define::STATUS_SHOW)
                 ->orderBy('ordering','asc')->get();
             if($menu){
                 foreach($menu as $itm) {
@@ -143,7 +142,7 @@ class MenuSystem extends BaseModel
         $data = $menuTree = array();
         $menuTree = Cache::get(Define::CACHE_TREE_MENU);
         if (sizeof($menuTree) == 0) {
-            $search['active'] = CGlobal::status_show;
+            $search['active'] = Define::STATUS_SHOW;
             $dataSearch = MenuSystem::searchByCondition($search, 200, 0,$total);
             if(!empty($dataSearch)){
                 $data = MenuSystem::getTreeMenu($dataSearch);
@@ -239,8 +238,8 @@ class MenuSystem extends BaseModel
         $data = (Define::CACHE_ON)? Cache::get(Define::CACHE_LIST_MENU_PERMISSION) : array();
         if (sizeof($data) == 0) {
             $result = MenuSystem::where('menu_id', '>', 0)
-                ->where('active',CGlobal::status_show)
-                ->where('show_permission',CGlobal::status_show)
+                ->where('active',Define::STATUS_SHOW)
+                ->where('show_permission',Define::STATUS_SHOW)
                 ->orderBy('parent_id','asc')->orderBy('ordering','asc')->get();
             if($result){
                 foreach($result as $itm) {
