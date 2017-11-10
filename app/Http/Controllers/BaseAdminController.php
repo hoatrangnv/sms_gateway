@@ -27,6 +27,7 @@ class BaseAdminController extends Controller{
     protected $user_group_menu = array();
     protected $is_root = false;
     protected $is_boss = false;
+    protected $languageSite = Define::VIETNAM_LANGUAGE;
 
     public function __construct(){
 		$this->middleware(function ($request, $next) {
@@ -58,7 +59,18 @@ class BaseAdminController extends Controller{
                $msg[] = 'Bạn không có quyền truy cập';
                View::share('error', $msg);
            }
+           //get lang
+            if(isset($_GET['lang']) && (int)$_GET['lang'] > 0){
+                $get_lang = isset($_GET['lang'])? $_GET['lang']: Define::VIETNAM_LANGUAGE;
+                $lang = (isset(CGlobal::$arrLanguage[$get_lang]))? $get_lang : Define::VIETNAM_LANGUAGE;
+                $request->session()->put('languageSite', $lang, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
 
+            if (Session::has('languageSite')){
+                $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite'): Define::VIETNAM_LANGUAGE ;
+            }
+
+           View::share('languageSite', $this->languageSite);
            View::share('menu', $this->menuSystem);
            View::share('aryPermissionMenu', $this->user_group_menu);
            View::share('is_root', $this->is_root);

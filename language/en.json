@@ -1,6 +1,9 @@
 {
     "//": "QUYNHTM +++++++++++++++++++++++++++++++++++++++",
-    "list1": "Danh mục",
+    "hello": "Hello",
+    "changePass": "Change pass",
+    "logout": "Logout",
+    "home": "Home",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",

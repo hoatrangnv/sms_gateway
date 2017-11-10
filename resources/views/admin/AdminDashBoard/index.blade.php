@@ -1,4 +1,6 @@
 <?php use App\Library\AdminFunction\CGlobal; ?>
+<?php use App\Library\AdminFunction\Define; ?>
+<?php use App\Library\AdminFunction\FunctionLib; ?>
 @extends('admin.AdminLayouts.index')
 @section('content')
 <div class="main-content-inner">
@@ -6,7 +8,7 @@
         <ul class="breadcrumb">
             <li>
                 <i class="ace-icon fa fa-home home-icon"></i>
-                Home
+                {{FunctionLib::viewLanguage('home')}}
             </li>
         </ul>
     </div>
@@ -14,7 +16,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="box-header">
-                    <h3 class="box-title" style="text-align: center;">Quản lý CMS của {{CGlobal::web_name}} </h3>
+                    <h3 class="box-title" style="text-align: center;">{{CGlobal::web_name}} </h3>
                 </div>
                 @if(isset($error) && !empty($error))
                     <div class="alert alert-danger" role="alert">

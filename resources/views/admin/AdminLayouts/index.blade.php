@@ -1,4 +1,5 @@
 <?php use App\Library\AdminFunction\CGlobal; ?>
+<?php use App\Library\AdminFunction\Define; ?>
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +84,7 @@
             <a href="#" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    Quản trị CMS - {{CGlobal::web_name}}
+                    {{CGlobal::web_name}}
                 </small>
             </a>
         </div>
@@ -91,12 +92,38 @@
             <ul class="nav ace-nav">
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                            <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/icon/vi.png"/>
+                            Viet Nam
+                        @else
+                            <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/icon/en.png"/>
+                            English
+                        @endif
+                    </a>
+                    <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        @if(isset($languageSite) && $languageSite == Define::ENGLISH_LANGUAGE)
+                            <li>
+                                <a href="{{URL::route('admin.dashboard',array('lang'=>Define::VIETNAM_LANGUAGE))}}">
+                                    <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/icon/vi.png"/>
+                                    Viet Nam
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{URL::route('admin.dashboard',array('lang'=>Define::ENGLISH_LANGUAGE))}}">
+                                    <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/icon/en.png"/>
+                                    English
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+                <li class="light-blue">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <span class="user-info">
-                            <small>Xin chào,</small>
+                            <small>{{FunctionLib::viewLanguage('hello')}},</small>
                             @if(isset($user))
                                 {{$user['user_name']}}
-                            @else
-                                bạn
                             @endif
                         </span>
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -105,14 +132,14 @@
                         <li>
                             <a href="{{URL::route('admin.user_change',array('id' => FunctionLib::inputId($user['user_id'])))}}">
                                 <i class="ace-icon fa fa-unlock"></i>
-                                Đổi mật khẩu
+                                {{FunctionLib::viewLanguage('changePass')}}
                             </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="{{URL::route('admin.logout')}}">
                                 <i class="ace-icon fa fa-power-off"></i>
-                                Đăng xuất
+                                {{FunctionLib::viewLanguage('logout')}}
                             </a>
                         </li>
                     </ul>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Tuan
+ * User: Quynhtm
  * Date: 29/05/2015
  * Time: 8:24 CH
  */
@@ -18,6 +18,9 @@ class AdminDashBoardController extends BaseAdminController{
     }
 
     public function dashboard(){
-        return view('admin.AdminDashBoard.index',['user'=>$this->user,'menu'=>$this->menuSystem,'is_root'=>$this->is_root]);
+        return view('admin.AdminDashBoard.index',[
+            'user'=>$this->user,
+            'menu'=>$this->menuSystem,
+            'is_root'=>$this->is_root]);
     }
 }
