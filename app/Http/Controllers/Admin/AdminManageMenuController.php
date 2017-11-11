@@ -11,6 +11,7 @@ use App\Library\AdminFunction\Pagging;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 class AdminManageMenuController extends BaseAdminController
 {
@@ -29,7 +30,6 @@ class AdminManageMenuController extends BaseAdminController
         parent::__construct();
         $this->arrMenuParent = MenuSystem::getAllParentMenu();
         CGlobal::$pageAdminTitle = 'Quản lý menu';
-        $this->getDataDefault();
     }
 
     public function getDataDefault(){
@@ -73,6 +73,7 @@ class AdminManageMenuController extends BaseAdminController
         $paging = '';
 
         //FunctionLib::debug($data);
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, $search['active']);
 
         $this->viewPermission = $this->getPermissionPage();
@@ -88,6 +89,7 @@ class AdminManageMenuController extends BaseAdminController
 
     public function getItem($ids) {
         $id = FunctionLib::outputId($ids);
+
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
@@ -95,7 +97,8 @@ class AdminManageMenuController extends BaseAdminController
         if($id > 0) {
             $data = MenuSystem::find($id);
         }
-        //FunctionLib::debug($data);
+
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
         $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
         $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
@@ -138,6 +141,7 @@ class AdminManageMenuController extends BaseAdminController
             }
         }
 
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
         $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
         $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
