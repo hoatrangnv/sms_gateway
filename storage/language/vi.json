@@ -18,6 +18,15 @@
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",
+    "concatenation_rule": "Quy tắc ghép",
+    "concatenation_strings": "Chuỗi ký tự cần ghép",
+    "time_check_connect": "Thời gian kiểm tra kết nối tới trạm (phút)",
+    "notice_1": "(*) Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy",
+    "no": "STT",
+    "create_at": "Ngày tạo",
+    "total": "Tổng",
+    "results":"Kết quả",
+    "system_setting":"Cài đặt hệ thống",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"

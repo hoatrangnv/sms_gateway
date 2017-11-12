@@ -60,6 +60,8 @@ var Admin = {
             	url_ajax = 'deleteInfor';
             }else if(type == 12){
             	url_ajax = 'deleteContract';
+            }else if(type == 13){
+            	url_ajax = 'deleteSystemSetting';
             }
             if(url_ajax != ''){
                 if(confirm('Bạn có muốn xóa item này?')) {

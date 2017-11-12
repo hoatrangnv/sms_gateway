@@ -18,6 +18,15 @@
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "list2": "Danh mục",
+    "concatenation_rule": "Concatenation Rule",
+    "concatenation_strings": "Concatenation Strings",
+    "time_check_connect": "Time to check connection to station (minutes)",
+    "notice_1": "(*) Enter strings separated by commas",
+    "no": "No",
+    "create_at": "Create at",
+    "total": "Total",
+    "results":"Results",
+    "system_setting":"System setting",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
