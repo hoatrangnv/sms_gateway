@@ -40,7 +40,7 @@ Route::get('menu/edit/{id?}', array('as' => 'admin.menuEdit','uses' => Admin.'\A
 Route::post('menu/edit/{id?}', array('as' => 'admin.menuEdit','uses' => Admin.'\AdminManageMenuController@postItem'));
 Route::post('menu/deleteMenu', array('as' => 'admin.deleteMenu','uses' => Admin.'\AdminManageMenuController@deleteMenu'));//ajax
 
-/*thông tin menu */
+/*Cài đặt hệ thống */
 Route::get('systemSetting/view',array('as' => 'admin.systemSettingView','uses' => Admin.'\AdminSystemSettingController@view'));
 Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
 Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));

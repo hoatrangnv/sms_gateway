@@ -74,7 +74,7 @@
                     </div>
                 @else
                     <div class="alert">
-                        Không có dữ liệu
+                        {{FunctionLib::viewLanguage('no_data')}}
                     </div>
                 @endif
             </div>
