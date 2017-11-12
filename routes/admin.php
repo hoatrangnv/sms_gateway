@@ -40,8 +40,8 @@ Route::get('menu/edit/{id?}', array('as' => 'admin.menuEdit','uses' => Admin.'\A
 Route::post('menu/edit/{id?}', array('as' => 'admin.menuEdit','uses' => Admin.'\AdminManageMenuController@postItem'));
 Route::post('menu/deleteMenu', array('as' => 'admin.deleteMenu','uses' => Admin.'\AdminManageMenuController@deleteMenu'));//ajax
 
-/*thông tin member */
-Route::match(['GET','POST'],'memberSite/view',array('as' => 'admin.memberSiteView','uses' => Admin.'\AdminMemberSiteController@view'));
-Route::get('memberSite/edit/{id}', array('as' => 'admin.memberSiteEdit','uses' => Admin.'\AdminMemberSiteController@getItem'));
-Route::post('memberSite/edit/{id}', array('as' => 'admin.memberSiteEdit','uses' => Admin.'\AdminMemberSiteController@postItem'));
-Route::post('memberSite/deleteMenu', array('as' => 'admin.deleteMemberSite','uses' => Admin.'\AdminMemberSiteController@deleteMenu'));//ajax
+/*thông tin menu */
+Route::get('systemSetting/view',array('as' => 'admin.systemSettingView','uses' => Admin.'\AdminSystemSettingController@view'));
+Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
+Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));
+Route::post('systemSetting/deleteMenu', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax

@@ -13,17 +13,18 @@ class Define{
     const DB_CONNECTION_PGSQL = 'pgsql';
 
     //local
-    /*const DB_HOST = 'localhost';
+    const DB_HOST = 'localhost';
     const DB_PORT = '3306';
     const DB_DATABASE = 'sms_gateways';
     const DB_USERNAME = 'root';
-    const DB_PASSWORD = '';*/
+    const DB_PASSWORD = '';
     //server
-    const DB_HOST = '27.118.26.157';
-    const DB_PORT = '3306';
-    const DB_DATABASE = 'sms_gateways';
-    const DB_USERNAME = 'root';
-    const DB_PASSWORD = 'sql.Dev@2k17';
+
+//    const DB_HOST = '27.118.26.157';
+//    const DB_PORT = '3306';
+//    const DB_DATABASE = 'sms_gateways';
+//    const DB_USERNAME = 'dev';
+//    const DB_PASSWORD = 'dev.S@2k17';
 
     const DB_SOCKET = '';
     const TABLE_USER = 'web_user';
@@ -35,6 +36,7 @@ class Define{
     const TABLE_PROVINCE = 'web_province';
     const TABLE_DISTRICTS = 'web_districts';
     const TABLE_WARDS = 'web_wards';
+    const TABLE_SYSTEM_SETTING = 'web_system_setting';
 
     /***************************************************************************************************************
     //Memcache
