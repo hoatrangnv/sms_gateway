@@ -67,7 +67,7 @@ class BaseAdminController extends Controller{
             }
             $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite'): Define::ENGLISH_LANGUAGE ;
 
-
+            //FunctionLib::debug($this->languageSite);
            View::share('languageSite', $this->languageSite);
            View::share('menu', $this->menuSystem);
            View::share('aryPermissionMenu', $this->user_group_menu);
