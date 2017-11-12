@@ -72,7 +72,6 @@ class Define{
     const STATUS_SHOW = 1;
     const STATUS_HIDE = 0;
     const STATUS_BLOCK = -2;
-    const NAMTEST = -2;
 
     static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
 
