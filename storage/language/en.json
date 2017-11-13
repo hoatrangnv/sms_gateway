@@ -33,6 +33,11 @@
     "concatenation_rule_end":"Into last messages",
     "import_excel":"Import excel",
     "is_require":"is require",
+    "carrier_setting":"Carrier Management",
+    "carrier_name":"Carrier name",
+    "slipt_number":"Slipt number",
+    "min_length":"Min length",
+    "max_length":"Max length",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
