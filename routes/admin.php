@@ -44,4 +44,10 @@ Route::post('menu/deleteMenu', array('as' => 'admin.deleteMenu','uses' => Admin.
 Route::get('systemSetting/view',array('as' => 'admin.systemSettingView','uses' => Admin.'\AdminSystemSettingController@view'));
 Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
 Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));
-Route::post('systemSetting/deleteSystemSetting', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax
+Route::post('systemSetting/deleteSystemSetting', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax\
+
+/*Cài đặt nhà mạng */
+Route::get('carrierSetting/view',array('as' => 'admin.carrierSettingView','uses' => Admin.'\AdminCarrierSettingController@view'));
+Route::get('carrierSetting/edit/{id?}', array('as' => 'admin.carrierSetting','uses' => Admin.'\AdminCarrierSettingController@getItem'));
+Route::post('carrierSetting/edit/{id?}', array('as' => 'admin.carrierSetting','uses' => Admin.'\AdminCarrierSettingController@postItem'));
+Route::post('carrierSetting/deleteCarrierSetting', array('as' => 'admin.deleteCarrierSetting','uses' => Admin.'\AdminCarrierSettingController@deleteCarrierSetting'));//ajax
