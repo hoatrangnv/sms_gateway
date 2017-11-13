@@ -29,13 +29,14 @@ class AdminSystemSettingController extends BaseAdminController
     {
         parent::__construct();
         CGlobal::$pageAdminTitle = 'Quản lý menu';
+        $this->getDataDefault();
     }
 
     public function getDataDefault(){
         $this->arrRuleString = array(
-            CGlobal::status_block => FunctionLib::controLanguage('status_choose',$this->languageSite),
-            CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
-            CGlobal::status_hide => FunctionLib::controLanguage('status_hidden',$this->languageSite));
+            CGlobal::concatenation_rule_first => FunctionLib::controLanguage('concatenation_rule_first',$this->languageSite),
+            CGlobal::concatenation_rule_center => FunctionLib::controLanguage('concatenation_rule_center',$this->languageSite),
+            CGlobal::concatenation_rule_end => FunctionLib::controLanguage('concatenation_rule_end',$this->languageSite));
     }
 
     public function getPermissionPage(){
@@ -64,9 +65,9 @@ class AdminSystemSettingController extends BaseAdminController
         $data = SystemSetting::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
-//        FunctionLib::debug($data);
+//        FunctionLib::debug($this->arrRuleString);
         $this->getDataDefault();
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, $dataSearch['active']);
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.view',array_merge([
@@ -89,7 +90,7 @@ class AdminSystemSettingController extends BaseAdminController
             $data = SystemSetting::find($id);
         }
         //FunctionLib::debug($data);
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.add',array_merge([
             'data'=>$data,
@@ -146,8 +147,8 @@ class AdminSystemSettingController extends BaseAdminController
     }
     private function valid($data=array()) {
         if(!empty($data)) {
-            if(isset($data['concatenation_strings']) && trim($data['concatenation_strings']) == '') {
-                $this->error[] = 'Nối chuỗi không bỏ trống';
+            if(isset($data['time_check_connect']) && trim($data['time_check_connect']) == '') {
+                $this->error[] = '* '.FunctionLib::controLanguage('time_check_connect').' '.FunctionLib::controLanguage('is_require');
             }
         }
         return true;

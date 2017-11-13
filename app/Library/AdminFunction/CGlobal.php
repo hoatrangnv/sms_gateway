@@ -41,7 +41,11 @@ class CGlobal{
     const status_show = 1;
     const status_hide = 0;
     const status_block = -2;
-	
+
+    const concatenation_rule_first = 1;
+    const concatenation_rule_center = 2;
+    const concatenation_rule_end = 3;
+
     //is_login Customer
     const not_login = 0;
     const is_login = 1;
