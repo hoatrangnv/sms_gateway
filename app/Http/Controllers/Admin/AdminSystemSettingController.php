@@ -21,7 +21,7 @@ class AdminSystemSettingController extends BaseAdminController
     private $permission_edit = 'systemSetting_edit';
 
     private $arrMenuParent = array();
-    private $arrStatus = array();
+    private $arrRuleString = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
@@ -32,7 +32,7 @@ class AdminSystemSettingController extends BaseAdminController
     }
 
     public function getDataDefault(){
-        $this->arrStatus = array(
+        $this->arrRuleString = array(
             CGlobal::status_block => FunctionLib::controLanguage('status_choose',$this->languageSite),
             CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
             CGlobal::status_hide => FunctionLib::controLanguage('status_hidden',$this->languageSite));
@@ -66,7 +66,7 @@ class AdminSystemSettingController extends BaseAdminController
 
 //        FunctionLib::debug($data);
         $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, $dataSearch['active']);
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, $dataSearch['active']);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.view',array_merge([
@@ -75,7 +75,7 @@ class AdminSystemSettingController extends BaseAdminController
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
-            'optionStatus'=>$optionStatus,
+            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -89,22 +89,12 @@ class AdminSystemSettingController extends BaseAdminController
             $data = SystemSetting::find($id);
         }
         //FunctionLib::debug($data);
-        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
-
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
-            'arrStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
+            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -132,23 +122,13 @@ class AdminSystemSettingController extends BaseAdminController
             }
         }
 
-        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
-
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
-            'arrStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
+            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -166,8 +146,8 @@ class AdminSystemSettingController extends BaseAdminController
     }
     private function valid($data=array()) {
         if(!empty($data)) {
-            if(isset($data['banner_name']) && trim($data['banner_name']) == '') {
-                $this->error[] = 'Null';
+            if(isset($data['concatenation_strings']) && trim($data['concatenation_strings']) == '') {
+                $this->error[] = 'Nối chuỗi không bỏ trống';
             }
         }
         return true;

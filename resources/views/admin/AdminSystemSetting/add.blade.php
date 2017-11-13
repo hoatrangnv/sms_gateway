@@ -17,7 +17,7 @@
     <div class="page-content">
         <!-- PAGE CONTENT BEGINS -->
         {{Form::open(array('method' => 'POST','role'=>'form','files' => true))}}
-        @if(isset($error))
+        @if(isset($error) && !empty($error))
             <div class="alert alert-danger" role="alert">
                 @foreach($error as $itmError)
                     <p>{{ $itmError }}</p>
@@ -43,7 +43,7 @@
             <label for="concatenation_rule" class="control-label col-sm-2">{{FunctionLib::viewLanguage('concatenation_rule')}}</label>
             <div class="col-sm-10">
                 <select name="concatenation_rule" id="concatenation_rule" class="form-control input-sm">
-                    {!! $optionStatus !!}
+                    {!! $optionRuleString !!}
                 </select>
             </div>
         </div>
