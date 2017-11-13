@@ -37,6 +37,17 @@ class Define{
     const TABLE_DISTRICTS = 'web_districts';
     const TABLE_WARDS = 'web_wards';
     const TABLE_SYSTEM_SETTING = 'web_system_setting';
+    const TABLE_CARRIER_SETTING = 'web_carrier_setting';
+    const TABLE_CUSTOMER_SETTING = 'web_customer_setting';
+    const TABLE_DEVICE_TOKEN = 'web_device_token';
+    const TABLE_MANAGER_SETTING = 'web_manager_setting';
+    const TABLE_MODEM = 'web_modem';
+    const TABLE_MODEM_COM = 'web_modem_com';
+    const TABLE_SMS_CUSTOMER = 'web_sms_customer';
+    const TABLE_SMS_LOG = 'web_sms_log';
+    const TABLE_SMS_REPORT = 'web_sms_report';
+    const TABLE_SMS_SENDTO = 'web_sms_sendTo';
+    const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
 
     /***************************************************************************************************************
     //Memcache
