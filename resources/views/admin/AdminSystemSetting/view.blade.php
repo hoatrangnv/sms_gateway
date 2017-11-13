@@ -20,9 +20,9 @@
                 <div class="panel panel-info">
                     {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                     <div class="panel-body">
-                        <div class="form-group col-lg-3">
+                        <div class="form-group col-lg-4">
                             <label for="banner_name">{{FunctionLib::viewLanguage('time_check_connect')}}</label>
-                            <input type="number" class="form-control input-sm" id="time_check_connect" name="time_check_connect" placeholder="Tiêu đề banner" @if(isset($search['time_check_connect']) && $search['time_check_connect'] != '')value="{{$search['time_check_connect']}}"@endif>
+                            <input type="number" class="form-control input-sm" id="time_check_connect" name="time_check_connect" placeholder="" @if(isset($search['time_check_connect']) && $search['time_check_connect'] != '')value="{{$search['time_check_connect']}}"@endif>
                         </div>
 
                         <div class="form-group col-lg-12 text-right">
@@ -44,10 +44,11 @@
                     <table class="table table-bordered">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="5%" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
-                            <th width="70%">{{FunctionLib::viewLanguage('time_check_connect')}}</th>
-                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('create_at')}}</th>
-                            <th width="15%" class="text-center">Thao tác</th>
+                            <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
+                            <th width="w50">{{FunctionLib::viewLanguage('time_check_connect')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('concatenation_strings')}}</th>
+                            <th width="w100" class="text-center">{{FunctionLib::viewLanguage('create_at')}}</th>
+                            <th width="w50" class="text-center">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,6 +56,7 @@
                             <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>{{ $item['time_check_connect'] }}</td>
+                                <td>{{ $item['concatenation_strings'] }}</td>
                                 <td class="text-center middle">{{$item['created_date']}}</td>
                                 <td class="text-center middle" align="center">
                                     @if($is_root || $permission_edit)

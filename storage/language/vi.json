@@ -28,6 +28,11 @@
     "results":"Kết quả",
     "system_setting":"Cài đặt hệ thống",
     "no_data":"Không có dữ liệu",
+    "concatenation_rule_first":"Vào đầu tin nhắn",
+    "concatenation_rule_center":"Vào giữa tin nhắn",
+    "concatenation_rule_end":"Vào cuôi tin nhắn",
+    "import_excel":"Tải từ file excel",
+    "is_require":"là bắt buộc",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"

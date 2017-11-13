@@ -25,7 +25,7 @@
             </div>
         @endif
         <div class="form-group">
-            <label for="time_check_connect" class="control-label col-sm-2">{{FunctionLib::viewLanguage('time_check_connect')}}</label>
+            <label for="time_check_connect" class="control-label col-sm-2">{{FunctionLib::viewLanguage('time_check_connect')}}<span class="red"> (*)</span></label>
             <div class="col-sm-10">
                 <input type="number" id="time_check_connect" name="time_check_connect"  class="form-control input-sm" value="@if(isset($data['time_check_connect'])){{$data['time_check_connect']}}@endif">
             </div>
@@ -36,13 +36,20 @@
             <div class="col-sm-10">
                 <textarea class="form form-control h100" id="concatenation_strings" name="concatenation_strings">@if(isset($data['concatenation_strings'])){{$data['concatenation_strings']}}@endif</textarea>
             </div>
-            <span style="float: right; font-style: italic; margin-top: 5px">{{FunctionLib::viewLanguage('notice_1')}}</span>
+        </div>
+        <div class="clear"></div>
+        <div class="form-group">
+            <label for="concatenation_strings" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <button  class="btn btn-success"><i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}</button>
+                <span style="float: right; font-style: italic; margin-top: 5px">{{FunctionLib::viewLanguage('notice_1')}}</span>
+            </div>
         </div>
         <div class="clear"></div>
         <div class="form-group">
             <label for="concatenation_rule" class="control-label col-sm-2">{{FunctionLib::viewLanguage('concatenation_rule')}}</label>
             <div class="col-sm-10">
-                <select name="concatenation_rule" id="concatenation_rule" class="form-control input-sm">
+                <select name="concatenation_rule" id="concatenation_rule" class="w200 form-control input-sm">
                     {!! $optionRuleString !!}
                 </select>
             </div>

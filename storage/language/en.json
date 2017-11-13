@@ -28,6 +28,11 @@
     "results":"Results",
     "system_setting":"System setting",
     "no_data":"No data",
+    "concatenation_rule_first":"Into first messages",
+    "concatenation_rule_center":"Into between messages",
+    "concatenation_rule_end":"Into last messages",
+    "import_excel":"Import excel",
+    "is_require":"is require",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
