@@ -42,7 +42,7 @@
         <div class="form-group">
             <label for="concatenation_rule" class="control-label col-sm-2">{{FunctionLib::viewLanguage('concatenation_rule')}}</label>
             <div class="col-sm-10">
-                <select name="concatenation_rule" id="concatenation_rule" class="form-control input-sm">
+                <select name="concatenation_rule" id="concatenation_rule" class="form-control input-sm w200">
                     {!! $optionStatus !!}
                 </select>
             </div>
