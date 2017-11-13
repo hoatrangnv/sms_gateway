@@ -10,10 +10,71 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-11-07 17:22:21
+Date: 2017-11-13 17:24:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for web_carrier_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `web_carrier_setting`;
+CREATE TABLE `web_carrier_setting` (
+  `carrier_setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `carrier_name` varchar(255) DEFAULT NULL,
+  `slipt_number` int(11) DEFAULT '0' COMMENT 'Số ký tự cần tách',
+  `first_number` varchar(255) DEFAULT NULL COMMENT 'Danh sách các đầu số cho phép, nhập cách nhau bởi dấu phẩy',
+  `min_number` int(11) DEFAULT '0' COMMENT 'Độ dài tối thiểu của 1 số hợp lệ',
+  `max_number` int(11) DEFAULT NULL,
+  `status` tinyint(2) DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`carrier_setting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_carrier_setting
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_customer_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `web_customer_setting`;
+CREATE TABLE `web_customer_setting` (
+  `customer_setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT '0',
+  `priority` tinyint(2) DEFAULT NULL COMMENT 'Độ ưu tiên của khách hàng',
+  `payment_type` tinyint(2) DEFAULT '0' COMMENT 'Hình thức thanh toán: 1 - Thanh toán trước; 2 - Thanh toán sau',
+  `account_balance` float(10,2) DEFAULT '0.00' COMMENT 'Số dư trong tài khoản',
+  `sms_send_auto` tinyint(2) DEFAULT '1' COMMENT 'Tin sẽ được gửi tự động hoặc qua bước kiểm duyệt (1 - tự động; 0 - Qua kiểm duyêt)',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`customer_setting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_customer_setting
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_device_token
+-- ----------------------------
+DROP TABLE IF EXISTS `web_device_token`;
+CREATE TABLE `web_device_token` (
+  `device_token_id` int(11) NOT NULL AUTO_INCREMENT,
+  `manager_id` int(11) DEFAULT NULL COMMENT 'Liên kết với id trong table "Manager"',
+  `device_id` int(11) DEFAULT '0',
+  `token` varchar(255) DEFAULT NULL,
+  `messeger_center` varchar(255) DEFAULT NULL COMMENT 'Trung tâm tin nhắn:',
+  `status` tinyint(2) DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`device_token_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_device_token
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for web_districts
@@ -839,42 +900,131 @@ INSERT INTO `web_group_user_permission` VALUES ('5', '2');
 INSERT INTO `web_group_user_permission` VALUES ('5', '3');
 
 -- ----------------------------
+-- Table structure for web_manager_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `web_manager_setting`;
+CREATE TABLE `web_manager_setting` (
+  `manager_setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `priority` tinyint(2) DEFAULT '0' COMMENT 'Độ ưu tiên của admin',
+  `payment_type` tinyint(2) DEFAULT '0' COMMENT 'Hình thức thanh toán: 1 - Thanh toán trực tiếp; 2 - Thanh toán sau',
+  `account_balance` float(10,2) DEFAULT NULL COMMENT 'Số dư trong tài khoản',
+  `scan_auto` tinyint(2) DEFAULT '0' COMMENT 'Máy chủ tự động quét gửi SMS (1 có; 0 không)',
+  `count_sms_number` int(11) DEFAULT '0' COMMENT 'Đếm số lượng tin đã gửi trong ngày, tự tăng khi truyền thành công gói tin về Trạm (Cuối ngày sẽ reset về 0)',
+  `sms_max` int(11) DEFAULT '0' COMMENT '''Số lượng tin max có thể gửi trong ngày theo COM',
+  `sms_error_max` int(11) DEFAULT '0' COMMENT 'Số lần gửi lỗi tối đa trong 1 lần kết nối tới COM',
+  `time_delay_from` int(11) DEFAULT '0' COMMENT 'Thời gian  trễ giữa 2 lần gửi trên 1 COM từ',
+  `time_delay_to` int(11) DEFAULT '0' COMMENT 'Thời gian  trễ giữa 2 lần gửi trên 1 COM từ',
+  `concatenation_strings` text COMMENT 'Chuỗi ký tự cần ghép, ngăn cách nhau bởi dấu phẩy',
+  `concatenation_rule` int(11) DEFAULT NULL COMMENT '1- Đầu; 2 - Cuối; 3 - Vị trí thứ n trong chuỗi (n cho nhập); 4 - Vị trí giữa bất kỳ trong chuỗi',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`manager_setting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_manager_setting
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for web_menu_system
 -- ----------------------------
 DROP TABLE IF EXISTS `web_menu_system`;
 CREATE TABLE `web_menu_system` (
   `menu_id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT '0',
-  `module` varchar(50) DEFAULT NULL,
   `menu_url` varchar(100) DEFAULT NULL,
   `menu_name` varchar(100) DEFAULT NULL,
+  `menu_name_en` varchar(100) DEFAULT NULL,
   `menu_icons` varchar(30) DEFAULT NULL,
   `menu_type` char(10) DEFAULT NULL,
   `role_id` varchar(100) DEFAULT NULL,
   `showcontent` smallint(2) DEFAULT '0',
   `show_permission` smallint(2) DEFAULT '0',
   `show_menu` smallint(2) DEFAULT '1',
-  `ordering` int(6) DEFAULT NULL,
+  `ordering` int(6) DEFAULT '1',
   `position` tinyint(4) DEFAULT NULL,
   `active` tinyint(4) DEFAULT '1',
   `access_data` text,
   `allow_guest` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of web_menu_system
 -- ----------------------------
-INSERT INTO `web_menu_system` VALUES ('1', '0', null, 'admin.user_view', 'Quản lý Admin', 'fa fa-user icon-4x', null, null, '1', '0', '1', '2', null, '1', null, '1');
-INSERT INTO `web_menu_system` VALUES ('2', '1', null, 'admin.user_view', 'Thông tin người dùng', 'fa fa-user icon-4x', null, null, '1', '1', '1', '1', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('3', '0', null, 'admin.user_view', 'QL sản phẩm', 'fa fa-gift', null, null, '1', '1', '1', '2', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('4', '1', null, 'admin.logout', 'Đăng xuất', 'fa fa-user icon-4x', null, null, '0', '1', '1', '10', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('5', '3', null, 'admin.user_view', 'Sản phẩm', 'fa fa-gift', null, null, '1', '1', '1', '1', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('6', '3', null, 'admin.user_view', 'Danh mục sản phẩm', 'fa fa-gift', null, null, '1', '1', '1', '2', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('8', '11', null, 'admin.menuView', 'MenuSystem', 'fa fa-sitemap', null, null, '0', '0', '0', '3', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('9', '11', null, 'admin.permission_view', 'Phân quyền', 'fa fa-user icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('10', '11', null, 'admin.groupUser_view', 'Nhóm quyền', 'fa fa-user icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
-INSERT INTO `web_menu_system` VALUES ('11', '0', null, '#', 'Quản trị Site', 'fa fa-cogs icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('1', '0', 'admin.user_view', 'Quản lý Hệ thống', 'System management', 'fa fa-home icon-4x', null, null, '0', '1', '1', '2', null, '1', null, '1');
+INSERT INTO `web_menu_system` VALUES ('2', '1', 'admin.user_view', 'Quản lý Người dùng', 'User Management', 'fa fa-user icon-4x', null, null, '1', '1', '1', '0', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('3', '0', 'admin.user_view', 'Quản lý Trạm', 'Station Management', 'fa fa-bars icon-4x', null, null, '0', '1', '1', '3', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('4', '1', 'admin.systemSettingView', 'Cài đặt Hệ thống', 'System Setting', 'fa fa-cog icon-4x', null, null, '0', '1', '1', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('5', '3', 'admin.user_view', 'Danh sách Trạm', 'Station List', 'fa fa-list-alt icon-4x', null, null, '1', '1', '1', '3', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('6', '3', 'admin.user_view', 'Thống kê Trạm', 'Station Report', 'fa fa-bar-chart icon-4x', null, null, '1', '1', '1', '2', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('8', '11', 'admin.menuView', 'Danh mục', 'Menu Site', 'fa fa-sitemap', null, null, '0', '0', '0', '3', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('9', '11', 'admin.permission_view', 'Phân quyền', 'Permission', 'fa fa-user icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('10', '11', 'admin.groupUser_view', 'Nhóm quyền', 'Group Permission', 'fa fa-users icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('11', '0', '#', 'Quản trị Site', 'Manager Site', 'fa fa-cogs icon-4x', null, null, '0', '0', '0', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('15', '1', 'admin.user_view', 'Quản lý Nhà mạng', 'Carrier Management', 'fa fa-credit-card icon-4x', null, null, '0', '1', '1', '2', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('16', '0', 'admin.user_view', 'Biểu đồ Tin nhắn', 'SMS Chart', 'fa fa-area-chart icon-4x', null, null, '1', '1', '1', '5', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('17', '16', 'admin.user_view', 'Biểu đồ Tỷ lệ thành công', ' Billing graph of successful', 'fa fa-line-chart icon-4x', null, null, '1', '1', '1', '6', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('18', '0', 'admin.user_view', 'Quản lý Gửi tin', 'SMS Management', 'fa fa-envelope icon-4x', null, null, '0', '1', '1', '4', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('19', '18', 'admin.user_view', 'SMS chờ gửi', 'SMS wating send', 'fa fa-pause icon-4x', null, null, '0', '1', '1', '2', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('20', '18', 'admin.user_view', 'Màn hình Gửi tin', 'Send SMS Screen', 'fa fa-paper-plane icon-4x', null, null, '1', '1', '1', '3', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('21', '18', 'admin.user_view', 'Lịch sử Gửi tin', 'Sent SMS History', 'fa fa-history icon-4x', null, null, '1', '1', '1', '4', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('22', '16', 'admin.user_view', 'Sản lượng SMS theo giờ', 'SMS Quality by hour', 'fa fa-bar-chart icon-4x', null, null, '0', '1', '1', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('23', '16', 'admin.user_view', 'Sản lượng SMS theo ngày', 'SMS Quality by day', 'fa fa-bar-chart icon-4x', null, null, '0', '1', '1', '2', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('24', '16', 'admin.user_view', 'Sản lượng SMS theo tháng', 'SMS Quality by month', 'fa fa-bar-chart icon-4x', null, null, '0', '1', '1', '3', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('25', '16', 'admin.user_view', 'Sản lượng SMS theo năm', 'SMS Quality by year', 'fa fa-bar-chart icon-4x', null, null, '0', '1', '1', '4', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('26', '28', 'admin.user_view', 'API kết nối trạm', 'Client API', 'fa fa-life-ring icon-4x', null, null, '1', '1', '1', '7', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('27', '28', 'admin.user_view', 'API Khách hàng', 'Customer API', 'fa fa-recycle icon-4x', null, null, '1', '1', '1', '8', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('28', '0', '#', 'Tài liệu API', 'API Document', 'fa fa-file-text icon-4x', null, null, '0', '1', '1', '7', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('29', '3', 'admin.user_view', 'Cài đặt Trạm', 'Station Setting', 'fa fa-cog icon-4x', null, null, '0', '1', '1', '1', null, '1', null, '0');
+INSERT INTO `web_menu_system` VALUES ('30', '18', 'admin.user_view', 'SMS chờ xử lý', 'SMS waiting process', 'fa fa-pause icon-4x', null, null, '0', '1', '1', '1', null, '1', null, '0');
+
+-- ----------------------------
+-- Table structure for web_modem
+-- ----------------------------
+DROP TABLE IF EXISTS `web_modem`;
+CREATE TABLE `web_modem` (
+  `modem_id` int(11) NOT NULL AUTO_INCREMENT,
+  `modem_name` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT '0',
+  `device_id` int(11) DEFAULT '0',
+  `digital` varchar(255) DEFAULT NULL COMMENT 'Thông số kỹ thuật của modem',
+  `is_active` tinyint(2) DEFAULT '1' COMMENT 'Tình trạng kích hoạt của modem  (1- on; 0 off)',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`modem_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_modem
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_modem_com
+-- ----------------------------
+DROP TABLE IF EXISTS `web_modem_com`;
+CREATE TABLE `web_modem_com` (
+  `modem_com_id` int(11) NOT NULL AUTO_INCREMENT,
+  `modem_com_name` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT '0',
+  `modem_id` int(11) DEFAULT '0',
+  `carrier_id` int(11) DEFAULT '0' COMMENT 'Mã nhà mạng (0: Không xác định)',
+  `carrier_name` varchar(255) DEFAULT NULL,
+  `mei_com` varchar(255) DEFAULT NULL COMMENT 'Thông số kỹ thuật của Com',
+  `content` varchar(255) DEFAULT NULL COMMENT 'Nội dung cảnh báo',
+  `sms_max_com_day` tinyint(5) DEFAULT '0' COMMENT 'Đếm số tin gửi thành công trong ngày để so sánh với số tối đa cho phép gửi  (Cuối ngày sẽ reset về 0)',
+  `success_number` tinyint(2) DEFAULT '0' COMMENT 'Số lần gửi thành công trong 1 lần kết nối',
+  `error_number` tinyint(5) DEFAULT '0' COMMENT 'Số lần gửi lỗi trong 1 lần kết nối => Khi Com disconnect thì reset về 0',
+  `is_active` tinyint(2) DEFAULT '1' COMMENT 'Tình trạng kích hoạt của Com (1- on; 0 off; 2 - error)note: error_number = sms_error_max (theo Manager_Settings) => update is_active = 2',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`modem_com_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_modem_com
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for web_permission
@@ -1028,6 +1178,135 @@ INSERT INTO `web_province` VALUES ('71', 'Đắk Nông', '0', '0', '0', 'a:5:{s:
 INSERT INTO `web_province` VALUES ('72', 'Đắk Lắc', '0', '0', '0', 'a:5:{s:7:\"hotline\";s:0:\"\";s:5:\"yahoo\";s:0:\"\";s:7:\"address\";s:0:\"\";s:5:\"email\";s:0:\"\";s:11:\"fullHotline\";s:0:\"\";}', '', '', '', 'vi', '1', '0');
 
 -- ----------------------------
+-- Table structure for web_sms_customer
+-- ----------------------------
+DROP TABLE IF EXISTS `web_sms_customer`;
+CREATE TABLE `web_sms_customer` (
+  `sms_customer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT '0',
+  `correct_number` int(11) DEFAULT '0' COMMENT 'Tổng số lượng số hợp lệ',
+  `incorrect_number` int(11) DEFAULT '0' COMMENT 'tổng không hợp lệ',
+  `incorrect_number_list` text COMMENT 'Chuỗi số không hợp lệ, ngăn cách bởi dấu phẩy',
+  `status` tinyint(2) DEFAULT '1',
+  `status_name` varchar(255) DEFAULT NULL COMMENT 'Tương ứng status: Pending, Successful',
+  `send_date` int(12) DEFAULT NULL COMMENT 'yyyymmdd',
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`sms_customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_sms_customer
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_sms_log
+-- ----------------------------
+DROP TABLE IF EXISTS `web_sms_log`;
+CREATE TABLE `web_sms_log` (
+  `sms_log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_customer_id` int(11) DEFAULT '0',
+  `sms_customer_id` int(11) DEFAULT '0' COMMENT 'id gói tin gốc, liên kết với id bảng "Sms_Customer"',
+  `carrier_id` int(11) DEFAULT NULL,
+  `carrier_name` varchar(255) DEFAULT NULL,
+  `user_manager_id` int(11) DEFAULT '0',
+  `total_sms` int(11) DEFAULT '0' COMMENT 'Tổng số SMS cần gửi sau khi được tách theo từng nhà mạng',
+  `send_sussesssful` int(11) DEFAULT '0' COMMENT 'Đếm số lần gửi thành công',
+  `send_fail` int(11) DEFAULT '0' COMMENT 'Số lần thất bại',
+  `sms_max` int(11) DEFAULT '0' COMMENT 'Tổng số sms gửi để check số lương max trong lần kế nối, trong ngày',
+  `status` tinyint(2) DEFAULT '1',
+  `status_name` varchar(255) DEFAULT NULL,
+  `send_date` int(12) DEFAULT '0' COMMENT 'yyyymmdd',
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`sms_log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_sms_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_sms_report
+-- ----------------------------
+DROP TABLE IF EXISTS `web_sms_report`;
+CREATE TABLE `web_sms_report` (
+  `sms_report_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_customer_id` int(11) DEFAULT '0',
+  `user_manager_id` int(11) DEFAULT '0',
+  `carrier_id` int(11) DEFAULT '0',
+  `success_number` int(10) DEFAULT '0',
+  `fail_number` int(10) DEFAULT '0',
+  `hour` int(5) DEFAULT '0',
+  `day` int(5) DEFAULT '0',
+  `month` int(5) DEFAULT '0',
+  `year` int(5) DEFAULT '0',
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`sms_report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_sms_report
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_sms_sendTo
+-- ----------------------------
+DROP TABLE IF EXISTS `web_sms_sendTo`;
+CREATE TABLE `web_sms_sendTo` (
+  `sms_sendTo_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sms_log_id` int(11) DEFAULT '0' COMMENT 'id gói tin sau khi được tách, liên kết với id trong table "Sms_Log"',
+  `sms_customer_id` int(11) DEFAULT '0' COMMENT 'id gói tin gốc, liên kết với id bảng "Sms_Customer"',
+  `user_customer_id` int(11) DEFAULT '0',
+  `carrier_id` int(11) DEFAULT NULL,
+  `user_manager_id` int(11) DEFAULT '0',
+  `modem_id` int(11) DEFAULT NULL,
+  `com_id` int(11) DEFAULT NULL,
+  `phone_receive` varchar(255) DEFAULT NULL COMMENT 'Số điện thoại nhận',
+  `phone_send` varchar(255) DEFAULT NULL COMMENT 'Số điện thoại gửi',
+  `status` tinyint(2) DEFAULT '1',
+  `status_name` varchar(255) DEFAULT NULL COMMENT 'Tương ứng status: Pending, Success, Fail',
+  `content` varchar(255) DEFAULT NULL,
+  `hour` int(5) DEFAULT NULL,
+  `day` int(5) DEFAULT NULL,
+  `month` int(5) DEFAULT NULL,
+  `year` int(5) DEFAULT NULL,
+  `send_date` int(12) DEFAULT NULL COMMENT 'yyyymmdd',
+  `send_date_at` datetime DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`sms_sendTo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_sms_sendTo
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for web_system_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `web_system_setting`;
+CREATE TABLE `web_system_setting` (
+  `system_setting_id` bigint(8) NOT NULL AUTO_INCREMENT,
+  `time_check_connect` bigint(8) NOT NULL COMMENT '''Thiết lập thời gian hệ thống tự động kiểm tra kết nối tới các trạm',
+  `concatenation_strings` text COMMENT 'Chuỗi ký tự cần ghép, ngăn cách nhau bởi dấu phẩy',
+  `concatenation_rule` bigint(8) DEFAULT NULL COMMENT '1- Đầu; 2 - Cuối; 3 - Vị trí giữa radom bất kỳ trong chuỗi',
+  `api_manager` text COMMENT 'Nội dung mô tả kết nội API của admin',
+  `api_manager_en` text COMMENT 'Nội dung mô tả kết nội API của admin  (Tiếng anh)',
+  `api_customer` text COMMENT 'Nội dung mô tả kết nội API của khách hàng',
+  `api_customer_en` text COMMENT 'Nội dung mô tả kết nội API của khách hàng  (Tiếng anh)',
+  `system_content` text COMMENT 'Thông báo từ hệ thống',
+  `system_content_en` text COMMENT 'Thông báo từ hệ thống (Tiếng anh)',
+  `created_date` datetime DEFAULT NULL COMMENT 'Thời gian tạo lần đầu',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Thời gian cập nhật gần nhất',
+  PRIMARY KEY (`system_setting_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of web_system_setting
+-- ----------------------------
+INSERT INTO `web_system_setting` VALUES ('1', '1510373669', 'dfdfdf', null, 'nam da sua', null, null, null, null, null, null, null);
+INSERT INTO `web_system_setting` VALUES ('2', '1510373102', null, null, 'nam dep trai', null, null, null, null, null, null, null);
+INSERT INTO `web_system_setting` VALUES ('3', '1510450170', 'sdsdfsd', null, 'ádasdasdsad', null, null, null, null, null, null, '2017-11-13 08:03:00');
+
+-- ----------------------------
 -- Table structure for web_user
 -- ----------------------------
 DROP TABLE IF EXISTS `web_user`;
@@ -1052,18 +1331,43 @@ CREATE TABLE `web_user` (
   `user_edit_name` varchar(255) DEFAULT NULL,
   `user_created` int(11) DEFAULT NULL,
   `user_updated` int(11) DEFAULT NULL,
+  `role_type` tinyint(2) DEFAULT '3' COMMENT '1:SuperAdmin, 2:Admin, 3:Customer',
+  `role_name` varchar(200) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `number_code` varchar(250) DEFAULT NULL,
+  `address_register` varchar(255) DEFAULT NULL COMMENT 'địa chỉ kinh doanh',
+  `telephone` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of web_user
 -- ----------------------------
-INSERT INTO `web_user` VALUES ('2', '0', 'admin', 'eef828faf0754495136af05c051766cb', 'Root', 'quynh@gmail.com', '', '1', '1', '4', '8,4,5', '1', '1510040205', '127.0.0.1', null, null, '2', 'admin', null, '1508643546');
-INSERT INTO `web_user` VALUES ('3', '0', 'quynhtm', '62c6e06921a2188643e58935b9e6c880', 'Trương Mạnh Quynh', 'quynh@gmail.com', '09838413368', '1', '1', '1,4', '2,4,5', '1', '1510039904', '127.0.0.1', '2', 'admin', '2', 'admin', '1499654993', '1510040229');
-INSERT INTO `web_user` VALUES ('4', '0', 'hienlt', '08390aa6f4dbc50eeeda7d7bec630034', 'Lê Thị Hiến', 'hienlt@hanelsoft.vn', '', '1', '1', '1,4', '2,4', '1', null, null, '2', 'admin', '2', 'admin', '1510040284', '1510040284');
-INSERT INTO `web_user` VALUES ('5', '0', 'dienbt', 'e7a19d3aa1bcac298816c5a23e92947b', 'Bùi Tiến Diện', 'dienbt@hanelsoft.vn', '', '1', '1', '1,4', '2,4,5', '1', null, null, '2', 'admin', '2', 'admin', '1510040323', '1510040323');
-INSERT INTO `web_user` VALUES ('6', '0', 'namnv', 'ac66700a2642519819379dcc151fcc62', 'Nguyễn Văn Nam', 'namnv@hanelsofn.vn', '', '1', '1', '4', '2,4,5', '1', null, null, '2', 'admin', '2', 'admin', '1510040354', '1510040354');
-INSERT INTO `web_user` VALUES ('7', '0', 'quantriAdmin', 'b7997c3d2f3125784f715992b55e10c1', 'Quản trị Admin SMS', 'sms@gmail.com', '', '1', '1', '1', '2,4', '1', '1510040666', '127.0.0.1', '2', 'admin', '2', 'admin', '1510040642', '1510040642');
+INSERT INTO `web_user` VALUES ('2', '0', 'admin', 'eef828faf0754495136af05c051766cb', 'Root', 'quynh@gmail.com', '', '1', '1', '4', '8,4,5', '1', '1510040205', '127.0.0.1', null, null, '2', 'admin', null, '1508643546', '3', null, null, null, null, null);
+INSERT INTO `web_user` VALUES ('3', '0', 'quynhtm', '62c6e06921a2188643e58935b9e6c880', 'Trương Mạnh Quynh', 'quynh@gmail.com', '09838413368', '1', '1', '1,4', '2,4,5', '1', '1510561759', '27.118.21.10', '2', 'admin', '2', 'admin', '1499654993', '1510040229', '3', null, null, null, null, null);
+INSERT INTO `web_user` VALUES ('4', '0', 'hienlt', '08390aa6f4dbc50eeeda7d7bec630034', 'Lê Thị Hiến', 'hien46k2@gmail.com', '', '1', '1', '1,4', '3,2,4,5,6', '1', '1510455820', '58.187.162.194', '2', 'admin', '4', 'hienlt', '1510040284', '1510182613', '3', null, null, null, null, null);
+INSERT INTO `web_user` VALUES ('5', '0', 'dienbt', 'e7a19d3aa1bcac298816c5a23e92947b', 'Bùi Tiến Diện', 'dienbt@hanelsoft.vn', '', '1', '1', '1,4', '2,4,5', '1', '1510128395', '113.176.7.67', '2', 'admin', '2', 'admin', '1510040323', '1510040323', '3', null, null, null, null, null);
+INSERT INTO `web_user` VALUES ('6', '0', 'namnv', 'ac66700a2642519819379dcc151fcc62', 'Nguyễn Văn Nam', 'namnv@hanelsofn.vn', '', '1', '1', '4', '2,4,5', '1', '1510450144', '127.0.0.1', '2', 'admin', '2', 'admin', '1510040354', '1510040354', '3', null, null, null, null, null);
+INSERT INTO `web_user` VALUES ('7', '0', 'quantriAdmin', 'b7997c3d2f3125784f715992b55e10c1', 'Quản trị Admin SMS', 'leeduxng@gmail.com', '', '1', '1', '1', '1,3,18,16,28,2,4,15,29,6,5,22,23,24,25,17,30,19,20,21,26,27', '1', '1510546803', '14.166.203.210', '2', 'admin', '4', 'hienlt', '1510040642', '1510455918', '3', null, null, null, null, null);
+
+-- ----------------------------
+-- Table structure for web_user_carrier_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `web_user_carrier_setting`;
+CREATE TABLE `web_user_carrier_setting` (
+  `user_carrier_setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `carrier_id` int(11) DEFAULT '0' COMMENT 'Liên kết với id của bảng Carrier_Setting',
+  `user_manager_id` int(11) DEFAULT NULL,
+  `user_customer_id` int(11) DEFAULT NULL,
+  `cost` float(10,2) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_carrier_setting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of web_user_carrier_setting
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for web_wards
