@@ -41,6 +41,22 @@
                             <input type="text" placeholder="Tên nhân viên" id="user_full_name" name="user_full_name"  class="form-control input-sm" value="@if(isset($data['user_full_name'])){{$data['user_full_name']}}@endif">
                         </div>
                     </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Kiểu User<span class="red"> (*) </span></label>
+                            <select name="role_type" id="role_type" class="form-control input-sm">
+                                {!! $optionRoleType !!}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Email<span class="red"> (*) </span></label>
+                            <input type="text" placeholder="Email" id="user_email" name="user_email"  class="form-control input-sm" value="@if(isset($data['user_email'])){{$data['user_email']}}@endif">
+                        </div>
+                    </div>
+
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="name" class="control-label">Phone</label>
@@ -49,8 +65,21 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="name" class="control-label">Email<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Email" id="user_email" name="user_email"  class="form-control input-sm" value="@if(isset($data['user_email'])){{$data['user_email']}}@endif">
+                            <label for="name" class="control-label">Telephone</label>
+                            <input type="text" placeholder="Telephone" id="telephone" name="telephone"  class="form-control input-sm" value="@if(isset($data['telephone'])){{$data['telephone']}}@endif">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Số đăng ký kinh doanh</label>
+                            <input type="text" placeholder="Số đăng ký kinh doanh" id="number_code" name="number_code"  class="form-control input-sm" value="@if(isset($data['number_code'])){{$data['number_code']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Địa chỉ kinh doanh</label>
+                            <input type="text" placeholder="Địa chỉ kinh doanh" id="address_register" name="address_register"  class="form-control input-sm" value="@if(isset($data['address_register'])){{$data['address_register']}}@endif">
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -75,7 +104,7 @@
                     <div id="show_category_sub_campaign" class="body">
                         <label for="name" class="control-label">Menu hiển thị</label>
                         @if(isset($menuAdmin) && !empty($menuAdmin))
-                            <div style="float: left; width: 100%;min-height: 250px;max-height:250px;overflow-x: hidden;">
+                            <div style="float: left; width: 100%;min-height: 250px;max-height:405px;overflow-x: hidden;">
                                 <table class="table table-bordered table-hover">
                                     @foreach ($menuAdmin as $menu_id => $menu_name)
                                         <tr>

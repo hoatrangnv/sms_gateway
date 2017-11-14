@@ -48,6 +48,7 @@ class Define{
     const TABLE_SMS_REPORT = 'web_sms_report';
     const TABLE_SMS_SENDTO = 'web_sms_sendTo';
     const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
+    const TABLE_USER_SETTING = 'web_user_setting';
 
     /***************************************************************************************************************
     //Memcache
@@ -79,11 +80,18 @@ class Define{
 
     const VIETNAM_LANGUAGE = 1;
     const ENGLISH_LANGUAGE = 2;
+    static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
 
     const STATUS_SHOW = 1;
     const STATUS_HIDE = 0;
     const STATUS_BLOCK = -2;
 
-    static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
+    //SuperAdmin, Admin, Customer
+    const ROLE_TYPE_SUPER_ADMIN = 1;
+    const ROLE_TYPE_ADMIN = 2;
+    const ROLE_TYPE_CUSTOMER = 3;
+    static $arrUserRole = array(Define::ROLE_TYPE_SUPER_ADMIN => 'SuperAdmin',Define::ROLE_TYPE_ADMIN => 'Admin',Define::ROLE_TYPE_CUSTOMER => 'Customer');
+
+
 
 }

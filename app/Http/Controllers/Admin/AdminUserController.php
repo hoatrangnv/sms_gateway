@@ -26,15 +26,17 @@ class AdminUserController extends BaseAdminController{
     private $permission_change_pass = 'user_change_pass';
     private $permission_remove = 'user_remove';
     private $arrStatus = array();
+    private $arrRoleType = array();
     private $arrSex = array();
     private $error = array();
 
     public function __construct(){
         parent::__construct();
-        $this->getDataDefault();
+
     }
 
     public function getDataDefault(){
+        $this->arrRoleType = Define::$arrUserRole;
         $this->arrStatus = array(
             CGlobal::status_hide => FunctionLib::controLanguage('status_all',$this->languageSite),
             CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
@@ -64,7 +66,7 @@ class AdminUserController extends BaseAdminController{
         $arrGroupUser = GroupUser::getListGroupUser();
 
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-
+        $this->getDataDefault();
         return view('admin.AdminUser.view',[
                 'data'=>$data,
                 'dataSearch'=>$dataSearch,
@@ -81,6 +83,7 @@ class AdminUserController extends BaseAdminController{
             ]);
     }
 
+    //get
     public function editInfo($ids)
     {
         $id = FunctionLib::outputId($ids);
@@ -99,9 +102,10 @@ class AdminUserController extends BaseAdminController{
         $arrGroupUser = GroupUser::getListGroupUser($this->is_boss);
         $menuAdmin = MenuSystem::getListMenuPermission();
         //FunctionLib::debug($this->arrStatus);
-
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['user_status'])? $data['user_status']: CGlobal::status_show);
         $optionSex = FunctionLib::getOption($this->arrSex, isset($data['user_sex'])? $data['user_sex']: CGlobal::status_show);
+        $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
             'arrStatus'=>$this->arrStatus,
@@ -111,6 +115,7 @@ class AdminUserController extends BaseAdminController{
 
             'optionStatus'=>$optionStatus,
             'optionSex'=>$optionSex,
+            'optionRoleType'=>$optionRoleType,
 
             'is_root'=>$this->is_root,
             'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
@@ -119,6 +124,7 @@ class AdminUserController extends BaseAdminController{
             'permission_remove'=>in_array($this->permission_remove, $this->permission) ? 1 : 0,
         ]);
     }
+    //post
     public function edit($ids){
         //check permission
         if (!$this->is_root && !in_array($this->permission_edit, $this->permission)) {
@@ -131,6 +137,10 @@ class AdminUserController extends BaseAdminController{
         $data['user_email'] = htmlspecialchars(trim(Request::get('user_email', '')));
         $data['user_phone'] = htmlspecialchars(trim(Request::get('user_phone', '')));
         $data['user_name'] = Request::get('user_name', '');
+        $data['telephone'] = Request::get('telephone', '');
+        $data['address_register'] = Request::get('address_register', '');
+        $data['number_code'] = Request::get('number_code', '');
+        $data['role_type'] = Request::get('role_type', Define::ROLE_TYPE_CUSTOMER);
 
         $this->validUser($id,$data);
         //FunctionLib::debug($this->error);
@@ -149,6 +159,11 @@ class AdminUserController extends BaseAdminController{
             $dataInsert['user_name'] = $data['user_name'];
             $dataInsert['user_email'] = $data['user_email'];
             $dataInsert['user_phone'] = $data['user_phone'];
+            $dataInsert['telephone'] = $data['telephone'];
+            $dataInsert['address_register'] = $data['address_register'];
+            $dataInsert['number_code'] = $data['number_code'];
+            $dataInsert['role_type'] = $data['role_type'];
+            $dataInsert['role_name'] = Define::$arrUserRole[$data['role_type']];
             $dataInsert['user_full_name'] = $data['user_full_name'];
             $dataInsert['user_status'] = (int)$data['user_status'];
             $dataInsert['user_edit_id'] = User::user_id();
@@ -166,7 +181,6 @@ class AdminUserController extends BaseAdminController{
                 $dataInsert['user_create_name'] = User::user_name();
                 $dataInsert['user_created'] = time();
                 if (User::createNew($dataInsert)) {
-
                     return Redirect::route('admin.user_view');
                 } else {
                     $this->error[] = 'Lỗi truy xuất dữ liệu';;
@@ -176,10 +190,10 @@ class AdminUserController extends BaseAdminController{
         }
         $arrGroupUser = GroupUser::getListGroupUser();
         $menuAdmin = MenuSystem::getListMenuPermission();
-
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['user_status'])? $data['user_status']: CGlobal::status_show);
         $optionSex = FunctionLib::getOption($this->arrSex, isset($data['user_sex'])? $data['user_sex']: CGlobal::status_show);
-
+        $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
             'arrStatus'=>$this->arrStatus,
@@ -188,6 +202,7 @@ class AdminUserController extends BaseAdminController{
             'arrUserGroupMenu'=>$groupUserMenu,
             'optionStatus'=>$optionStatus,
             'optionSex'=>$optionSex,
+            'optionRoleType'=>$optionRoleType,
 
             'error'=>$this->error,
             'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
