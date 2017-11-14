@@ -9,7 +9,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">{{FunctionLib::viewLanguage('home')}}</a>
             </li>
-            <li class="active">{{FunctionLib::viewLanguage('system_setting')}}</li>
+            <li class="active">{{FunctionLib::viewLanguage('carrier_setting')}}</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -21,8 +21,8 @@
                     {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                     <div class="panel-body">
                         <div class="form-group col-lg-4">
-                            <label for="banner_name">{{FunctionLib::viewLanguage('time_check_connect')}}</label>
-                            <input type="number" class="form-control input-sm" id="time_check_connect" name="time_check_connect" placeholder="" @if(isset($search['time_check_connect']) && $search['time_check_connect'] != '')value="{{$search['time_check_connect']}}"@endif>
+                            <label for="carrier_name">{{FunctionLib::viewLanguage('carrier_name')}}</label>
+                            <input type="text" class="form-control input-sm" id="carrier_name" name="carrier_name" placeholder="" @if(isset($search['carrier_name']) && $search['carrier_name'] != '')value="{{$search['carrier_name']}}"@endif>
                         </div>
 
                         <div class="form-group col-lg-12 text-right">
@@ -45,9 +45,11 @@
                         <thead class="thin-border-bottom">
                         <tr class="">
                             <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
-                            <th width="w50">{{FunctionLib::viewLanguage('time_check_connect')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('concatenation_strings')}}</th>
-                            <th width="w100" class="text-center">{{FunctionLib::viewLanguage('create_at')}}</th>
+                            <th width="w50">{{FunctionLib::viewLanguage('carrier_name')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('slipt_number')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('min_length')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('max_length')}}</th>
+                            <th width="w100" class="text-center">Đầu số hợp lệ</th>
                             <th width="w50" class="text-center">Thao tác</th>
                         </tr>
                         </thead>
@@ -55,15 +57,17 @@
                         @foreach ($data as $key => $item)
                             <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                <td>{{ $item['time_check_connect'] }}</td>
-                                <td>{{ $item['concatenation_strings'] }}</td>
-                                <td class="text-center middle">{{$item['created_date']}}</td>
+                                <td>{{ $item['carrier_name'] }}</td>
+                                <td>{{ $item['slipt_number'] }}</td>
+                                <td>{{ $item['min_length'] }}</td>
+                                <td>{{ $item['max_length'] }}</td>
+                                <td>{{ $item['first_number'] }}</td>
                                 <td class="text-center middle" align="center">
                                     @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.systemSettingEdit',array('id' => FunctionLib::inputId($item['system_setting_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                        <a href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId($item['system_setting_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
                                     @endif
                                     @if($is_boss || $permission_remove)
-                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['system_setting_id']}},13)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
+                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['carrier_setting_id']}},13)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
                                             <span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>
                                     @endif
                                 </td>

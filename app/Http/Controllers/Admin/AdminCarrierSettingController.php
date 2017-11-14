@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseAdminController;
-use App\Http\Models\SystemSetting;
+use App\Http\Models\CarrierSetting;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
-class AdminSystemSettingController extends BaseAdminController
+class AdminCarrierSettingController extends BaseAdminController
 {
-    private $permission_view = 'systemSetting_view';
-    private $permission_full = 'systemSetting_full';
-    private $permission_delete = 'systemSetting_delete';
-    private $permission_create = 'systemSetting_create';
-    private $permission_edit = 'systemSetting_edit';
+    private $permission_view = 'carrierSetting_view';
+    private $permission_full = 'carrierSetting_full';
+    private $permission_delete = 'carrierSetting_delete';
+    private $permission_create = 'carrierSetting_create';
+    private $permission_edit = 'carrierSetting_edit';
 
     private $arrMenuParent = array();
     private $arrRuleString = array();
@@ -62,15 +62,15 @@ class AdminSystemSettingController extends BaseAdminController
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
-        $data = SystemSetting::searchByCondition($dataSearch, $limit, $offset, $total);
+        $data = CarrierSetting::searchByCondition($dataSearch, $limit, $offset, $total);
+//        FunctionLib::debug($data);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
-//        FunctionLib::debug($this->arrRuleString);
         $this->getDataDefault();
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
 
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSystemSetting.view',array_merge([
+        return view('admin.AdminCarrierSetting.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
             'size'=>$total,
@@ -87,12 +87,12 @@ class AdminSystemSettingController extends BaseAdminController
         }
         $data = array();
         if($id > 0) {
-            $data = SystemSetting::find($id);
+            $data = CarrierSetting::find($id);
         }
         //FunctionLib::debug($data);
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSystemSetting.add',array_merge([
+        return view('admin.AdminCarrierSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'optionRuleString'=>$optionRuleString,
@@ -111,21 +111,21 @@ class AdminSystemSettingController extends BaseAdminController
             $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
                 //cap nhat
-                if(SystemSetting::updateItem($id, $data)) {
-                    return Redirect::route('admin.systemSettingView');
+                if(CarrierSetting::updateItem($id, $data)) {
+                    return Redirect::route('admin.carrierSettingView');
                 }
             }else{
                 $data['created_date']=$data['updated_date'];
                 //them moi
                 if(SystemSetting::createItem($data)) {
-                    return Redirect::route('admin.systemSettingView');
+                    return Redirect::route('admin.carrierSettingView');
                 }
             }
         }
 
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSystemSetting.add',array_merge([
+        return view('admin.AdminCarrierSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
@@ -140,7 +140,7 @@ class AdminSystemSettingController extends BaseAdminController
             return Response::json($data);
         }
         $id = (int)Request::get('id', 0);
-        if ($id > 0 && SystemSetting::deleteItem($id)) {
+        if ($id > 0 && CarrierSetting::deleteItem($id)) {
             $data['isIntOk'] = 1;
         }
         return Response::json($data);

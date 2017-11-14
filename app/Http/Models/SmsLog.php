@@ -8,21 +8,21 @@ use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
 
-class SystemSetting extends BaseModel
+class SmsLog extends BaseModel
 {
-    protected $table = Define::TABLE_SYSTEM_SETTING;
-    protected $primaryKey = 'system_setting_id';
+    protected $table = Define::TABLE_SMS_LOG;
+    protected $primaryKey = 'sms_log_id';
     public $timestamps = false;
 
-    protected $fillable = array('time_check_connect', 'concatenation_strings', 'concatenation_rule', 'api_manager', 'api_manager_en',
-        'api_customer', 'api_customer_en','system_content','system_content_en','created_date','updated_date');
+    protected $fillable = array('user_customer_id', 'sms_customer_id', 'carrier_id', 'carrier_name', 'user_manager_id',
+        'total_sms', 'send_sussesssful','send_fail','sms_max','status','status_name','send_date','created_date');
 
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new SystemSetting();
+            $checkData = new SmsLog();
             $fieldInput = $checkData->checkField($data);
-            $item = new SystemSetting();
+            $item = new SmsLog();
             if (is_array($fieldInput) && count($fieldInput) > 0) {
                 foreach ($fieldInput as $k => $v) {
                     $item->$k = $v;
@@ -31,8 +31,8 @@ class SystemSetting extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->system_setting_id,$item);
-            return $item->system_setting_id;
+            self::removeCache($item->sms_log_id,$item);
+            return $item->sms_log_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
             throw new PDOException();
@@ -42,15 +42,15 @@ class SystemSetting extends BaseModel
     public static function updateItem($id,$data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new SystemSetting();
+            $checkData = new SmsLog();
             $fieldInput = $checkData->checkField($data);
-            $item = SystemSetting::find($id);
+            $item = SmsLog::find($id);
             foreach ($fieldInput as $k => $v) {
                 $item->$k = $v;
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->system_setting_id,$item);
+            self::removeCache($item->sms_log_id,$item);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -76,12 +76,12 @@ class SystemSetting extends BaseModel
         if($id <= 0) return false;
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $item = SystemSetting::find($id);
+            $item = SmsLog::find($id);
             if($item){
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->system_setting_id,$item);
+            self::removeCache($item->sms_log_id,$item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -93,13 +93,13 @@ class SystemSetting extends BaseModel
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
 //        FunctionLib::debug($dataSearch);
         try{
-            $query = SystemSetting::where('system_setting_id','>',0);
+            $query = SmsLog::where('sms_log_id','>',0);
             if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
                 $query->where('time_check_connect','LIKE', '%' . $dataSearch['time_check_connect'] . '%');
             }
 
             $total = $query->count();
-            $query->orderBy('system_setting_id', 'desc');
+            $query->orderBy('sms_log_id', 'desc');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
