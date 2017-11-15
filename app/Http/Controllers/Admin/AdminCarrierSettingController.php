@@ -56,8 +56,8 @@ class AdminCarrierSettingController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['time_check_connect'] = addslashes(Request::get('time_check_connect',''));
-        $dataSearch['active'] = (int)Request::get('active',-1);
+        $dataSearch['carrier_name'] = addslashes(Request::get('carrier_name',''));
+//        $dataSearch['active'] = (int)Request::get('active',-1);
 
         $limit = CGlobal::number_limit_show;
         $total = 0;
@@ -67,7 +67,7 @@ class AdminCarrierSettingController extends BaseAdminController
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
+//        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminCarrierSetting.view',array_merge([
@@ -76,7 +76,7 @@ class AdminCarrierSettingController extends BaseAdminController
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
-            'optionRuleString'=>$optionRuleString,
+//            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -89,13 +89,12 @@ class AdminCarrierSettingController extends BaseAdminController
         if($id > 0) {
             $data = CarrierSetting::find($id);
         }
-        //FunctionLib::debug($data);
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
+//        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminCarrierSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
-            'optionRuleString'=>$optionRuleString,
+//            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -117,19 +116,19 @@ class AdminCarrierSettingController extends BaseAdminController
             }else{
                 $data['created_date']=$data['updated_date'];
                 //them moi
-                if(SystemSetting::createItem($data)) {
+                if(CarrierSetting::createItem($data)) {
                     return Redirect::route('admin.carrierSettingView');
                 }
             }
         }
 
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
+//        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminCarrierSetting.add',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
-            'optionRuleString'=>$optionRuleString,
+//            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 

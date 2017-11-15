@@ -27,7 +27,7 @@
 
                         <div class="form-group col-lg-12 text-right">
                             @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.systemSettingEdit',array('id' => FunctionLib::inputId(0)))}}">
+                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId(0)))}}">
                                     <i class="ace-icon fa fa-plus-circle"></i>
                                     {{FunctionLib::viewLanguage('add')}}
                                 </a>
@@ -59,15 +59,15 @@
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>{{ $item['carrier_name'] }}</td>
                                 <td>{{ $item['slipt_number'] }}</td>
-                                <td>{{ $item['min_length'] }}</td>
-                                <td>{{ $item['max_length'] }}</td>
+                                <td>{{ $item['min_number'] }}</td>
+                                <td>{{ $item['max_number'] }}</td>
                                 <td>{{ $item['first_number'] }}</td>
                                 <td class="text-center middle" align="center">
                                     @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId($item['system_setting_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                        <a href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId($item['carrier_setting_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
                                     @endif
                                     @if($is_boss || $permission_remove)
-                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['carrier_setting_id']}},13)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
+                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['carrier_setting_id']}},14)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
                                             <span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>
                                     @endif
                                 </td>
