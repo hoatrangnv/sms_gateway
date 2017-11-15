@@ -144,12 +144,18 @@ class AdminCarrierSettingController extends BaseAdminController
         }
         return Response::json($data);
     }
-    private function valid($data=array()) {
-        if(!empty($data)) {
-            if(isset($data['time_check_connect']) && trim($data['time_check_connect']) == '') {
-                $this->error[] = '* '.FunctionLib::controLanguage('time_check_connect').' '.FunctionLib::controLanguage('is_require');
-            }
-        }
+
+
+
+    public function valid($data=array()) {
+        $arr_require = array(
+            array("key_input"=>$data['carrier_name'],"label"=>FunctionLib::controLanguage('carrier_name',$this->languageSite)),
+            array("key_input"=>$data['slipt_number'],"label"=>FunctionLib::controLanguage('slipt_number',$this->languageSite)),
+            array("key_input"=>$data['min_number'],"label"=>FunctionLib::controLanguage('min_number',$this->languageSite)),
+            array("key_input"=>$data['max_number'],"label"=>FunctionLib::controLanguage('max_number',$this->languageSite)),
+
+        );
+        FunctionLib::check_require($arr_require,$this->error);
         return true;
     }
 }

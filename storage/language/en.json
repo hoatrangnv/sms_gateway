@@ -36,8 +36,9 @@
     "carrier_setting":"Carrier Management",
     "carrier_name":"Carrier name",
     "slipt_number":"Slipt number",
-    "min_length":"Min length",
-    "max_length":"Max length",
+    "min_number":"Min length",
+    "max_number":"Max length",
+    "required": "Required",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
