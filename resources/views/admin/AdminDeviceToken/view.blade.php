@@ -27,7 +27,7 @@
 
                         <div class="form-group col-lg-12 text-right">
                             @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId(0)))}}">
+                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId(0)))}}">
                                     <i class="ace-icon fa fa-plus-circle"></i>
                                     {{FunctionLib::viewLanguage('add')}}
                                 </a>
@@ -45,11 +45,11 @@
                         <thead class="thin-border-bottom">
                         <tr class="">
                             <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
-                            <th width="w50">{{FunctionLib::viewLanguage('carrier_name')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('slipt_number')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('min_number')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('max_number')}}</th>
-                            <th width="w100" class="text-center">Đầu số hợp lệ</th>
+                            <th width="w50">{{FunctionLib::viewLanguage('acc')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('device_code')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('token')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('messeger_center')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('status')}}</th>
                             <th width="w50" class="text-center">Thao tác</th>
                         </tr>
                         </thead>
@@ -57,17 +57,17 @@
                         @foreach ($data as $key => $item)
                             <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                <td>{{ $item['carrier_name'] }}</td>
-                                <td>{{ $item['slipt_number'] }}</td>
-                                <td>{{ $item['min_number'] }}</td>
-                                <td>{{ $item['max_number'] }}</td>
-                                <td>{{ $item['first_number'] }}</td>
+                                <td>{{ $arrUser[$item['user_id']] }}</td>
+                                <td>{{ $item['device_code'] }}</td>
+                                <td>{{ $item['token'] }}</td>
+                                <td>{{ $item['messeger_center'] }}</td>
+                                <td>{{ $item['status'] }}</td>
                                 <td class="text-center middle" align="center">
                                     @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.carrierSettingEdit',array('id' => FunctionLib::inputId($item['carrier_setting_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                        <a href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId($item['device_token_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
                                     @endif
                                     @if($is_boss || $permission_remove)
-                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['carrier_setting_id']}},14)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
+                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['device_token_id']}},15)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
                                             <span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>
                                     @endif
                                 </td>

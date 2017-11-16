@@ -14,7 +14,7 @@ class DeviceToken extends BaseModel
     protected $primaryKey = 'device_token_id';
     public $timestamps = false;
 
-    protected $fillable = array('user_id', 'device_id', 'token', 'messeger_center', 'status',
+    protected $fillable = array('user_id', 'device_code', 'token', 'messeger_center', 'status',
         'created_date', 'updated_date');
 
     public static function createItem($data){
@@ -94,12 +94,13 @@ class DeviceToken extends BaseModel
 //        FunctionLib::debug($dataSearch);
         try{
             $query = DeviceToken::where('device_token_id','>',0);
-            if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
-                $query->where('time_check_connect','LIKE', '%' . $dataSearch['time_check_connect'] . '%');
+            if (isset($dataSearch['device_code']) && $dataSearch['device_code'] != '') {
+                $query->where('device_code','LIKE', '%' . $dataSearch['device_code'] . '%');
             }
 
             $total = $query->count();
-            $query->orderBy('device_token_id', 'desc');
+            $query->orderBy('device_token_id', 'desc')
+            ;
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
