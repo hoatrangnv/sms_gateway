@@ -40,6 +40,15 @@
     "max_number":"Độ dài max",
     "required": "Bắt buộc",
     "any": "Tùy ý",
+    "acc": "Tài khoản",
+    "device_code": "Mã thiết bị",
+    "token": "Mã xác thực",
+    "messeger_center": "Trung tâm tin nhắn",
+    "status": "Trạng thái",
+    "active": "Hoạt động",
+    "not_active": "Không hoạt động",
+    "select_user": "Chọn người dùng",
+    "device_stting": "Cài đặt thiết bị",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"

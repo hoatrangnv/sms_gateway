@@ -39,6 +39,15 @@
     "min_number":"Min length",
     "max_number":"Max length",
     "required": "Required",
+    "acc": "Account",
+    "device_code": "Device code",
+    "token": "Token",
+    "messeger_center": "Messeger center",
+    "status": "Status",
+    "active": "Active",
+    "not_active": "Not active",
+    "select_user": "Select user",
+    "device_stting": "Device setting",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
