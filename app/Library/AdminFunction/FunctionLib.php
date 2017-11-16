@@ -929,4 +929,18 @@ class FunctionLib {
         $language = json_decode($json,true);
         return isset($language[$key]) ? $language[$key]: '';
     }
+
+    /**
+     * @param $data
+     * @param $error
+     */
+    public static function check_require($data,&$error){
+        if (!empty($data)){
+            foreach ($data as $k => $arCheck) {
+                if(trim($arCheck['key_input']) == '' && isset($arCheck['key_input'])) {
+                    $error[] = '* '.$arCheck['label'].' '.FunctionLib::controLanguage('is_require');
+                }
+            }
+        }
+    }
 }

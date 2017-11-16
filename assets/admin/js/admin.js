@@ -105,6 +105,8 @@ var Admin = {
             	url_ajax = 'deleteContract';
             }else if(type == 13){
             	url_ajax = 'deleteSystemSetting';
+            }else if(type == 14){
+            	url_ajax = 'deleteCarrierSetting';
             }
             if(url_ajax != ''){
                 if(confirm('Bạn có muốn xóa item này?')) {

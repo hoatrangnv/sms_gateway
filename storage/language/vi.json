@@ -36,8 +36,10 @@
     "carrier_setting":"Quản lý nhà mạng",
     "carrier_name":"Tên nhà mạng",
     "slipt_number":"Số ký tự cần tách",
-    "min_length":"Độ dài min",
-    "max_length":"Độ dài max",
+    "min_number":"Độ dài min",
+    "max_number":"Độ dài max",
+    "required": "Bắt buộc",
+    "any": "Tùy ý",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
