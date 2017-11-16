@@ -207,6 +207,7 @@ class FunctionLib {
     static function debug($array) {
         echo '<pre>';
         print_r($array);
+        echo '</pre>';
         die;
     }
     static function debugOnsite($array) {

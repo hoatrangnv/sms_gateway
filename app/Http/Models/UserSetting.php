@@ -36,8 +36,7 @@ class UserSetting extends BaseModel
             $tbl_user_setting.'.*',
         );
         $users = $query->get($fields);
-        //DB::getQueryLog();
-        return isset($users['user_id']) ? $users : array();
+        return isset($users[0]) ? $users[0]: array();
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){

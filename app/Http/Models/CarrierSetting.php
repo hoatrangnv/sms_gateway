@@ -2,11 +2,11 @@
 
 namespace App\Http\Models;
 
-use App\Library\AdminFunction\FunctionLib;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
+use App\library\AdminFunction\Memcache;
 
 class CarrierSetting extends BaseModel
 {
@@ -14,8 +14,7 @@ class CarrierSetting extends BaseModel
     protected $primaryKey = 'carrier_setting_id';
     public $timestamps = false;
 
-    protected $fillable = array('carrier_name', 'slipt_number', 'first_number', 'min_number', 'max_number',
-        'status', 'created_date','updated_date');
+    protected $fillable = array('carrier_name', 'slipt_number', 'first_number', 'min_number', 'max_number', 'status', 'created_date','updated_date');
 
     public static function createItem($data){
         try {
@@ -125,8 +124,10 @@ class CarrierSetting extends BaseModel
         Cache::forget(Define::CACHE_TREE_MENU);
     }
 
-    public static function getListAllCarrierSetting() {
-        $list = CarrierSetting::where('status', '>', Define::STATUS_SHOW)->pluck('carrier_name','carrier_setting_id');
-        return $list ? $list : array();
+    public static function getListAll() {
+        $query = CarrierSetting::where('carrier_setting_id','>',0);
+        $query->where('status','=', 1);
+        $list = $query->get();
+        return $list;
     }
 }
