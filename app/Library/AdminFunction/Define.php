@@ -88,7 +88,7 @@ class Define{
 
     const SCAN_AUTO_TRUE = 1;
     const SCAN_AUTO_FASLE = 0;
-    static $arrScanAuto = array(Define::SCAN_AUTO_TRUE => 'Thanh toán trước',Define::PAYMENT_TYPE_AFTER => 'Thanh toán sau');
+    static $arrScanAuto = array(Define::SCAN_AUTO_TRUE => 'Có',Define::PAYMENT_TYPE_AFTER => 'Không');
 
     const SEND_AUTO_TRUE = 1;
     const SEND_AUTO_FASLE = 0;

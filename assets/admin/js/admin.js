@@ -70,8 +70,7 @@ var Admin = {
             data: {formData:formData,'_token':_token},
             dataType: 'json',
             success: function(res) {
-                $('#img_loading').hide();
-                $('#sys_show_infor').html(res.html);
+                $('#sys_showPopupInfoSetting').modal('hide');
             }
         });
     },

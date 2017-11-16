@@ -334,11 +334,8 @@ class AdminUserController extends BaseAdminController{
         //thong tin user ở setting
         $arrInfoUser = UserSetting::getUserSettingByUserId($user_id);
 
-        //get thong tin cua nha mang
-        $arrInfoCarrierSetting = CarrierSetting::getListAllCarrierSetting();
-
         //get thong tin cua nha mang theo user id
-        $arrInfoCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
+        $dataUserCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
 
         //show data
         if(empty($arrInfoUser)){
@@ -347,7 +344,23 @@ class AdminUserController extends BaseAdminController{
             $data['role_name'] = $infoUser['role_name'];
             $data['user_id'] = $infoUser['user_id'];
         }else{
-            $data = $arrInfoUser;
+            $data = (array)$arrInfoUser;
+        }
+
+        //get thong tin cua nha mang
+        $arrNhaMang = array();
+        $arrInfoCarrierSetting = CarrierSetting::getListAll();
+        foreach ($arrInfoCarrierSetting as $carrier){
+            $arrNhaMang[$carrier['carrier_setting_id']] = $carrier['carrier_name'];
+        }
+
+        if(!empty($arrNhaMang)){
+            foreach ($arrNhaMang as $carrier_id =>$carrier_name){
+                $data['carrier'][] = array(
+                    'carrier_id'=>$carrier_id,
+                    'carrier_name'=>$carrier_name,
+                    'cost'=>(isset($dataUserCarrierSetting[$carrier_id])?$dataUserCarrierSetting[$carrier_id]['cost']:''));
+            }
         }
 
         $optionPayment = FunctionLib::getOption(Define::$arrPayment, isset($data['payment_type'])? $data['payment_type']: Define::PAYMENT_TYPE_FIRST);
@@ -358,17 +371,75 @@ class AdminUserController extends BaseAdminController{
             'optionPayment'=>$optionPayment,
             'optionScanAuto'=>$optionScanAuto,
             'optionSendAuto'=>$optionSendAuto,
+            'user_id'=>$user_ids,
             ])->render();
         $arrData['html'] = $html;
         return response()->json( $arrData );
-
-        //return Response::json($arrData);//json_encode($arrData);
     }
 
     public function submitInfoSettingUser(){
+        $arrData['intReturn'] = -1;
+        $arrData['msg'] = 'Error';
         $formData= Request::get('formData', '');
-        FunctionLib::debug($formData);
+        $formInput = explode('&',$formData);
+        $arrForm = array();
+        if(!empty($formInput)){
+            foreach ($formInput as $k=>$string_valu){
+                $arrVal = explode('=',$string_valu);
+                $arrForm[$arrVal[0]] = $arrVal[1];
+            }
+        }
+        /**
+         *  [0] => user_id=NjZSV3JLXzdfZm52RjQ5
+        [1] => user_setting_id=+SlJpZVpJXzBfS21XamJ5
+        [2] => priority=
+        [3] => account_balance=
+        [4] => cost_1=500
+        [5] => carrier_id_1=1
+        [6] => cost_2=
+        [7] => carrier_id_2=2
+        [8] => scan_auto=1
+        [9] => payment_type=1
+        [10] => _token=VUUJi57LMZMWDs3oAQB3Xl4jYSVpZr1HNwCoEbZw
+         */
+        if(!isset($arrForm['user_id']) || !isset($arrForm['user_setting_id']))
+            return response()->json( $arrData );
 
+        //thong tin user
+        $user_id = FunctionLib::outputId($arrForm['user_id']);
+        $infoUser = User::getUserById($user_id);
+
+        //id user_carrier_setting
+        $user_setting_id = FunctionLib::outputId($arrForm['user_setting_id']);
+
+        $dataInputUserSetting = array();
+        $dataInputUserSetting['priority'] = isset($arrForm['priority'])?(int)$arrForm['priority']: 0;
+        $dataInputUserSetting['payment_type'] = isset($arrForm['payment_type'])?(int)$arrForm['payment_type']: Define::PAYMENT_TYPE_FIRST;
+        $dataInputUserSetting['account_balance'] = isset($arrForm['account_balance'])?(float)$arrForm['account_balance']: 0;
+        if(isset($arrForm['scan_auto'])){
+            $dataInputUserSetting['scan_auto'] = (int)$arrForm['scan_auto'];
+        }
+        if(isset($arrForm['sms_send_auto'])){
+            $dataInputUserSetting['sms_send_auto'] = (int)$arrForm['sms_send_auto'];
+        }
+
+        $dataInputUserSetting['user_id'] = $infoUser['user_id'];
+        $dataInputUserSetting['role_type'] = $infoUser['role_type'];
+        $dataInputUserSetting['role_name'] = $infoUser['role_name'];
+        $dataInputUserSetting['updated_date'] = date('Y-m-d h:i:s');
+
+        //lấy du liệu vào DB
+        //cập nhật user_setting
+
+        if($user_setting_id > 0){//cap nhat
+            UserSetting::updateItem($user_setting_id,$dataInputUserSetting);
+        }else{//thêm mới
+            $dataInputUserSetting['created_date'] = date('Y-m-d h:i:s');
+            UserSetting::createItem($dataInputUserSetting);
+        }
+        $arrData['intReturn'] = 1;
+        $arrData['msg'] = '';
+        return response()->json( $arrData );
         //return Response::json($arrData);//json_encode($arrData);
     }
 }

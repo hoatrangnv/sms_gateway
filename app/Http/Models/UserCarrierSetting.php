@@ -125,6 +125,12 @@ class UserCarrierSetting extends BaseModel
     }
     public static function getListAllByUserId($user_id) {
         $list = UserCarrierSetting::where('user_id', '=', $user_id)->get();
-        return $list ? $list : array();
+        $result = array();
+        if($list){
+            foreach ($list as $val){
+                $result[$val['user_carrier_setting_id']] = $val;
+            }
+        }
+        return $result;
     }
 }
