@@ -74,6 +74,7 @@ class Define{
     const CACHE_EMAIL_NAME    = 'manager@gmail.com';
 
     const CACHE_OPTION_USER = 'cache_option_user';
+    const CACHE_OPTION_DEVICE = 'cache_option_device';
 
     /***************************************************************************************************************
     //Define

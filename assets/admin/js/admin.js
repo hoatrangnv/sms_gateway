@@ -107,25 +107,25 @@ var Admin = {
             	url_ajax = 'deleteSystemSetting';
             }else if(type == 14){
             	url_ajax = 'deleteCarrierSetting';
+            }else if(type == 15){
+            	url_ajax = 'deleteDeviceToken';
             }
             if(url_ajax != ''){
-                if(confirm('Bạn có muốn xóa item này?')) {
-                    $.ajax({
-                        type: "post",
-                        url: url_ajax,
-                        data: {id : id,_token : _token},
-                        dataType: 'json',
-                        success: function(res) {
-                            $('#img_loading_'+id).hide();
-                            if(res.isIntOk == 1){
-                                alert('Bạn đã thực hiện thành công');
-                                window.location.reload();
-                            }else{
-                                alert('Không thể thực hiện được thao tác.');
-                            }
+                $.ajax({
+                    type: "post",
+                    url: url_ajax,
+                    data: {id : id,_token : _token},
+                    dataType: 'json',
+                    success: function(res) {
+                        $('#img_loading_'+id).hide();
+                        if(res.isIntOk == 1){
+                            alert('Bạn đã thực hiện thành công');
+                            window.location.reload();
+                        }else{
+                            alert('Không thể thực hiện được thao tác.');
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     },
