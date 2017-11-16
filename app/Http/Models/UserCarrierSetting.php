@@ -14,7 +14,7 @@ class UserCarrierSetting extends BaseModel
     protected $primaryKey = 'user_carrier_setting_id';
     public $timestamps = false;
 
-    protected $fillable = array('carrier_id', 'user_manager_id', 'user_customer_id', 'cost','created_date','updated_date');
+    protected $fillable = array('carrier_id', 'user_id', 'cost','created_date','updated_date');
 
     public static function createItem($data){
         try {
@@ -122,5 +122,9 @@ class UserCarrierSetting extends BaseModel
         Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
         Cache::forget(Define::CACHE_ALL_PARENT_MENU);
         Cache::forget(Define::CACHE_TREE_MENU);
+    }
+    public static function getListAllByUserId($user_id) {
+        $list = UserCarrierSetting::where('user_id', '=', $user_id)->get();
+        return $list ? $list : array();
     }
 }

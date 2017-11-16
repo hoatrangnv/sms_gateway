@@ -124,4 +124,9 @@ class CarrierSetting extends BaseModel
         Cache::forget(Define::CACHE_ALL_PARENT_MENU);
         Cache::forget(Define::CACHE_TREE_MENU);
     }
+
+    public static function getListAllCarrierSetting() {
+        $list = CarrierSetting::where('status', '>', Define::STATUS_SHOW)->lists('carrier_name','carrier_setting_id');
+        return $list ? $list : array();
+    }
 }
