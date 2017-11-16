@@ -11,6 +11,10 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\GroupUser;
 use App\Http\Models\User;
 use App\Http\Models\MenuSystem;
+use App\Http\Models\UserSetting;
+use App\Http\Models\CarrierSetting;
+use App\Http\Models\UserCarrierSetting;
+
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
@@ -316,4 +320,33 @@ class AdminUserController extends BaseAdminController{
         return Response::json($data);
     }
 
+    //ajax
+    public function getInfoSettingUser(){
+        $user_ids = Request::get('user_id', '');
+        $user_id = FunctionLib::outputId($user_ids);
+        //thong tin user ở setting
+        $arrInfoUser = UserSetting::getUserSettingByUserId($user_id);
+
+        //get thong tin cua nha mang
+        $arrInfoCarrierSetting = CarrierSetting::getListAllCarrierSetting();
+
+        //get thong tin cua nha mang theo user id
+        $arrInfoCarrierSetting = UserCarrierSetting::getListAllByUserId();
+
+        $arrData = $data = array();
+        $arrData['intReturn'] = 1;
+        $arrData['msg'] = '';
+        $html =  view('admin.AdminUser.infoUserSetting',['data'=>$data ])->render();
+        $arrData['html'] = $html;
+        return response()->json( $arrData );
+
+        //return Response::json($arrData);//json_encode($arrData);
+    }
+
+    public function submitInfoSettingUser(){
+        $formData= Request::get('formData', '');
+        FunctionLib::debug($formData);
+
+        //return Response::json($arrData);//json_encode($arrData);
+    }
 }

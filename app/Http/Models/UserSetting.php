@@ -18,6 +18,58 @@ class UserSetting extends BaseModel
         'count_sms_number', 'sms_max','sms_error_max','time_delay_from','time_delay_to','concatenation_strings'
         ,'role_type','role_name','sms_send_auto','concatenation_rule','created_date','updated_date');
 
+    public static function getUserSettingByUserId($user_id) {
+        $tbl_user= Define::TABLE_USER;
+        $tbl_user_setting = Define::TABLE_USER_SETTING;
+
+        $query = DB::table($tbl_user);
+        $query->join($tbl_user_setting, function ($join) use ($tbl_user, $tbl_user_setting,$user_id) {
+            $join->on($tbl_user.'.user_id', '=', $tbl_user_setting.'.user_id');
+        });
+        $query->where($tbl_user.'.user_id', '=', $user_id);
+        $fields = array(
+            $tbl_user.'.user_id',
+            $tbl_user.'.role_type',
+            $tbl_user.'.role_name',
+            $tbl_user.'.user_full_name',
+
+            $tbl_user_setting.'.*',
+        );
+        $users = $query->get($fields);
+        //DB::getQueryLog();
+        return $users ? $users : array();
+    }
+
+    public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
+//        FunctionLib::debug($dataSearch);
+        try{
+            $query = UserSetting::where('user_setting_id','>',0);
+            $total = $query->count();
+            $query->orderBy('user_setting_id', 'desc');
+
+            //get field can lay du lieu
+            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
+            if(!empty($fields)){
+                $result = $query->take($limit)->skip($offset)->get($fields);
+            }else{
+                $result = $query->take($limit)->skip($offset)->get();
+            }
+            return $result;
+
+        }catch (PDOException $e){
+            throw new PDOException();
+        }
+    }
+
+    public static function removeCache($id = 0,$data){
+        if($id > 0){
+            //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
+           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
+        }
+        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
+        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
+        Cache::forget(Define::CACHE_TREE_MENU);
+    }
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
@@ -89,36 +141,5 @@ class UserSetting extends BaseModel
             throw new PDOException();
             return false;
         }
-    }
-
-    public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
-//        FunctionLib::debug($dataSearch);
-        try{
-            $query = UserSetting::where('user_setting_id','>',0);
-            $total = $query->count();
-            $query->orderBy('user_setting_id', 'desc');
-
-            //get field can lay du lieu
-            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
-            if(!empty($fields)){
-                $result = $query->take($limit)->skip($offset)->get($fields);
-            }else{
-                $result = $query->take($limit)->skip($offset)->get();
-            }
-            return $result;
-
-        }catch (PDOException $e){
-            throw new PDOException();
-        }
-    }
-
-    public static function removeCache($id = 0,$data){
-        if($id > 0){
-            //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
-        }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
     }
 }

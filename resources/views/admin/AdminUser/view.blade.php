@@ -92,7 +92,7 @@
                                 </td>
                                 <td class="text-center middle" align="center">
                                     @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.user_edit',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Setting item"><i class="fa fa-cog fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                                        <a href="#" onclick="Admin.getInfoSettingUser('{{FunctionLib::inputId($item['user_id'])}}')" title="Setting item"><i class="fa fa-cog fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                                     @endif
                                     @if($is_root || $permission_edit)
                                         <a href="{{URL::route('admin.user_edit',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
@@ -121,6 +121,22 @@
             </div>
         </div>
     </div><!-- /.page-content -->
+</div>
+
+<!--Popup anh khac de chen vao noi dung bai viet-->
+<div class="modal fade" id="sys_showPopupInfoSetting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Thông tin quận huyện</h4>
+            </div>
+            <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/ajax-loader.gif" width="20" style="display: none" id="img_loading_district">
+            <div class="modal-body" id="sys_show_infor">
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

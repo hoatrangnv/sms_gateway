@@ -14,7 +14,7 @@ class DeviceToken extends BaseModel
     protected $primaryKey = 'device_token_id';
     public $timestamps = false;
 
-    protected $fillable = array('manager_id', 'device_id', 'token', 'messeger_center', 'status',
+    protected $fillable = array('user_id', 'device_id', 'token', 'messeger_center', 'status',
         'created_date', 'updated_date');
 
     public static function createItem($data){
