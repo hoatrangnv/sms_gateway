@@ -54,3 +54,9 @@ Route::get('carrierSetting/view',array('as' => 'admin.carrierSettingView','uses'
 Route::get('carrierSetting/edit/{id?}', array('as' => 'admin.carrierSettingEdit','uses' => Admin.'\AdminCarrierSettingController@getItem'));
 Route::post('carrierSetting/edit/{id?}', array('as' => 'admin.carrierSettingEdit','uses' => Admin.'\AdminCarrierSettingController@postItem'));
 Route::post('carrierSetting/deleteCarrierSetting', array('as' => 'admin.deleteCarrierSetting','uses' => Admin.'\AdminCarrierSettingController@deleteCarrierSetting'));//ajax
+
+/*Cài đặt thiết bị */
+Route::get('deviceToken/view',array('as' => 'admin.deviceTokenView','uses' => Admin.'\AdminDeviceTokenController@view'));
+Route::get('deviceToken/edit/{id?}', array('as' => 'admin.deviceTokenEdit','uses' => Admin.'\AdminDeviceTokenController@getItem'));
+Route::post('deviceToken/edit/{id?}', array('as' => 'admin.deviceTokenEdit','uses' => Admin.'\AdminDeviceTokenController@postItem'));
+Route::post('deviceToken/deleteTokenSetting', array('as' => 'admin.deleteDeviceToken','uses' => Admin.'\AdminDeviceTokenController@deleteDeviceToken'));//ajax
