@@ -324,6 +324,13 @@ class AdminUserController extends BaseAdminController{
     public function getInfoSettingUser(){
         $user_ids = Request::get('user_id', '');
         $user_id = FunctionLib::outputId($user_ids);
+        $arrData = $data = array();
+        $arrData['intReturn'] = 1;
+        $arrData['msg'] = '';
+
+        //thong tin user
+        $infoUser = User::getUserById($user_id);
+
         //thong tin user ở setting
         $arrInfoUser = UserSetting::getUserSettingByUserId($user_id);
 
@@ -331,12 +338,27 @@ class AdminUserController extends BaseAdminController{
         $arrInfoCarrierSetting = CarrierSetting::getListAllCarrierSetting();
 
         //get thong tin cua nha mang theo user id
-        $arrInfoCarrierSetting = UserCarrierSetting::getListAllByUserId();
+        $arrInfoCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
 
-        $arrData = $data = array();
-        $arrData['intReturn'] = 1;
-        $arrData['msg'] = '';
-        $html =  view('admin.AdminUser.infoUserSetting',['data'=>$data ])->render();
+        //show data
+        if(empty($arrInfoUser)){
+            $data['user_full_name'] = $infoUser['user_full_name'];
+            $data['role_type'] = $infoUser['role_type'];
+            $data['role_name'] = $infoUser['role_name'];
+            $data['user_id'] = $infoUser['user_id'];
+        }else{
+            $data = $arrInfoUser;
+        }
+
+        $optionPayment = FunctionLib::getOption(Define::$arrPayment, isset($data['payment_type'])? $data['payment_type']: Define::PAYMENT_TYPE_FIRST);
+        $optionScanAuto = FunctionLib::getOption(Define::$arrScanAuto, isset($data['scan_auto'])? $data['scan_auto']: Define::SCAN_AUTO_FASLE);
+        $optionSendAuto = FunctionLib::getOption(Define::$arrSendAuto, isset($data['sms_send_auto'])? $data['sms_send_auto']: Define::SEND_AUTO_FASLE);
+        $html =  view('admin.AdminUser.infoUserSetting',[
+            'data'=>$data,
+            'optionPayment'=>$optionPayment,
+            'optionScanAuto'=>$optionScanAuto,
+            'optionSendAuto'=>$optionSendAuto,
+            ])->render();
         $arrData['html'] = $html;
         return response()->json( $arrData );
 

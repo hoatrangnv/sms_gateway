@@ -129,7 +129,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Thông tin quận huyện</h4>
+                <h4 class="modal-title" id="myModalLabel">Cài đặt người dùng</h4>
             </div>
             <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/ajax-loader.gif" width="20" style="display: none" id="img_loading_district">
             <div class="modal-body" id="sys_show_infor">

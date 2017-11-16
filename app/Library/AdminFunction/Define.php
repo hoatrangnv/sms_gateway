@@ -82,6 +82,18 @@ class Define{
     const ENGLISH_LANGUAGE = 2;
     static $arrLanguage = array(Define::VIETNAM_LANGUAGE => 'vi',Define::ENGLISH_LANGUAGE => 'en');
 
+    const PAYMENT_TYPE_FIRST = 1;
+    const PAYMENT_TYPE_AFTER = 2;
+    static $arrPayment = array(Define::PAYMENT_TYPE_FIRST => 'Thanh toán trước',Define::PAYMENT_TYPE_AFTER => 'Thanh toán sau');
+
+    const SCAN_AUTO_TRUE = 1;
+    const SCAN_AUTO_FASLE = 0;
+    static $arrScanAuto = array(Define::SCAN_AUTO_TRUE => 'Thanh toán trước',Define::PAYMENT_TYPE_AFTER => 'Thanh toán sau');
+
+    const SEND_AUTO_TRUE = 1;
+    const SEND_AUTO_FASLE = 0;
+    static $arrSendAuto = array(Define::SEND_AUTO_TRUE => 'Tự động',Define::PAYMENT_TYPE_AFTER => 'Qua kiểm duyệt');
+
     const STATUS_SHOW = 1;
     const STATUS_HIDE = 0;
     const STATUS_BLOCK = -2;

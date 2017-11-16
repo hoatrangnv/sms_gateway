@@ -37,7 +37,7 @@ class UserSetting extends BaseModel
         );
         $users = $query->get($fields);
         //DB::getQueryLog();
-        return $users ? $users : array();
+        return isset($users['user_id']) ? $users : array();
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){

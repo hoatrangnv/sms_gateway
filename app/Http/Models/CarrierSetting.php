@@ -126,7 +126,7 @@ class CarrierSetting extends BaseModel
     }
 
     public static function getListAllCarrierSetting() {
-        $list = CarrierSetting::where('status', '>', Define::STATUS_SHOW)->lists('carrier_name','carrier_setting_id');
+        $list = CarrierSetting::where('status', '>', Define::STATUS_SHOW)->pluck('carrier_name','carrier_setting_id');
         return $list ? $list : array();
     }
 }
