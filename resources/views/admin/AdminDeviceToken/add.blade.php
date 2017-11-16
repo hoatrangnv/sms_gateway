@@ -25,7 +25,10 @@
             </div>
         @endif
         <div class="form-group">
-            <label for="user_id" class="control-label col-sm-2">{{FunctionLib::viewLanguage('acc')}}</label>
+            <label for="user_id" class="control-label no-padding-right col-sm-2">
+                {{FunctionLib::viewLanguage('acc')}}
+                <span class="badge badge-danger">{{FunctionLib::viewLanguage('required')}}</span>
+            </label>
             <div class="col-sm-10">
                 <select name="user_id" id="user_id" class="w200 form-control input-sm">
                     {!! $optionUser !!}
@@ -75,7 +78,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-2"></label>
             <div class="col-sm-10">
-                <a class="btn btn-warning" href="{{URL::route('admin.carrierSettingView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                <a class="btn btn-warning" href="{{URL::route('admin.deviceTokenView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                 <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
             </div>
         </div>

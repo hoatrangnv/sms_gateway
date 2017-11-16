@@ -107,6 +107,8 @@ class AdminDeviceTokenController extends BaseAdminController
         $id_hiden = (int)Request::get('id_hiden', 0);
         $data = $_POST;
         $data['updated_date'] = date("Y/m/d H:i",time());
+        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($data['user_id'])?$data['user_id']:0));
+        $optionStatus = FunctionLib::getOption($this->arrStatus, (isset($data['status'])?$data['status']:CGlobal::active));
         if($this->valid($data) && empty($this->error)) {
             $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
@@ -127,6 +129,8 @@ class AdminDeviceTokenController extends BaseAdminController
         return view('admin.AdminDeviceToken.add',array_merge([
             'data'=>$data,
             'id'=>$id,
+            'optionUser'=>$optionUser,
+            'optionStatus'=>$optionStatus,
             'error'=>$this->error,
         ],$this->viewPermission));
     }
@@ -147,14 +151,15 @@ class AdminDeviceTokenController extends BaseAdminController
 
 
     public function valid($data=array()) {
-//        $arr_require = array(
-//            array("key_input"=>$data['carrier_name'],"label"=>FunctionLib::controLanguage('carrier_name',$this->languageSite)),
-//            array("key_input"=>$data['slipt_number'],"label"=>FunctionLib::controLanguage('slipt_number',$this->languageSite)),
-//            array("key_input"=>$data['min_number'],"label"=>FunctionLib::controLanguage('min_number',$this->languageSite)),
-//            array("key_input"=>$data['max_number'],"label"=>FunctionLib::controLanguage('max_number',$this->languageSite)),
-//
-//        );
-//        FunctionLib::check_require($arr_require,$this->error);
+        $arr_require = array(
+            array("key_input"=>$data['user_id'],"label"=>FunctionLib::controLanguage('acc',$this->languageSite)),
+            array("key_input"=>$data['device_code'],"label"=>FunctionLib::controLanguage('device_code',$this->languageSite)),
+            array("key_input"=>$data['token'],"label"=>FunctionLib::controLanguage('token',$this->languageSite)),
+            array("key_input"=>$data['messeger_center'],"label"=>FunctionLib::controLanguage('messeger_center',$this->languageSite)),
+            array("key_input"=>$data['status'],"label"=>FunctionLib::controLanguage('status',$this->languageSite)),
+
+        );
+        FunctionLib::check_require($arr_require,$this->error);
         return true;
     }
 }
