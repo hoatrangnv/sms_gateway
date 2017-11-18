@@ -49,6 +49,11 @@
     "not_active": "Không hoạt động",
     "select_user": "Chọn người dùng",
     "device_stting": "Cài đặt thiết bị",
+    "modem_stting": "Cài đặt modem",
+    "modem_name": "Tên modem",
+    "device_id": "Id thiết bị",
+    "digital": "Thông số kỹ thuật",
+    "select_device": "Chọn thiết bị",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"

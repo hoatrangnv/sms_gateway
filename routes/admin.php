@@ -59,4 +59,10 @@ Route::post('carrierSetting/deleteCarrierSetting', array('as' => 'admin.deleteCa
 Route::get('deviceToken/view',array('as' => 'admin.deviceTokenView','uses' => Admin.'\AdminDeviceTokenController@view'));
 Route::get('deviceToken/edit/{id?}', array('as' => 'admin.deviceTokenEdit','uses' => Admin.'\AdminDeviceTokenController@getItem'));
 Route::post('deviceToken/edit/{id?}', array('as' => 'admin.deviceTokenEdit','uses' => Admin.'\AdminDeviceTokenController@postItem'));
-Route::post('deviceToken/deleteTokenSetting', array('as' => 'admin.deleteDeviceToken','uses' => Admin.'\AdminDeviceTokenController@deleteDeviceToken'));//ajax
+Route::post('deviceToken/deleteDeviceToken', array('as' => 'admin.deleteDeviceToken','uses' => Admin.'\AdminDeviceTokenController@deleteDeviceToken'));//ajax
+
+/*Cài đặt modem */
+Route::get('modem/view',array('as' => 'admin.modemView','uses' => Admin.'\AdminModemController@view'));
+Route::get('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@getItem'));
+Route::post('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@postItem'));
+Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminModemController@deleteModem'));//ajax

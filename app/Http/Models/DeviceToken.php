@@ -116,6 +116,25 @@ class DeviceToken extends BaseModel
         }
     }
 
+    public static function getList() {
+        $device = DeviceToken::where('status', '>', 0)->get();
+        return $device ? $device : array();
+    }
+
+    public  static function getOptionDevice(){
+        $data = Cache::get(Define::CACHE_OPTION_DEVICE);
+        if (sizeof($data) == 0) {
+            $arr =  DeviceToken::getList();
+            foreach ($arr as $value){
+                $data[$value->device_token_id] = $value->device_code;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_DEVICE, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);

@@ -48,6 +48,11 @@
     "not_active": "Not active",
     "select_user": "Select user",
     "device_stting": "Device setting",
+    "modem_stting": "Modem setting",
+    "modem_name": "Modem name",
+    "device_id": "Device id",
+    "digital": "Digital",
+    "select_device": "Select device",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
     "list3": "Danh mục"
