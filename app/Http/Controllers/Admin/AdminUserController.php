@@ -353,13 +353,17 @@ class AdminUserController extends BaseAdminController{
         foreach ($arrInfoCarrierSetting as $carrier){
             $arrNhaMang[$carrier['carrier_setting_id']] = $carrier['carrier_name'];
         }
-
         if(!empty($arrNhaMang)){
+            //gia theo nha mang cua nguo dung
+            $costCarrer = array();
+            foreach ($dataUserCarrierSetting as $kk =>$valu){
+                $costCarrer[$valu['carrier_id']] = $valu['cost'];
+            }
             foreach ($arrNhaMang as $carrier_id =>$carrier_name){
                 $data['carrier'][] = array(
                     'carrier_id'=>$carrier_id,
                     'carrier_name'=>$carrier_name,
-                    'cost'=>(isset($dataUserCarrierSetting[$carrier_id])?$dataUserCarrierSetting[$carrier_id]['cost']:''));
+                    'cost'=>(isset($costCarrer[$carrier_id]) ? $costCarrer[$carrier_id]:''));
             }
         }
 
@@ -389,19 +393,6 @@ class AdminUserController extends BaseAdminController{
                 $arrForm[$arrVal[0]] = $arrVal[1];
             }
         }
-        /**
-         *  [0] => user_id=NjZSV3JLXzdfZm52RjQ5
-        [1] => user_setting_id=+SlJpZVpJXzBfS21XamJ5
-        [2] => priority=
-        [3] => account_balance=
-        [4] => cost_1=500
-        [5] => carrier_id_1=1
-        [6] => cost_2=
-        [7] => carrier_id_2=2
-        [8] => scan_auto=1
-        [9] => payment_type=1
-        [10] => _token=VUUJi57LMZMWDs3oAQB3Xl4jYSVpZr1HNwCoEbZw
-         */
         if(!isset($arrForm['user_id']) || !isset($arrForm['user_setting_id']))
             return response()->json( $arrData );
 
@@ -430,13 +421,42 @@ class AdminUserController extends BaseAdminController{
 
         //lấy du liệu vào DB
         //cập nhật user_setting
-
         if($user_setting_id > 0){//cap nhat
             UserSetting::updateItem($user_setting_id,$dataInputUserSetting);
         }else{//thêm mới
             $dataInputUserSetting['created_date'] = date('Y-m-d h:i:s');
             UserSetting::createItem($dataInputUserSetting);
         }
+
+        //get thong tin cua nha mang
+        $arrCarrerId = array();
+        $arrInfoCarrierSetting = CarrierSetting::getListAll();
+        foreach ($arrInfoCarrierSetting as $carrier){
+            $arrCarrerId[] = $carrier['carrier_setting_id'];
+        }
+        if(!empty($arrCarrerId)){
+            //get thong tin cua nha mang theo user id
+            $dataUserCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
+            $costCarrer = array();
+            foreach ($dataUserCarrierSetting as $kk =>$valu){
+                $costCarrer[$valu['carrier_id']] = $valu['user_carrier_setting_id'];
+            }
+
+            foreach ($arrCarrerId as $ke => $carrierId){ //cost_2
+                if(isset($arrForm['carrier_id_'.$carrierId]) && isset($arrForm['cost_'.$carrierId])){
+                    $updateCarrer = array('user_id'=>$user_id,'carrier_id'=>$carrierId,'cost'=>(int)$arrForm['cost_'.$carrierId]);
+                    if(isset($costCarrer[$carrierId])){//update
+                        $updateCarrer['updated_date'] = FunctionLib::getDateTime();
+                        UserCarrierSetting::updateItem($costCarrer[$carrierId],$updateCarrer);
+                    }else{//them moi
+                        $updateCarrer['updated_date'] = FunctionLib::getDateTime();
+                        $updateCarrer['created_date'] = FunctionLib::getDateTime();
+                        UserCarrierSetting::createItem($updateCarrer);
+                    }
+                }
+            }
+        }
+
         $arrData['intReturn'] = 1;
         $arrData['msg'] = '';
         return response()->json( $arrData );
