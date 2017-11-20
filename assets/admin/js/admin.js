@@ -39,6 +39,48 @@ $(document).ready(function() {
     })
 });
 var Admin = {
+    /**
+     *********************************************************************************************************************
+     * @param id
+     * Function cho SMS
+     * *******************************************************************************************************************
+     */
+    getInfoSettingUser: function(user_id) {
+        $('#sys_showPopupInfoSetting').modal('show');
+        $('#img_loading').show();
+        $('#sys_show_infor').html('');
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/user/getInfoSettingUser',
+            data: {user_id : user_id},
+            dataType: 'json',
+            success: function(res) {
+                $('#img_loading').hide();
+                $('#sys_show_infor').html(res.html);
+            }
+        });
+    },
+    submitInfoSettingUser: function() {
+        $('#img_loading').show();
+        var formData = $('#form_user_setting').serialize();
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "POST",
+            url: WEB_ROOT + '/manager/user/submitInfoSettingUser',//
+            data: {formData:formData,'_token':_token},
+            dataType: 'json',
+            success: function(res) {
+                $('#sys_showPopupInfoSetting').modal('hide');
+            }
+        });
+    },
+
+    /**
+     *********************************************************************************************************************
+     * @param id
+     * AND Function cho SMS
+     * *******************************************************************************************************************
+     */
     deleteItem: function(id,type) {
         if(confirm('Bạn có muốn xóa Item này không?')) {
             $('#img_loading_'+id).show();
@@ -62,25 +104,27 @@ var Admin = {
             	url_ajax = 'deleteContract';
             }else if(type == 13){
             	url_ajax = 'deleteSystemSetting';
+            }else if(type == 14){
+            	url_ajax = 'deleteCarrierSetting';
+            }else if(type == 15){
+            	url_ajax = 'deleteDeviceToken';
             }
             if(url_ajax != ''){
-                if(confirm('Bạn có muốn xóa item này?')) {
-                    $.ajax({
-                        type: "post",
-                        url: url_ajax,
-                        data: {id : id,_token : _token},
-                        dataType: 'json',
-                        success: function(res) {
-                            $('#img_loading_'+id).hide();
-                            if(res.isIntOk == 1){
-                                alert('Bạn đã thực hiện thành công');
-                                window.location.reload();
-                            }else{
-                                alert('Không thể thực hiện được thao tác.');
-                            }
+                $.ajax({
+                    type: "post",
+                    url: url_ajax,
+                    data: {id : id,_token : _token},
+                    dataType: 'json',
+                    success: function(res) {
+                        $('#img_loading_'+id).hide();
+                        if(res.isIntOk == 1){
+                            alert('Bạn đã thực hiện thành công');
+                            window.location.reload();
+                        }else{
+                            alert('Không thể thực hiện được thao tác.');
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     },

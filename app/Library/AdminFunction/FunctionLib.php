@@ -207,6 +207,7 @@ class FunctionLib {
     static function debug($array) {
         echo '<pre>';
         print_r($array);
+        echo '</pre>';
         die;
     }
     static function debugOnsite($array) {
@@ -928,5 +929,19 @@ class FunctionLib {
         $json = mb_convert_encoding($json, 'UTF8', 'auto');
         $language = json_decode($json,true);
         return isset($language[$key]) ? $language[$key]: '';
+    }
+
+    /**
+     * @param $data
+     * @param $error
+     */
+    public static function check_require($data,&$error){
+        if (!empty($data)){
+            foreach ($data as $k => $arCheck) {
+                if(trim($arCheck['key_input']) == '' && isset($arCheck['key_input'])) {
+                    $error[] = '* '.$arCheck['label'].' '.FunctionLib::controLanguage('is_require');
+                }
+            }
+        }
     }
 }

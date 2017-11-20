@@ -11,6 +11,10 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\GroupUser;
 use App\Http\Models\User;
 use App\Http\Models\MenuSystem;
+use App\Http\Models\UserSetting;
+use App\Http\Models\CarrierSetting;
+use App\Http\Models\UserCarrierSetting;
+
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
@@ -26,15 +30,17 @@ class AdminUserController extends BaseAdminController{
     private $permission_change_pass = 'user_change_pass';
     private $permission_remove = 'user_remove';
     private $arrStatus = array();
+    private $arrRoleType = array();
     private $arrSex = array();
     private $error = array();
 
     public function __construct(){
         parent::__construct();
-        $this->getDataDefault();
+
     }
 
     public function getDataDefault(){
+        $this->arrRoleType = Define::$arrUserRole;
         $this->arrStatus = array(
             CGlobal::status_hide => FunctionLib::controLanguage('status_all',$this->languageSite),
             CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
@@ -64,7 +70,7 @@ class AdminUserController extends BaseAdminController{
         $arrGroupUser = GroupUser::getListGroupUser();
 
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-
+        $this->getDataDefault();
         return view('admin.AdminUser.view',[
                 'data'=>$data,
                 'dataSearch'=>$dataSearch,
@@ -81,6 +87,7 @@ class AdminUserController extends BaseAdminController{
             ]);
     }
 
+    //get
     public function editInfo($ids)
     {
         $id = FunctionLib::outputId($ids);
@@ -99,9 +106,10 @@ class AdminUserController extends BaseAdminController{
         $arrGroupUser = GroupUser::getListGroupUser($this->is_boss);
         $menuAdmin = MenuSystem::getListMenuPermission();
         //FunctionLib::debug($this->arrStatus);
-
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['user_status'])? $data['user_status']: CGlobal::status_show);
         $optionSex = FunctionLib::getOption($this->arrSex, isset($data['user_sex'])? $data['user_sex']: CGlobal::status_show);
+        $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
             'arrStatus'=>$this->arrStatus,
@@ -111,6 +119,7 @@ class AdminUserController extends BaseAdminController{
 
             'optionStatus'=>$optionStatus,
             'optionSex'=>$optionSex,
+            'optionRoleType'=>$optionRoleType,
 
             'is_root'=>$this->is_root,
             'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
@@ -119,6 +128,7 @@ class AdminUserController extends BaseAdminController{
             'permission_remove'=>in_array($this->permission_remove, $this->permission) ? 1 : 0,
         ]);
     }
+    //post
     public function edit($ids){
         //check permission
         if (!$this->is_root && !in_array($this->permission_edit, $this->permission)) {
@@ -131,6 +141,10 @@ class AdminUserController extends BaseAdminController{
         $data['user_email'] = htmlspecialchars(trim(Request::get('user_email', '')));
         $data['user_phone'] = htmlspecialchars(trim(Request::get('user_phone', '')));
         $data['user_name'] = Request::get('user_name', '');
+        $data['telephone'] = Request::get('telephone', '');
+        $data['address_register'] = Request::get('address_register', '');
+        $data['number_code'] = Request::get('number_code', '');
+        $data['role_type'] = Request::get('role_type', Define::ROLE_TYPE_CUSTOMER);
 
         $this->validUser($id,$data);
         //FunctionLib::debug($this->error);
@@ -149,6 +163,11 @@ class AdminUserController extends BaseAdminController{
             $dataInsert['user_name'] = $data['user_name'];
             $dataInsert['user_email'] = $data['user_email'];
             $dataInsert['user_phone'] = $data['user_phone'];
+            $dataInsert['telephone'] = $data['telephone'];
+            $dataInsert['address_register'] = $data['address_register'];
+            $dataInsert['number_code'] = $data['number_code'];
+            $dataInsert['role_type'] = $data['role_type'];
+            $dataInsert['role_name'] = Define::$arrUserRole[$data['role_type']];
             $dataInsert['user_full_name'] = $data['user_full_name'];
             $dataInsert['user_status'] = (int)$data['user_status'];
             $dataInsert['user_edit_id'] = User::user_id();
@@ -166,7 +185,6 @@ class AdminUserController extends BaseAdminController{
                 $dataInsert['user_create_name'] = User::user_name();
                 $dataInsert['user_created'] = time();
                 if (User::createNew($dataInsert)) {
-
                     return Redirect::route('admin.user_view');
                 } else {
                     $this->error[] = 'Lỗi truy xuất dữ liệu';;
@@ -176,10 +194,10 @@ class AdminUserController extends BaseAdminController{
         }
         $arrGroupUser = GroupUser::getListGroupUser();
         $menuAdmin = MenuSystem::getListMenuPermission();
-
+        $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['user_status'])? $data['user_status']: CGlobal::status_show);
         $optionSex = FunctionLib::getOption($this->arrSex, isset($data['user_sex'])? $data['user_sex']: CGlobal::status_show);
-
+        $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
             'arrStatus'=>$this->arrStatus,
@@ -188,6 +206,7 @@ class AdminUserController extends BaseAdminController{
             'arrUserGroupMenu'=>$groupUserMenu,
             'optionStatus'=>$optionStatus,
             'optionSex'=>$optionSex,
+            'optionRoleType'=>$optionRoleType,
 
             'error'=>$this->error,
             'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
@@ -301,4 +320,126 @@ class AdminUserController extends BaseAdminController{
         return Response::json($data);
     }
 
+    //ajax
+    public function getInfoSettingUser(){
+        $user_ids = Request::get('user_id', '');
+        $user_id = FunctionLib::outputId($user_ids);
+        $arrData = $data = array();
+        $arrData['intReturn'] = 1;
+        $arrData['msg'] = '';
+
+        //thong tin user
+        $infoUser = User::getUserById($user_id);
+
+        //thong tin user ở setting
+        $arrInfoUser = UserSetting::getUserSettingByUserId($user_id);
+
+        //get thong tin cua nha mang theo user id
+        $dataUserCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
+
+        //show data
+        if(empty($arrInfoUser)){
+            $data['user_full_name'] = $infoUser['user_full_name'];
+            $data['role_type'] = $infoUser['role_type'];
+            $data['role_name'] = $infoUser['role_name'];
+            $data['user_id'] = $infoUser['user_id'];
+        }else{
+            $data = (array)$arrInfoUser;
+        }
+
+        //get thong tin cua nha mang
+        $arrNhaMang = array();
+        $arrInfoCarrierSetting = CarrierSetting::getListAll();
+        foreach ($arrInfoCarrierSetting as $carrier){
+            $arrNhaMang[$carrier['carrier_setting_id']] = $carrier['carrier_name'];
+        }
+
+        if(!empty($arrNhaMang)){
+            foreach ($arrNhaMang as $carrier_id =>$carrier_name){
+                $data['carrier'][] = array(
+                    'carrier_id'=>$carrier_id,
+                    'carrier_name'=>$carrier_name,
+                    'cost'=>(isset($dataUserCarrierSetting[$carrier_id])?$dataUserCarrierSetting[$carrier_id]['cost']:''));
+            }
+        }
+
+        $optionPayment = FunctionLib::getOption(Define::$arrPayment, isset($data['payment_type'])? $data['payment_type']: Define::PAYMENT_TYPE_FIRST);
+        $optionScanAuto = FunctionLib::getOption(Define::$arrScanAuto, isset($data['scan_auto'])? $data['scan_auto']: Define::SCAN_AUTO_FASLE);
+        $optionSendAuto = FunctionLib::getOption(Define::$arrSendAuto, isset($data['sms_send_auto'])? $data['sms_send_auto']: Define::SEND_AUTO_FASLE);
+        $html =  view('admin.AdminUser.infoUserSetting',[
+            'data'=>$data,
+            'optionPayment'=>$optionPayment,
+            'optionScanAuto'=>$optionScanAuto,
+            'optionSendAuto'=>$optionSendAuto,
+            'user_id'=>$user_ids,
+            ])->render();
+        $arrData['html'] = $html;
+        return response()->json( $arrData );
+    }
+
+    public function submitInfoSettingUser(){
+        $arrData['intReturn'] = -1;
+        $arrData['msg'] = 'Error';
+        $formData= Request::get('formData', '');
+        $formInput = explode('&',$formData);
+        $arrForm = array();
+        if(!empty($formInput)){
+            foreach ($formInput as $k=>$string_valu){
+                $arrVal = explode('=',$string_valu);
+                $arrForm[$arrVal[0]] = $arrVal[1];
+            }
+        }
+        /**
+         *  [0] => user_id=NjZSV3JLXzdfZm52RjQ5
+        [1] => user_setting_id=+SlJpZVpJXzBfS21XamJ5
+        [2] => priority=
+        [3] => account_balance=
+        [4] => cost_1=500
+        [5] => carrier_id_1=1
+        [6] => cost_2=
+        [7] => carrier_id_2=2
+        [8] => scan_auto=1
+        [9] => payment_type=1
+        [10] => _token=VUUJi57LMZMWDs3oAQB3Xl4jYSVpZr1HNwCoEbZw
+         */
+        if(!isset($arrForm['user_id']) || !isset($arrForm['user_setting_id']))
+            return response()->json( $arrData );
+
+        //thong tin user
+        $user_id = FunctionLib::outputId($arrForm['user_id']);
+        $infoUser = User::getUserById($user_id);
+
+        //id user_carrier_setting
+        $user_setting_id = FunctionLib::outputId($arrForm['user_setting_id']);
+
+        $dataInputUserSetting = array();
+        $dataInputUserSetting['priority'] = isset($arrForm['priority'])?(int)$arrForm['priority']: 0;
+        $dataInputUserSetting['payment_type'] = isset($arrForm['payment_type'])?(int)$arrForm['payment_type']: Define::PAYMENT_TYPE_FIRST;
+        $dataInputUserSetting['account_balance'] = isset($arrForm['account_balance'])?(float)$arrForm['account_balance']: 0;
+        if(isset($arrForm['scan_auto'])){
+            $dataInputUserSetting['scan_auto'] = (int)$arrForm['scan_auto'];
+        }
+        if(isset($arrForm['sms_send_auto'])){
+            $dataInputUserSetting['sms_send_auto'] = (int)$arrForm['sms_send_auto'];
+        }
+
+        $dataInputUserSetting['user_id'] = $infoUser['user_id'];
+        $dataInputUserSetting['role_type'] = $infoUser['role_type'];
+        $dataInputUserSetting['role_name'] = $infoUser['role_name'];
+        $dataInputUserSetting['updated_date'] = date('Y-m-d h:i:s');
+
+        //lấy du liệu vào DB
+        //cập nhật user_setting
+
+        if($user_setting_id > 0){//cap nhat
+            UserSetting::updateItem($user_setting_id,$dataInputUserSetting);
+        }else{//thêm mới
+            $dataInputUserSetting['created_date'] = date('Y-m-d h:i:s');
+            UserSetting::createItem($dataInputUserSetting);
+        }
+        $arrData['intReturn'] = 1;
+        $arrData['msg'] = '';
+        return response()->json( $arrData );
+        //return Response::json($arrData);//json_encode($arrData);
+    }
 }

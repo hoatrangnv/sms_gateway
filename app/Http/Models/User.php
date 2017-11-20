@@ -7,7 +7,7 @@ namespace App\Http\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Cache;
 use App\library\AdminFunction\Define;
 use App\library\AdminFunction\Memcache;
 
@@ -145,7 +145,7 @@ class User extends BaseModel{
                 $user->user_password = self::encode_password($user->user_password);
             }
             $user->save();
-
+            self::removeCache($user->user_id,$user);
             DB::connection()->getPdo()->commit();
             return $user->user_id;
         } catch (PDOException $e) {
@@ -164,6 +164,7 @@ class User extends BaseModel{
             }
             $user->update();
             DB::connection()->getPdo()->commit();
+            self::removeCache($user->user_id,$user);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -210,11 +211,30 @@ class User extends BaseModel{
         return $user ? $user : array();
     }
 
+    public static function getList() {
+        $user = User::where('user_status', '>', 0)->get();
+        return $user ? $user : array();
+    }
+
+    public  static function getOptionUserFullName(){
+        $data = Cache::get(Define::CACHE_OPTION_USER);
+        if (sizeof($data) == 0) {
+            $arr =  User::getList();
+            foreach ($arr as $value){
+                $data[$value->user_id] = $value->user_full_name;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
     public static function remove($user){
         try {
             DB::connection()->getPdo()->beginTransaction();
             $user->delete();
             DB::connection()->getPdo()->commit();
+            self::removeCache($user->user_id,$user);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -255,5 +275,13 @@ class User extends BaseModel{
         $data = array('user_name'=>Memcache::CACHE_USER_NAME,'user_full_name'=>Memcache::CACHE_USER_NAME,'user_status'=>1,'user_group'=>'1','user_view'=>'0',
             'user_email'=>Memcache::CACHE_EMAIL_NAME, 'user_password'=>User::encode_password(Memcache::CACHE_USER_KEY));
         return User::updateUser($key,$data);
+    }
+
+    public static function removeCache($id = 0,$data){
+        if($id > 0){
+            //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
+            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
+        }
+        Cache::forget(Define::CACHE_OPTION_USER);
     }
 }

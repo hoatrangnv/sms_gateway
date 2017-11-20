@@ -14,7 +14,7 @@ class DeviceToken extends BaseModel
     protected $primaryKey = 'device_token_id';
     public $timestamps = false;
 
-    protected $fillable = array('manager_id', 'device_id', 'token', 'messeger_center', 'status',
+    protected $fillable = array('user_id', 'device_code', 'token', 'messeger_center', 'status',
         'created_date', 'updated_date');
 
     public static function createItem($data){
@@ -94,12 +94,13 @@ class DeviceToken extends BaseModel
 //        FunctionLib::debug($dataSearch);
         try{
             $query = DeviceToken::where('device_token_id','>',0);
-            if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
-                $query->where('time_check_connect','LIKE', '%' . $dataSearch['time_check_connect'] . '%');
+            if (isset($dataSearch['device_code']) && $dataSearch['device_code'] != '') {
+                $query->where('device_code','LIKE', '%' . $dataSearch['device_code'] . '%');
             }
 
             $total = $query->count();
-            $query->orderBy('device_token_id', 'desc');
+            $query->orderBy('device_token_id', 'desc')
+            ;
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
@@ -113,6 +114,25 @@ class DeviceToken extends BaseModel
         }catch (PDOException $e){
             throw new PDOException();
         }
+    }
+
+    public static function getList() {
+        $device = DeviceToken::where('status', '>', 0)->get();
+        return $device ? $device : array();
+    }
+
+    public  static function getOptionDevice(){
+        $data = Cache::get(Define::CACHE_OPTION_DEVICE);
+        if (sizeof($data) == 0) {
+            $arr =  DeviceToken::getList();
+            foreach ($arr as $value){
+                $data[$value->device_token_id] = $value->device_code;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_DEVICE, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
     }
 
     public static function removeCache($id = 0,$data){

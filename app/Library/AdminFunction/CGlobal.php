@@ -50,4 +50,7 @@ class CGlobal{
     const not_login = 0;
     const is_login = 1;
 
+    const active = 1;
+    const not_active = 0;
+
 }
