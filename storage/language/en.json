@@ -1,11 +1,11 @@
 {
     "//": "QUYNHTM +++++++++++++++++++++++++++++++++++++++",
     "hello": "Hello",
-    "changePass": "Change pass",
+    "changePass": "Change password",
     "logout": "Logout",
     "home": "Home",
     "status_show": "Show",
-    "status_hidden": "hidden",
+    "status_hidden": "Hidden",
     "status_block": "Block",
     "status_choose": "--Choose status--",
     "status_all": "All",
