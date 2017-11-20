@@ -210,6 +210,9 @@ class FunctionLib {
         echo '</pre>';
         die;
     }
+    static function getDateTime() {
+        return date('Y-m-d h:i:s');
+    }
     static function debugOnsite($array) {
         if(Request::get('quynhtm') == 133){
             FunctionLib::debug($array);
