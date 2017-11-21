@@ -116,7 +116,25 @@
 	"cost_vnd": "Cost (VND)",
 	"sent_date": "Sent date",
 	"subscriber": "Cost (VND)",
+	"customer": "Customer",
+	"carrier": "Carrier",
+	"choose_year": "Choose year",
+	"choose_month": "Choose month",
+	"report": "Report",
+	"total_report": "Total report",
+	"report_type": "Report type",
+	"acccount_name": "Account name",
+	"admin_account": "Admin account",
+	"choose_date": "Choose date",
+	"divide_by_hour": "Divide by hour",
+	"hour": "Hour",
+	"values": "Values",
+	"report_by_hour": "Report by hour",
+	"report_by_date": "Report by date",
+	"report_by_month": "Report by month",
+	"report_by_year": "Report by year",
+	"from_year": "From year",
+	"to_year": "To year",
 
-	
 	"": ""
 }
