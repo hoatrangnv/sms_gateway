@@ -27,12 +27,8 @@
         <div class="form-group">
             <label for="concatenation_strings" class="control-label col-sm-2"></label>
             <div class="col-sm-12">
-                <textarea class="form form-control h100 ckeditor" id="concatenation_strings" name="concatenation_strings">
-                    @if($lang==1)
-                        @if(isset($data[0]['system_content'])){{$data[0]['system_content']}}@endif
-                    @else
-                        @if(isset($data[0]['system_content_en'])){{$data[0]['system_content_en']}}@endif
-                    @endif
+                <textarea class="form form-control h100 ckeditor" rows="10" id="editorConfig " @if($lang==1)name="system_content"@else name="system_content_en" @endif>
+                    @if(isset($data['content'])){{$data['content']}}@endif
                 </textarea>
             </div>
         </div>
@@ -41,8 +37,9 @@
             <a class="btn btn-warning" href="{{URL::route('admin.dashboard')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
             <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
         </div>
-        <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
+        <input type="hidden" id="id_hiden" name="id_hiden" value="{{FunctionLib::inputId($id)}}"/>
         {{ Form::close() }}
     </div><!-- /.page-content -->
 </div>
 @stop
+
