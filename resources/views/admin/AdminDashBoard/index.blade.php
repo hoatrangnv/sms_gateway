@@ -56,6 +56,9 @@
                     @endif
                  </div>
             </div>
+            <div class="col-xs-12">
+                <a href="{{URL::route('admin.infoEdit')}}" class=""><i class="fa fa-pencil-square-o" aria-hidden="true"></i>{{FunctionLib::viewLanguage('edit')}}</a>
+            </div>
         </div>
     </div>
 </div>

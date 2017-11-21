@@ -145,6 +145,34 @@ class AdminSystemSettingController extends BaseAdminController
         }
         return Response::json($data);
     }
+
+    public function getInfoEdit(){
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $total = 0;
+        $data = SystemSetting::searchByCondition(array("field_get"=>"system_setting_id,system_content,system_content_en"),1,0,$total);
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminDashBoard.add',array_merge([
+            'data'=>$data,
+            'lang'=>$this->languageSite,
+            'id'=>$data[0]['system_setting_id'],
+        ],$this->viewPermission));
+    }
+    public function postInfoEdit($ids){
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        FunctionLib::debug($ids);
+        $total = 0;
+        $data = SystemSetting::searchByCondition(array("field_get"=>"system_setting_id,system_content,system_content_en"),1,0,$total);
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminDashBoard.add',array_merge([
+            'data'=>$data,
+            'lang'=>$this->languageSite,
+            'id'=>$data[0]['system_setting_id'],
+        ],$this->viewPermission));
+    }
     private function valid($data=array()) {
         if(!empty($data)) {
             if(isset($data['time_check_connect']) && trim($data['time_check_connect']) == '') {

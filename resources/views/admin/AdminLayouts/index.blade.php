@@ -69,6 +69,8 @@
 
     {!!CGlobal::$extraHeaderCSS!!}
     {!!CGlobal::$extraHeaderJS!!}
+
+    <script type="text/javascript" src="../../../../assets/lib/ckeditor/ckeditor.js"></script>
 </head>
 
 <body class="no-skin">
