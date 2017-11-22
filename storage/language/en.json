@@ -53,6 +53,10 @@
     "digital": "Digital",
     "select_device": "Select device",
 	"edit_noti": "Edit notification",
+	"api_document": "API document",
+	"client_api": "Client API",
+	"customer_api": "Customer API",
+	"edid_api":"Edit API",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",
