@@ -145,6 +145,65 @@ class AdminSystemSettingController extends BaseAdminController
         }
         return Response::json($data);
     }
+
+    public function getInfoEdit(){
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $total = 0;
+        $data = SystemSetting::searchByCondition(array("field_get"=>"system_setting_id,system_content,system_content_en"),1,0,$total);
+
+        if (count($data)>0){
+            if ($this->languageSite == Define::VIETNAM_LANGUAGE){
+                $data['content'] = $data[0]['system_content'];
+            }else{
+                $data['content'] = $data[0]['system_content_en'];
+            }
+            $id = $data[0]['system_setting_id'];
+        }else{
+            $data = array();
+            $id=0;
+        }
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminDashBoard.add',array_merge([
+            'data'=>$data,
+            'lang'=>$this->languageSite,
+            'id'=>$id,
+        ],$this->viewPermission));
+    }
+    public function postInfoEdit(){
+        $data = $_POST;
+        $data['id_hiden']= (isset($data['id_hiden']))?$data['id_hiden']:FunctionLib::inputId(0);
+        $id = FunctionLib::outputId($_POST['id_hiden']);
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $data['updated_date'] = date("Y/m/d H:i",time());
+        if(empty($this->error)) {
+            if($id > 0) {
+                //cap nhat
+                if(SystemSetting::updateItem($id, $data)) {
+                    return Redirect::route('admin.dashboard');
+                }
+            }else{
+                $data['created_date']=$data['updated_date'];
+                //them moi
+                if(SystemSetting::createItem($data)) {
+                    return Redirect::route('admin.dashboard');
+                }
+            }
+        }
+
+
+        $total = 0;
+        $data = SystemSetting::searchByCondition(array("field_get"=>"system_setting_id,system_content,system_content_en"),1,0,$total);
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminDashBoard.add',array_merge([
+            'data'=>$data,
+            'lang'=>$this->languageSite,
+            'id'=>$data[0]['system_setting_id'],
+        ],$this->viewPermission));
+    }
     private function valid($data=array()) {
         if(!empty($data)) {
             if(isset($data['time_check_connect']) && trim($data['time_check_connect']) == '') {

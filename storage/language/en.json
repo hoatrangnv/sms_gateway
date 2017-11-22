@@ -52,6 +52,7 @@
     "device_id": "Device id",
     "digital": "Digital",
     "select_device": "Select device",
+	"edit_noti": "Edit notification",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",
