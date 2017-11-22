@@ -66,3 +66,7 @@ Route::get('modem/view',array('as' => 'admin.modemView','uses' => Admin.'\AdminM
 Route::get('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@getItem'));
 Route::post('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@postItem'));
 Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminModemController@deleteModem'));//ajax
+
+/*send SMS*/
+Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
+Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));

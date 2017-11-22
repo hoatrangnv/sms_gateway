@@ -17,7 +17,6 @@
     "save": "Lưu lại",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
-    "list2": "Danh mục",
     "concatenation_rule": "Quy tắc ghép",
     "concatenation_strings": "Chuỗi ký tự cần ghép",
     "time_check_connect": "Thời gian kiểm tra kết nối tới trạm (giây)",
@@ -56,7 +55,6 @@
     "select_device": "Chọn thiết bị",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
-    "list3": "Danh mục",
 	"edit": "Chỉnh sửa",
 	"action": "Thao tác",
 	"update": "Cập nhật",
