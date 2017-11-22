@@ -57,7 +57,7 @@
     "api_document": "Tài liệu API",
     "client_api": "API kết nối trạm",
     "customer_api": "API khách hàng",
-	"edid_api":"Chỉnh sửa API",
+	"edit_api":"Chỉnh sửa API",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",

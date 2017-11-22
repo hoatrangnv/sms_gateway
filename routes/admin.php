@@ -73,7 +73,12 @@ Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Adm
 Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
 Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
 
-/*Document API*/
+/*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
 Route::get('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiClientEdit'));
 Route::post('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@postApiClientEdit'));
+
+/*Document API Customer*/
+Route::get('dashboard/customerAPIView', array('as' => 'admin.customerAPIView','uses' => Admin.'\AdminSystemSettingController@getApiCustomer'));
+Route::get('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiCustomerEdit'));
+Route::post('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@postApiCustomerEdit'));
