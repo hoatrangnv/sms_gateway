@@ -6,8 +6,10 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\GroupUser;
 use App\Http\Models\GroupUserPermission;
 use App\Http\Models\Permission;
+use App\Http\Models\RoleMenu;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
+use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\Pagging;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -18,6 +20,7 @@ class AdminGroupUserController extends BaseAdminController{
     private $permission_create = 'group_user_create';
     private $permission_edit = 'group_user_edit';
     private $arrStatus = array(CGlobal::status_hide=> 'Ẩn', CGlobal::status_show => 'Hoạt động');
+    private $viewPermission = array();//check quyen
 
     public function __construct()
     {
@@ -264,6 +267,108 @@ class AdminGroupUserController extends BaseAdminController{
             }
         }
         return Response::json($data);
+    }
+
+    /**********************************************Role menu*********************************************************************/
+    public function viewRole() {
+        //Check phan quyen.
+        if(!$this->is_root && !in_array($this->permission_view,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $pageNo = (int) Request::get('page_no',1);
+        $sbmValue = Request::get('submit', 1);
+        $limit = 200;
+        $offset = ($pageNo - 1) * $limit;
+        $search = $data = array();
+        $total = 0;
+
+        $search['role_id'] = (int)Request::get('role_id',-1);
+        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
+
+        $dataSearch = RoleMenu::searchByCondition($search, $limit, $offset,$total);
+        if(!empty($dataSearch)){
+            $data =$dataSearch;
+        }
+        $paging = '';
+
+        //FunctionLib::debug($data);
+        $arrRoleType = Define::$arrUserRole;
+        $optionStatus = FunctionLib::getOption($arrRoleType, $search['role_id']);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminGroupUser.viewRole',array_merge([
+            'data'=>$data,
+            'search'=>$search,
+            'total'=>$total,
+            'stt'=>($pageNo - 1) * $limit,
+            'paging'=>$paging,
+            'optionStatus'=>$optionStatus,
+        ],$this->viewPermission));
+    }
+
+    public function getRole($ids) {
+        $id = FunctionLib::outputId($ids);
+
+        if(!$this->is_root && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $data = array();
+        if($id > 0) {
+            $data = RoleMenu::find($id);
+        }
+
+        $arrRoleType = Define::$arrUserRole;
+        $optionRole = FunctionLib::getOption($arrRoleType, isset($data['role_id'])? $data['role_id']: Define::ROLE_TYPE_CUSTOMER);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminGroupUser.addRole',array_merge([
+            'data'=>$data,
+            'id'=>$id,
+            'optionRole'=>$optionRole,
+        ],$this->viewPermission));
+    }
+
+    public function postRole($ids) {
+        $id = FunctionLib::outputId($ids);
+        if(!$this->is_root && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $id_hiden = (int)Request::get('id_hiden', 0);
+        $data = $_POST;
+        if($this->valid($data) && empty($this->error)) {
+            $id = ($id == 0)?$id_hiden: $id;
+            if($id > 0) {
+                //cap nhat
+                if(RoleMenu::updateItem($id, $data)) {
+                    return Redirect::route('admin.viewRole');
+                }
+            }else{
+                //them moi
+                if(RoleMenu::createItem($data)) {
+                    return Redirect::route('admin.viewRole');
+                }
+            }
+        }
+
+        $arrRoleType = Define::$arrUserRole;
+        $optionRole = FunctionLib::getOption($arrRoleType, isset($data['role_id'])? $data['role_id']: Define::ROLE_TYPE_CUSTOMER);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminGroupUser.addRole',array_merge([
+            'data'=>$data,
+            'id'=>$id,
+            'error'=>$this->error,
+            'optionRole'=>$optionRole,
+        ],$this->viewPermission));
+    }
+
+    public function getPermissionPage(){
+        return $this->viewPermission = [
+            'is_root'=> $this->is_root ? 1:0,
+            'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
+            'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
+            'permission_full'=>in_array($this->permission_view, $this->permission) ? 1 : 0,
+        ];
     }
 
 }

@@ -54,24 +54,11 @@ class AdminSendSmsController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $data = array();
-
-        $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
-
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSendSms.add',array_merge([
             'data'=>$data,
             'id'=>0,
             'arrStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
         ],$this->viewPermission));
     }
 
@@ -85,12 +72,6 @@ class AdminSendSmsController extends BaseAdminController
         if($this->valid($data) && empty($this->error)) {
 
         }
-        $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSendSms.add',array_merge([
@@ -98,11 +79,6 @@ class AdminSendSmsController extends BaseAdminController
             'id'=>0,
             'error'=>$this->error,
             'arrStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
         ],$this->viewPermission));
     }
 

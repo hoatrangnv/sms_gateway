@@ -49,6 +49,7 @@ class Define{
     const TABLE_SMS_SENDTO = 'web_sms_sendTo';
     const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
     const TABLE_USER_SETTING = 'web_user_setting';
+    const TABLE_ROLE_MENU = 'web_role_menu';
 
     /***************************************************************************************************************
     //Memcache
