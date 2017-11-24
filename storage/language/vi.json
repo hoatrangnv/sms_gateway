@@ -54,6 +54,10 @@
     "digital": "Thông số kỹ thuật",
     "select_device": "Chọn thiết bị",
     "edit_noti": "Chỉnh sửa thông báo",
+    "api_document": "Tài liệu API",
+    "client_api": "API kết nối trạm",
+    "customer_api": "API khách hàng",
+	"edit_api":"Chỉnh sửa API",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",
