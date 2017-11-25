@@ -39,6 +39,7 @@
     <script src="{{URL::asset('assets/js/ace-extra.min.js')}}"></script>
 
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <link media="all" type="text/css" rel="stylesheet" href="{{URL::asset('assets/lib/datetimepicker/datetimepicker.css')}}" />
 
     <!--[if lte IE 8]>
     <script src="{{URL::asset('assets/js/html5shiv.min.js')}}"></script>
@@ -66,9 +67,12 @@
     <script src="{{URL::asset('assets/js/bootbox.min.js')}}"></script>
     <script src="{{URL::asset('assets/admin/js/admin.js')}}"></script>
     <script src="{{URL::asset('assets/admin/js/format.js')}}"></script>
+    <script src="{{URL::asset('assets/lib/datetimepicker/jquery.datetimepicker.js')}}"></script>
 
     {!!CGlobal::$extraHeaderCSS!!}
     {!!CGlobal::$extraHeaderJS!!}
+
+    <script type="text/javascript" src="../../../../assets/lib/ckeditor/ckeditor.js"></script>
 </head>
 
 <body class="no-skin">

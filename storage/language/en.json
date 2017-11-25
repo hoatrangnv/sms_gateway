@@ -17,7 +17,6 @@
     "save": "Save",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
-    "list2": "Danh mục",
     "concatenation_rule": "Concatenation Rule",
     "concatenation_strings": "Concatenation Strings",
     "time_check_connect": "Time to check connection to station (second)",
@@ -53,9 +52,13 @@
     "device_id": "Device id",
     "digital": "Digital",
     "select_device": "Select device",
+	"edit_noti": "Edit notification",
+	"api_document": "API document",
+	"client_api": "Client API",
+	"customer_api": "Customer API",
+	"edit_api":"Edit API",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
-    "list3": "Danh mục"
 	"edit": "Edit",
 	"action": "Action",
 	"updated": "Updated",

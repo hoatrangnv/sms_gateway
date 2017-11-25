@@ -8,6 +8,8 @@
 
 Route::get('logout', array('as' => 'admin.logout','uses' => Admin.'\AdminLoginController@logout'));
 Route::get('dashboard', array('as' => 'admin.dashboard','uses' => Admin.'\AdminDashBoardController@dashboard'));
+Route::get('dashboard/infoEdit', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminSystemSettingController@getInfoEdit'));
+Route::post('dashboard/infoEdit/{id?}', array('as' => 'admin.infoEdit','uses' => Admin.'\AdminSystemSettingController@postInfoEdit'));
 
 /*thông tin tài khoản*/
 Route::match(['GET','POST'],'user/view', array('as' => 'admin.user_view','uses' => Admin.'\AdminUserController@view'));
@@ -36,6 +38,11 @@ Route::post('groupUser/create',array('as' => 'admin.groupUser_create','uses' => 
 Route::get('groupUser/edit/{id?}',array('as' => 'admin.groupUser_edit','uses' => Admin.'\AdminGroupUserController@editInfo'))->where('id', '[0-9]+');
 Route::post('groupUser/edit/{id?}',array('as' => 'admin.groupUser_edit','uses' => Admin.'\AdminGroupUserController@edit'))->where('id', '[0-9]+');
 Route::post('groupUser/remove/{id}',array('as' => 'admin.groupUser_remove','uses' => Admin.'\AdminGroupUserController@remove'));
+/*thông tin quyền theo role */
+Route::get('groupUser/viewRole',array('as' => 'admin.viewRole','uses' => Admin.'\AdminGroupUserController@viewRole'));
+Route::get('groupUser/editRole/{id?}', array('as' => 'admin.editRole','uses' => Admin.'\AdminGroupUserController@getRole'));
+Route::post('groupUser/editRole/{id?}', array('as' => 'admin.editRole','uses' => Admin.'\AdminGroupUserController@postRole'));
+
 
 /*thông tin menu */
 Route::get('menu/view',array('as' => 'admin.menuView','uses' => Admin.'\AdminManageMenuController@view'));
@@ -66,3 +73,17 @@ Route::get('modem/view',array('as' => 'admin.modemView','uses' => Admin.'\AdminM
 Route::get('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@getItem'));
 Route::post('modem/edit/{id?}', array('as' => 'admin.modemEdit','uses' => Admin.'\AdminModemController@postItem'));
 Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminModemController@deleteModem'));//ajax
+
+/*send SMS*/
+Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
+Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
+
+/*Document API Client*/
+Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
+Route::get('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiClientEdit'));
+Route::post('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@postApiClientEdit'));
+
+/*Document API Customer*/
+Route::get('dashboard/customerAPIView', array('as' => 'admin.customerAPIView','uses' => Admin.'\AdminSystemSettingController@getApiCustomer'));
+Route::get('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiCustomerEdit'));
+Route::post('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@postApiCustomerEdit'));

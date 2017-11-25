@@ -17,7 +17,6 @@
     "save": "Lưu lại",
 
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
-    "list2": "Danh mục",
     "concatenation_rule": "Quy tắc ghép",
     "concatenation_strings": "Chuỗi ký tự cần ghép",
     "time_check_connect": "Thời gian kiểm tra kết nối tới trạm (giây)",
@@ -54,9 +53,13 @@
     "device_id": "Id thiết bị",
     "digital": "Thông số kỹ thuật",
     "select_device": "Chọn thiết bị",
+    "edit_noti": "Chỉnh sửa thông báo",
+    "api_document": "Tài liệu API",
+    "client_api": "API kết nối trạm",
+    "customer_api": "API khách hàng",
+	"edit_api":"Chỉnh sửa API",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
-    "list3": "Danh mục",
 	"edit": "Chỉnh sửa",
 	"action": "Thao tác",
 	"update": "Cập nhật",
