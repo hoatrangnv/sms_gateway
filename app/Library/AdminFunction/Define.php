@@ -77,6 +77,8 @@ class Define{
     const CACHE_OPTION_USER = 'cache_option_user';
     const CACHE_OPTION_DEVICE = 'cache_option_device';
 
+    const CACHE_INFO_CARRIER = 'cache_info_carrier';
+
     /***************************************************************************************************************
     //Define
      ***************************************************************************************************************/
