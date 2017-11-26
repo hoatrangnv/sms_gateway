@@ -59,13 +59,13 @@ class AdminDeviceTokenController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['carrier_name'] = addslashes(Request::get('carrier_name',''));
-
+        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
         $data = DeviceToken::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
+        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
@@ -76,6 +76,7 @@ class AdminDeviceTokenController extends BaseAdminController
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
             'arrUser'=>$this->arrManager,
+            'optionUser'=>$optionUser,
         ],$this->viewPermission));
     }
 
