@@ -94,8 +94,8 @@ class DeviceToken extends BaseModel
 //        FunctionLib::debug($dataSearch);
         try{
             $query = DeviceToken::where('device_token_id','>',0);
-            if (isset($dataSearch['device_code']) && $dataSearch['device_code'] != '') {
-                $query->where('device_code','LIKE', '%' . $dataSearch['device_code'] . '%');
+            if (isset($dataSearch['user_id']) && $dataSearch['user_id'] != '') {
+                $query->where('user_id','=', $dataSearch['user_id']);
             }
 
             $total = $query->count();

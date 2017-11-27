@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
 use App\library\AdminFunction\Memcache;
+use Illuminate\Support\Facades\Cache;
 
 class CarrierSetting extends BaseModel
 {
@@ -117,11 +118,8 @@ class CarrierSetting extends BaseModel
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
+        Cache::forget(Define::CACHE_INFO_CARRIER);
     }
 
     public static function getListAll() {
@@ -129,5 +127,26 @@ class CarrierSetting extends BaseModel
         $query->where('status','=', 1);
         $list = $query->get();
         return $list;
+    }
+
+    public static function getInfoCarrier() {
+        $data = Cache::get(Define::CACHE_INFO_CARRIER);
+        if (sizeof($data) == 0) {
+            $arr =  CarrierSetting::getListAll();
+            foreach ($arr as $value){
+                $data[$value->carrier_setting_id] = array(
+                    'carrier_setting_id'=>$value->carrier_setting_id,
+                    'carrier_name'=>$value->carrier_name,
+                    'slipt_number'=>$value->slipt_number,
+                    'first_number'=>$value->first_number,
+                    'min_number'=>$value->min_number,
+                    'max_number'=>$value->max_number,
+                );
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_INFO_CARRIER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
     }
 }

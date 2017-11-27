@@ -87,3 +87,9 @@ Route::post('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_e
 Route::get('dashboard/customerAPIView', array('as' => 'admin.customerAPIView','uses' => Admin.'\AdminSystemSettingController@getApiCustomer'));
 Route::get('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiCustomerEdit'));
 Route::post('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_api_edit','uses' => Admin.'\AdminSystemSettingController@postApiCustomerEdit'));
+
+/*Cài đặt station */
+Route::get('stationSetting/view',array('as' => 'admin.stationSettingView','uses' => Admin.'\AdminStationSettingController@view'));
+Route::get('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@getItem'));
+Route::post('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@postItem'));
+Route::post('stationSetting/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminStationSettingController@deleteModem'));//ajax

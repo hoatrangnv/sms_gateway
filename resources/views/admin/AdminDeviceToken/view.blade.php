@@ -20,18 +20,20 @@
                 <div class="panel panel-info">
                     {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                     <div class="panel-body">
-                        <div class="form-group col-lg-4">
-                            <label for="carrier_name">{{FunctionLib::viewLanguage('carrier_name')}}</label>
-                            <input type="text" class="form-control input-sm" id="carrier_name" name="carrier_name" placeholder="" @if(isset($search['carrier_name']) && $search['carrier_name'] != '')value="{{$search['carrier_name']}}"@endif>
+                        <div class="col-sm-10">
+                            <label for="carrier_name">{{FunctionLib::viewLanguage('acc')}}</label>
+                            <select name="user_id" id="user_id" class="w200 form-control input-sm">
+                                {!! $optionUser !!}
+                            </select>
                         </div>
 
                         <div class="form-group col-lg-12 text-right">
-                            @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId(0)))}}">
-                                    <i class="ace-icon fa fa-plus-circle"></i>
-                                    {{FunctionLib::viewLanguage('add')}}
-                                </a>
-                            @endif
+                            {{--@if($is_root || $permission_full ==1 || $permission_create == 1)--}}
+                                {{--<a class="btn btn-danger btn-sm" href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId(0)))}}">--}}
+                                    {{--<i class="ace-icon fa fa-plus-circle"></i>--}}
+                                    {{--{{FunctionLib::viewLanguage('add')}}--}}
+                                {{--</a>--}}
+                            {{--@endif--}}
                                 {{--<button class="btn btn-warning btn-sm" type="submit" name="submit" value="2"><i class="fa fa-file-excel-o"></i> Xuất Excel</button>--}}
                                 <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i class="fa fa-search"></i> {{FunctionLib::viewLanguage('search')}}</button>
                         </div>
@@ -50,7 +52,7 @@
                             <th width="w100">{{FunctionLib::viewLanguage('token')}}</th>
                             <th width="w100">{{FunctionLib::viewLanguage('messeger_center')}}</th>
                             <th width="w100">{{FunctionLib::viewLanguage('status')}}</th>
-                            <th width="w50" class="text-center">Thao tác</th>
+                            {{--<th width="w50" class="text-center">Thao tác</th>--}}
                         </tr>
                         </thead>
                         <tbody>
@@ -62,15 +64,15 @@
                                 <td>{{ $item['token'] }}</td>
                                 <td>{{ $item['messeger_center'] }}</td>
                                 <td>{{ $item['status'] }}</td>
-                                <td class="text-center middle" align="center">
-                                    @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId($item['device_token_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
-                                    @endif
-                                    @if($is_boss || $permission_remove)
-                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['device_token_id']}},15)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
-                                            <span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>
-                                    @endif
-                                </td>
+                                {{--<td class="text-center middle" align="center">--}}
+                                    {{--@if($is_root || $permission_edit)--}}
+                                        {{--<a href="{{URL::route('admin.deviceTokenEdit',array('id' => FunctionLib::inputId($item['device_token_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>--}}
+                                    {{--@endif--}}
+                                    {{--@if($is_boss || $permission_remove)--}}
+                                            {{--<a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['device_token_id']}},15)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>--}}
+                                            {{--<span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>--}}
+                                    {{--@endif--}}
+                                {{--</td>--}}
                             </tr>
                         @endforeach
                         </tbody>

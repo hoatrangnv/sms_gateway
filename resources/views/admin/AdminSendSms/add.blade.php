@@ -30,13 +30,13 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label">{{FunctionLib::viewLanguage('phone_number')}}</label>
-                            <textarea type="text" placeholder="Tên menu" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5"></textarea>
+                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5"></textarea>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="name" class="control-label">{{FunctionLib::viewLanguage('sms_content')}}</label>
-                            <textarea type="text" placeholder="Tên menu" id="sms_content" name="sms_content"  class="form-control input-sm" rows="5"></textarea>
+                            <label for="name" class="control-label">{{functionlib::viewlanguage('sms_content')}}</label>
+                            <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5"></textarea>
                         </div>
                     </div>
                     <div class="col-sm-6">
