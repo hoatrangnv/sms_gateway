@@ -59,7 +59,7 @@
                         @foreach ($data as $key => $item)
                             <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                <td>{{ $arrUser[$item['user_id']] }}</td>
+                                <td>@if(in_array($item['user_id'],$arrUser)){{ $arrUser[$item['user_id']] }}@endif</td>
                                 <td>{{ $item['device_code'] }}</td>
                                 <td>{{ $item['token'] }}</td>
                                 <td>{{ $item['messeger_center'] }}</td>
