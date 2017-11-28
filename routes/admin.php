@@ -90,6 +90,6 @@ Route::post('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_a
 
 /*Cài đặt station */
 Route::get('stationSetting/view',array('as' => 'admin.stationSettingView','uses' => Admin.'\AdminStationSettingController@view'));
-Route::get('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@getItem'));
-Route::post('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@postItem'));
-Route::post('stationSetting/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminStationSettingController@deleteModem'));//ajax
+//Route::get('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@getItem'));
+Route::post('stationSetting/view/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@postItem'));
+//Route::post('stationSetting/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminStationSettingController@deleteModem'));//ajax

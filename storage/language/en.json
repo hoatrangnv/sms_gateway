@@ -57,6 +57,9 @@
 	"client_api": "Client API",
 	"customer_api": "Customer API",
 	"edit_api":"Edit API",
+	"to":"to",
+	"station_management":"Station management",
+	"station_setting":"Station setting",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",

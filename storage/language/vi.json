@@ -58,6 +58,9 @@
     "client_api": "API kết nối trạm",
     "customer_api": "API khách hàng",
 	"edit_api":"Chỉnh sửa API",
+	"to":"đến",
+	"station_management":"Quản lý trạm",
+	"station_setting":"Cài đặt trạm",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",
