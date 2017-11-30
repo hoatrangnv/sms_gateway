@@ -18,6 +18,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <!-- PAGE CONTENT BEGINS -->
+                    @if($is_root || $permission_full ==1)
                     <div class="panel panel-info">
                         {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                         <div class="panel-body">
@@ -49,12 +50,13 @@
                         </div>
                         {{ Form::close() }}
                     </div>
+                    @endif
                     @if(sizeof($data) > 0)
                         <div class="span clearfix"> @if($size >0) {{FunctionLib::viewLanguage('total')}}
                             <b>{{$size}}</b> {{FunctionLib::viewLanguage('results')}}  @endif </div>
                         <br>
                         @foreach ($data as $key1 => $item1)
-                            {{$key1}} ({{$item1['user_name_view']}}) 
+                            {{$key1}} ({{$item1['user_name_view']}})
                             <span class="label label-success">Đã thành SIM toàn modem</span>
                         <div class="space-4"></div>
                             <table class="table table-bordered">

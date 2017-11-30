@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Response;
 
 class AdminStationListController extends BaseAdminController
 {
-    private $permission_view = 'carrierSetting_view';
-    private $permission_full = 'carrierSetting_full';
-    private $permission_delete = 'carrierSetting_delete';
-    private $permission_create = 'carrierSetting_create';
-    private $permission_edit = 'carrierSetting_edit';
+    private $permission_view = 'stationSetting_view';
+    private $permission_full = 'stationSetting_full';
+//    private $permission_delete = 'carrierSetting_delete';
+//    private $permission_create = 'carrierSetting_create';
+//    private $permission_edit = 'carrierSetting_edit';
 
     private $arrManager = array();
     private $arrStatus = array();
@@ -45,9 +45,9 @@ class AdminStationListController extends BaseAdminController
     public function getPermissionPage(){
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
-            'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
-            'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
-            'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
+//            'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
+//            'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
+//            'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
         ];
     }
