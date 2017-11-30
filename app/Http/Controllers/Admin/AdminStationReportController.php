@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\ModemCom;
+use App\Http\Models\Modem;
 use App\Http\Models\User;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
-class AdminStationListController extends BaseAdminController
+class AdminStationReportController extends BaseAdminController
 {
     private $permission_view = 'stationSetting_view';
     private $permission_full = 'stationSetting_full';
@@ -61,18 +62,17 @@ class AdminStationListController extends BaseAdminController
         $sbmValue = Request::get('submit', 1);
         $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
         $total = 0;
-        $data = ModemCom::searchByCondition($dataSearch,$total);
+        $data = Modem::searchByCondition($dataSearch,$total);
 
         $data_by_modem = array();
         foreach ($data as $k => $v){
             $data_by_modem[$v['modem_name']]['list'][] = $v;
             $data_by_modem[$v['modem_name']]['user_name_view'] = $v['user_name'];
-            $data_by_modem[$v['modem_name']]['status_content'] = $v['status_content'];
         }
         $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminStationList.view',array_merge([
+        return view('admin.AdminStationReport.view',array_merge([
 //            'data'=>$data,
             'data'=>$data_by_modem,
             'search'=>$dataSearch,

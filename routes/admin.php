@@ -94,3 +94,6 @@ Route::post('stationSetting/view/{id?}', array('as' => 'admin.stationSettingEdit
 
 /*Station List*/
 Route::get('stationList/view',array('as' => 'admin.stationListView','uses' => Admin.'\AdminStationListController@view'));
+
+/*Station Report*/
+Route::get('stationReport/view',array('as' => 'admin.stationReportView','uses' => Admin.'\AdminStationReportController@view'));

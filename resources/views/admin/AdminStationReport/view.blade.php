@@ -57,7 +57,7 @@
                         <br>
                         @foreach ($data as $key1 => $item1)
                             {{$key1}} ({{$item1['user_name_view']}})
-                            <span class="label label-success">{{$item1['status_content']}}</span>
+                            <span class="label label-success">Đã thành SIM toàn modem</span>
                         <div class="space-4"></div>
                             <table class="table table-bordered">
                                 <thead class="thin-border-bottom">
