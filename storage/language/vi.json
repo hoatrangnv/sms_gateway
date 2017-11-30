@@ -61,6 +61,7 @@
 	"to":"đến",
 	"station_management":"Quản lý trạm",
 	"station_setting":"Cài đặt trạm",
+	"station_list":"Danh sách trạm",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",
@@ -87,7 +88,7 @@
 	"failure": "Thất bại",
 	"com": "COM",
 	"imei_com": "IMEI COM",
-	"content": "Content",
+	"content": "Nội dung",
 	"phone_number": "Số điện thoại",
 	"upload from file excel": "Lấy từ file excel",
 	"sms_content": "Nội dung tin nhắn",
