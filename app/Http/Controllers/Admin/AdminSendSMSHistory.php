@@ -102,12 +102,12 @@ class AdminSendSMSHistory extends BaseAdminController
     }
 
     public function viewDetails() {
-
         $id_cs = isset($_GET['id_customer_sms']) && FunctionLib::outputId($_GET['id_customer_sms'])>0 ?FunctionLib::outputId($_GET['id_customer_sms']):0;
         //Check phan quyen.
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
+
         if ($id_cs <=0){
             return Redirect::route('admin.smsHistoryView');
         }
@@ -129,6 +129,7 @@ class AdminSendSMSHistory extends BaseAdminController
         $this->viewPermission = $this->getPermissionPage();
         $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
+        $incorrect_number_list = isset($data[0])?$data[0]['incorrect_number_list']:"";
 
         return view('admin.AdminSendSMSHistory.viewdetails',array_merge([
             'data'=>$data,
@@ -139,7 +140,8 @@ class AdminSendSMSHistory extends BaseAdminController
             'optionStatus'=>$optionStatus,
             'arrStatus'=>$this->arrStatus,
             'optionCarrier'=>$optionCarrier,
-            'incorrect_number_list'=>$data[0]['incorrect_number_list'],
+            'incorrect_number_list'=>$incorrect_number_list,
+            'id_cs'=>$id_cs,
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }

@@ -133,6 +133,9 @@ class SmsSendTo extends BaseModel
             if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id'] != '') {
                 $query->where('carrier_id','=',$dataSearch['carrier_id']);
             }
+            if (isset($dataSearch['status']) && $dataSearch['status'] != '') {
+                $query->where('web_sms_sendTo.status','=',$dataSearch['status']);
+            }
 
             $total = $query->count();
             $query->orderBy('sms_sendTo_id', 'desc');

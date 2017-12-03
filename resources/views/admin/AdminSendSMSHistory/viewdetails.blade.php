@@ -32,7 +32,8 @@
                 <div class="col-xs-12">
                     <!-- PAGE CONTENT BEGINS -->
                     <div class="panel panel-info">
-                        <form method="" action="{{URL::route('admin.smsHistoryDetailsView')}}" role="form">
+                        <form method="get" action="{{URL::route('admin.smsHistoryDetailsView')}}" role="form">
+                            <input type="hidden" name="id_customer_sms" value="{{FunctionLib::inputId($id_cs)}}">
                             <div class="panel-body">
                                 <div class="form-group col-lg-3">
                                     <label for="carrier_id"><i>{{FunctionLib::viewLanguage('carrier')}}</i></label>
