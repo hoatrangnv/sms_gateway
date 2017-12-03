@@ -100,32 +100,38 @@ class Modem extends BaseModel
             $table_user = Define::TABLE_USER;
             $table_modem = Define::TABLE_MODEM;
             $table_modem_com = Define::TABLE_MODEM_COM;
-            $query = Modem::query()
-                ->select($table_modem.'.modem_id',$table_user.'.user_name',$table_modem.'.modem_name',$table_modem.'.modem_type','success_number','error_number',$table_modem.'.updated_date',$table_modem.'.digital',$table_modem.'is_active')
-                ->join($table_modem, $table_modem . '.modem_id', '=', $table_modem_com . '.modem_id')
-                ->join($table_modem, $table_modem . '.user_id', '=', $table_user . '.user_id')
+//            $query = Modem::query()
+//            ,\DB::raw('SUM(success_number)'),\DB::raw('SUM(error_number)')
+            $query = Modem::select(DB::raw('SUM(success_number) as sum_success,SUM(error_number) as sum_error'),$table_modem.'.modem_id',$table_user.'.user_name','error_number','success_number',$table_modem.'.modem_name',$table_modem.'.modem_type',$table_modem.'.updated_date',$table_modem.'.digital',$table_modem.'.is_active')
+//                ->select(DB::raw('SUM(success_number) as sum_success,SUM(error_number) as sum_error'))
+                ->join($table_modem_com, $table_modem . '.modem_id', '=', $table_modem_com . '.modem_id')
+                ->join($table_user, $table_modem . '.user_id', '=', $table_user . '.user_id')
+                ->get()
                 ->groupBy($table_modem.'.modem_id')
+//                ->orderBy($table_modem.'modem_id', 'desc');
             ;
-            if (isset($dataSearch['modem_name']) && $dataSearch['modem_name'] != '') {
-                $query->where('modem_name', 'LIKE', '%' . $dataSearch['modem_name'] . '%');
-            }
+            FunctionLib::debug($query);
+//            if (isset($dataSearch['modem_name']) && $dataSearch['modem_name'] != '') {
+//                $query->where('modem_name', 'LIKE', '%' . $dataSearch['modem_name'] . '%');
+//            }
 
             $total = $query->count();
-            $query->orderBy('modem_id', 'desc');
+
 
             //get field can lay du lieu
-            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',', trim($dataSearch['field_get'])) : array();
-            if (!empty($fields)) {
-                $result = $query->get($fields);
-            } else {
-                $result = $query->get();
-            }
-            FunctionLib::debug($result);
-            return $result;
+            return $query;
 
         } catch (PDOException $e) {
             throw new PDOException();
         }
+    }
+    public static function searchByCondition1($dataSearch = array(), &$total)
+    {
+        $data = DB::statement('SELECT m.modem_id,sum(mc.error_number),sum(mc.success_number),m.modem_name,m.modem_type,m.updated_date,m.digital,m.is_active,u.user_name FROM web_modem m INNER JOIN web_modem_com mc ON mc.modem_id = m.modem_id 
+INNER JOIN web_user u ON m.user_id = u.user_id 
+GROUP BY m.modem_id 
+ORDER BY m.modem_id DESC');
+        FunctionLib::debug($data);
     }
 
     public static function removeCache($id = 0, $data)

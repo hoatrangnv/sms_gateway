@@ -93,8 +93,12 @@ class SmsCustomer extends BaseModel
 //        FunctionLib::debug($dataSearch);
         try{
             $query = SmsCustomer::where('sms_customer_id','>',0);
-            if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
-                $query->where('time_check_connect','LIKE', '%' . $dataSearch['time_check_connect'] . '%');
+
+            if (isset($dataSearch['user_id']) && $dataSearch['user_id'] != '') {
+                $query->where('user_customer_id','=', $dataSearch['user_id']);
+            }
+            if (isset($dataSearch['status']) && $dataSearch['status'] != '') {
+                $query->where('status','=', $dataSearch['status']);
             }
 
             $total = $query->count();

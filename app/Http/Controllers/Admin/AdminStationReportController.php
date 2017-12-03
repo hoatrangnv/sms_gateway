@@ -63,6 +63,10 @@ class AdminStationReportController extends BaseAdminController
         $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
         $total = 0;
         $data = Modem::searchByCondition($dataSearch,$total);
+        FunctionLib::debug($data);
+        foreach ($data as  $k => $v){
+
+        }
 
         $data_by_modem = array();
         foreach ($data as $k => $v){
