@@ -298,4 +298,8 @@ class User extends BaseModel{
         }
         Cache::forget(Define::CACHE_OPTION_USER);
     }
+
+    public static function executesSQL($str_sql = ''){
+        return (trim($str_sql) != '') ? DB::select(DB::raw($str_sql)): array();
+    }
 }
