@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Response;
 
 class AdminStationReportController extends BaseAdminController
 {
-    private $permission_view = 'stationSetting_view';
-    private $permission_full = 'stationSetting_full';
+    private $permission_view = 'stationReport_view';
+    private $permission_full = 'stationReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -36,7 +36,7 @@ class AdminStationReportController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName();
+        $this->arrManager = User::getOptionUserFullNameAndMail();
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
@@ -60,28 +60,32 @@ class AdminStationReportController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $total = 0;
-        $data = Modem::searchByCondition($dataSearch,$total);
-        FunctionLib::debug($data);
-        foreach ($data as  $k => $v){
+        $sql = "SELECT web_modem.modem_id,sum(web_modem_com.error_number) as total_err,sum(web_modem_com.success_number) as total_succ,web_modem.modem_name,web_modem.modem_type,web_modem.updated_date,web_modem.digital,web_modem.is_active,web_user.user_name FROM web_modem INNER JOIN web_modem_com ON web_modem_com.modem_id = web_modem.modem_id 
+INNER JOIN web_user ON web_modem.user_id = web_user.user_id ";
 
+        if (isset($dataSearch['station_account']) && $dataSearch['station_account'] >0){
+            $sql.= " WHERE web_modem.user_id = ".$dataSearch['station_account']." 
+GROUP BY web_modem.modem_id 
+ORDER BY web_modem.modem_id DESC";
+        }else{
+            $sql.= " GROUP BY web_modem.modem_id 
+ORDER BY web_modem.modem_id DESC";
         }
 
-        $data_by_modem = array();
+        $data = Modem::executesSQL($sql);
+        $arr = array();
         foreach ($data as $k => $v){
-            $data_by_modem[$v['modem_name']]['list'][] = $v;
-            $data_by_modem[$v['modem_name']]['user_name_view'] = $v['user_name'];
+            $arr[] = (array) $v;
         }
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
+        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminStationReport.view',array_merge([
-//            'data'=>$data,
-            'data'=>$data_by_modem,
+            'data'=>$arr,
             'search'=>$dataSearch,
             'size'=>$total,
-            'arrUser'=>$this->arrManager,
             'optionUser'=>$optionUser,
         ],$this->viewPermission));
     }

@@ -59,7 +59,7 @@ class AdminStationListController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $total = 0;
         $data = ModemCom::searchByCondition($dataSearch,$total);
 
@@ -69,7 +69,7 @@ class AdminStationListController extends BaseAdminController
             $data_by_modem[$v['modem_name']]['user_name_view'] = $v['user_name'];
             $data_by_modem[$v['modem_name']]['status_content'] = $v['status_content'];
         }
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
+        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminStationList.view',array_merge([
