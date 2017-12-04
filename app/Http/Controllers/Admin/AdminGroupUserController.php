@@ -7,6 +7,7 @@ use App\Http\Models\GroupUser;
 use App\Http\Models\GroupUserPermission;
 use App\Http\Models\Permission;
 use App\Http\Models\RoleMenu;
+use App\Http\Models\MenuSystem;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -21,6 +22,7 @@ class AdminGroupUserController extends BaseAdminController{
     private $permission_edit = 'group_user_edit';
     private $arrStatus = array(CGlobal::status_hide=> 'Ẩn', CGlobal::status_show => 'Hoạt động');
     private $viewPermission = array();//check quyen
+    private $error = array();
 
     public function __construct()
     {
@@ -312,19 +314,30 @@ class AdminGroupUserController extends BaseAdminController{
         if(!$this->is_root && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
-        $data = array();
-        if($id > 0) {
+
+        $arrUserGroupMenu = $data = array();
+        if($id > 0){
             $data = RoleMenu::find($id);
+            $data['role_group_permission'] = explode(',', $data['role_group_permission']);
+            $arrUserGroupMenu = explode(',', $data['role_group_menu_id']);
         }
+
+        $arrGroupUser = GroupUser::getListGroupUser($this->is_boss);
+        $menuAdmin = MenuSystem::getListMenuPermission();
 
         $arrRoleType = Define::$arrUserRole;
         $optionRole = FunctionLib::getOption($arrRoleType, isset($data['role_id'])? $data['role_id']: Define::ROLE_TYPE_CUSTOMER);
+        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['role_status'])? $data['role_status']: CGlobal::status_show);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminGroupUser.addRole',array_merge([
             'data'=>$data,
             'id'=>$id,
             'optionRole'=>$optionRole,
+            'optionStatus'=>$optionStatus,
+            'arrGroupUser'=>$arrGroupUser,
+            'menuAdmin'=>$menuAdmin,
+            'arrUserGroupMenu'=>$arrUserGroupMenu,
         ],$this->viewPermission));
     }
 
@@ -333,9 +346,31 @@ class AdminGroupUserController extends BaseAdminController{
         if(!$this->is_root && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
+        $arrRoleType = Define::$arrUserRole;
+
         $id_hiden = (int)Request::get('id_hiden', 0);
-        $data = $_POST;
-        if($this->valid($data) && empty($this->error)) {
+        $data['role_status'] = (int)Request::get('role_status',CGlobal::status_show);
+        $data['role_id'] = (int)Request::get('role_id',Define::ROLE_TYPE_CUSTOMER);
+        $data['role_name'] = isset($arrRoleType[$data['role_id']])? $arrRoleType[$data['role_id']]: 'no name';
+
+        //lay nhóm quyền
+        $groupUser = $data['user_group'] = Request::get('user_group', array());
+        if ($groupUser) {
+            $strGroupUser = implode(',', $groupUser);
+            $data['role_group_permission'] = $strGroupUser;
+        }
+        $groupUserMenu = $data['user_group_menu'] = Request::get('user_group_menu', array());
+        if ($groupUserMenu) {
+            $strGroupUserMenu = implode(',', $groupUserMenu);
+            $data['role_group_menu_id'] = $strGroupUserMenu;
+        }
+
+        if(empty($this->error)) {
+            $dataInsert['role_id'] = $data['role_id'];
+            $dataInsert['role_name'] = $data['role_name'];
+            $dataInsert['role_status'] = $data['role_status'];
+            $dataInsert['role_group_menu_id'] = $data['role_group_menu_id'];
+            $dataInsert['role_group_permission'] = $data['role_group_permission'];
             $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
                 //cap nhat
@@ -349,9 +384,11 @@ class AdminGroupUserController extends BaseAdminController{
                 }
             }
         }
-
+        $arrGroupUser = GroupUser::getListGroupUser($this->is_boss);
+        $menuAdmin = MenuSystem::getListMenuPermission();
         $arrRoleType = Define::$arrUserRole;
         $optionRole = FunctionLib::getOption($arrRoleType, isset($data['role_id'])? $data['role_id']: Define::ROLE_TYPE_CUSTOMER);
+        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['role_status'])? $data['role_status']: CGlobal::status_show);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminGroupUser.addRole',array_merge([
@@ -359,6 +396,9 @@ class AdminGroupUserController extends BaseAdminController{
             'id'=>$id,
             'error'=>$this->error,
             'optionRole'=>$optionRole,
+            'optionStatus'=>$optionStatus,
+            'arrGroupUser'=>$arrGroupUser,
+            'menuAdmin'=>$menuAdmin,
         ],$this->viewPermission));
     }
 
@@ -370,5 +410,4 @@ class AdminGroupUserController extends BaseAdminController{
             'permission_full'=>in_array($this->permission_view, $this->permission) ? 1 : 0,
         ];
     }
-
 }

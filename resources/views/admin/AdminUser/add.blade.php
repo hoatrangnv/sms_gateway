@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <div style="float: left; width: 50%">
+                <div style="float: left; width: 50%; display: none">
                     <div id="show_category_sub_campaign" class="body">
                         <label for="name" class="control-label">Menu hiển thị</label>
                         @if(isset($menuAdmin) && !empty($menuAdmin))
@@ -128,6 +128,7 @@
                     </div>
                 </div>
 
+                <div style="display: none">
                 <div class="clearfix"></div>
                 <div class="col-sm-2">
                     <label for="name" class="control-label">Danh sách nhóm quyền</label>
@@ -146,6 +147,7 @@
                             </div>
                         @endforeach
                     </div>
+                </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-sm-12 text-left">
                     {!! csrf_field() !!}
