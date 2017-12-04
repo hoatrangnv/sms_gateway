@@ -300,6 +300,6 @@ class User extends BaseModel{
     }
 
     public static function executesSQL($str_sql = ''){
-        return (trim($str_sql) != '') ? DB::select(DB::raw($str_sql)): array();
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
     }
 }
