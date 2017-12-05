@@ -102,3 +102,6 @@ Route::get('stationReport/view',array('as' => 'admin.stationReportView','uses' =
 /*SMS History*/
 Route::get('smsHistory/view',array('as' => 'admin.smsHistoryView','uses' => Admin.'\AdminSendSMSHistory@view'));
 Route::get('smsHistory/details',array('as' => 'admin.smsHistoryDetailsView','uses' => Admin.'\AdminSendSMSHistory@viewDetails'));
+
+/*Report Chart*/
+Route::get('reportChart/view',array('as' => 'admin.reportChart','uses' => Admin.'\AdminReportChartController@view'));
