@@ -64,19 +64,24 @@ class AdminSystemSettingController extends BaseAdminController
         $offset = ($page_no - 1) * $limit;
         $data = SystemSetting::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
+        if (isset($data[0]['system_setting_id']) && $data[0]['system_setting_id']!=""){
+            $id=FunctionLib::inputId($data[0]['system_setting_id']);
+        }else{
+            $id=FunctionLib::inputId(0);
+        }
 
-//        FunctionLib::debug($this->arrRuleString);
         $this->getDataDefault();
-        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
+        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data[0]['concatenation_rule'])?$data[0]['concatenation_rule']:CGlobal::concatenation_rule_first));
 
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSystemSetting.view',array_merge([
-            'data'=>$data,
+        return view('admin.AdminSystemSetting.add',array_merge([
+            'data'=>!empty($data)?$data[0]:array(),
             'search'=>$dataSearch,
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
             'optionRuleString'=>$optionRuleString,
+            'id'=>$id,
         ],$this->viewPermission));
     }
 
@@ -89,38 +94,41 @@ class AdminSystemSettingController extends BaseAdminController
         if($id > 0) {
             $data = SystemSetting::find($id);
         }
-        //FunctionLib::debug($data);
+
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSystemSetting.add',array_merge([
             'data'=>$data,
-            'id'=>$id,
+            'id'=>FunctionLib::$id,
             'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
-    public function postItem($ids) {
-        $id = FunctionLib::outputId($ids);
+    public function postItem() {
+        $id=0;
+        if (isset($_POST['id_hiden']) && $_POST['id_hiden']!= ""){
+            $id=FunctionLib::outputId($_POST['id_hiden']);
+        }
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
-        $id_hiden = (int)Request::get('id_hiden', 0);
+
         $data = $_POST;
         $data['updated_date'] = date("Y/m/d H:i",time());
         if($this->valid($data) && empty($this->error)) {
-            $id = ($id == 0)?$id_hiden: $id;
             if($id > 0) {
                 //cap nhat
                 if(SystemSetting::updateItem($id, $data)) {
                     return Redirect::route('admin.systemSettingView');
                 }
-            }else{
-                $data['created_date']=$data['updated_date'];
-                //them moi
-                if(SystemSetting::createItem($data)) {
-                    return Redirect::route('admin.systemSettingView');
-                }
             }
+//            else{
+//                $data['created_date']=$data['updated_date'];
+//                //them moi
+//                if(SystemSetting::createItem($data)) {
+//                    return Redirect::route('admin.systemSettingView');
+//                }
+//            }
         }
 
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);

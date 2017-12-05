@@ -57,7 +57,7 @@
 
         <div class="clear"></div>
         <div class="form-group col-sm-12 text-left">
-            <a class="btn btn-warning" href="{{URL::route('admin.systemSettingView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+            {{--<a class="btn btn-warning" href="{{URL::route('admin.systemSettingView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>--}}
             <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
         </div>
         <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
