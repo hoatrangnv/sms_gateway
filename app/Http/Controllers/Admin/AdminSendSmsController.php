@@ -128,11 +128,14 @@ class AdminSendSmsController extends BaseAdminController
                 }
             }
         }
-        FunctionLib::debug($this->error);
-        FunctionLib::debug($dataSend);
+        //FunctionLib::debug($dataSend);
 
         if($this->valid($data) && empty($this->error)) {
+            FunctionLib::debug($dataSend);
+            //web_sms_customer
 
+            //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
+            //user_manager_id = 0;
         }
 
         $this->viewPermission = $this->getPermissionPage();

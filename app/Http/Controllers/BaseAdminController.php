@@ -27,7 +27,7 @@ class BaseAdminController extends Controller{
     protected $user_group_menu = array();
     protected $is_root = false;
     protected $is_boss = false;
-    protected $languageSite = Define::ENGLISH_LANGUAGE;
+    protected $languageSite = Define::VIETNAM_LANGUAGE;
 
     public function __construct(){
 		$this->middleware(function ($request, $next) {
