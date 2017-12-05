@@ -22,16 +22,9 @@
                     <div class="panel panel-info">
                         {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                         <div class="panel-body">
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                <select name="station_account" id="station_account" class="w200 form-control input-sm">
-                                    {!! $optionUser !!}
-                                </select>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <label for="email_address">{{FunctionLib::viewLanguage('email_address')}}</label>
-                                <select name="email_address" id="email_address" class="w200 form-control input-sm">
+                                <select name="station_account" id="station_account" class="form-control input-sm">
                                     {!! $optionUser !!}
                                 </select>
                             </div>
