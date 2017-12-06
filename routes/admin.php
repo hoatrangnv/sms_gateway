@@ -105,3 +105,6 @@ Route::get('smsHistory/details',array('as' => 'admin.smsHistoryDetailsView','use
 
 /*Report Chart*/
 Route::get('reportChart/view',array('as' => 'admin.reportChart','uses' => Admin.'\AdminReportChartController@view'));
+
+/*SMS Report Chart*/
+Route::get('smsReportChart/view',array('as' => 'admin.smsReportChart','uses' => Admin.'\AdminSMSReportChartController@view'));
