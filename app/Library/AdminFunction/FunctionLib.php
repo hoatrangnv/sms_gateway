@@ -9,13 +9,22 @@ namespace App\Library\AdminFunction;
 
 use Illuminate\Support\Facades\Session;
 use App\library\AdminFunction\Define;
+use App\library\AdminFunction\CGlobal;
 
 class FunctionLib {
+
     static function bug($data,$die=true){
         echo "<pre>";
         print_r($data);
         echo "</pre>";
         if($die){die;}
+    }
+
+    static function getDirRoot(){
+        $webroot=str_replace('\\','/','http://'.$_SERVER['HTTP_HOST'].(dirname($_SERVER['SCRIPT_NAME'])?dirname($_SERVER['SCRIPT_NAME']):''));
+        $webroot.=$webroot[strlen($webroot)-1]!='/'?'/':'';
+        $strWebroot = $webroot;
+        return $strWebroot;
     }
     /**
      * @param $file_name
@@ -35,7 +44,7 @@ class FunctionLib {
                 CGlobal::$extraFooterCSS .= $html . "\n";
             return;
         } else {
-            $html = '<link type="text/css" rel="stylesheet" href="' .Config::get('config.WEB_ROOT') . '/assets/' . $file_name . ((CGlobal::$css_ver) ? '?ver=' . CGlobal::$css_ver : '') . '" />' . "\n";
+            $html = '<link type="text/css" rel="stylesheet" href="' .self::getDirRoot() . 'assets/' . $file_name . ((CGlobal::$css_ver) ? '?ver=' . CGlobal::$css_ver : '') . '" />' . "\n";
             if ($position == CGlobal::$POS_HEAD && strpos(CGlobal::$extraHeaderCSS, $html) === false)
                 CGlobal::$extraHeaderCSS .= $html . "\n";
             elseif ($position == CGlobal::$POS_END && strpos(CGlobal::$extraFooterCSS, $html) === false)
@@ -61,7 +70,7 @@ class FunctionLib {
                 CGlobal::$extraFooterJS .= $html . "\n";
             return;
         } else {
-            $html = '<script type="text/javascript" src="' . Config::get('config.WEB_ROOT')  . '/assets/' . $file_name . ((CGlobal::$js_ver) ? '?ver=' . CGlobal::$js_ver : '') . '"></script>';
+            $html = '<script type="text/javascript" src="' . self::getDirRoot()  . 'assets/' . $file_name . ((CGlobal::$js_ver) ? '?ver=' . CGlobal::$js_ver : '') . '"></script>';
             if ($position == CGlobal::$POS_HEAD && strpos(CGlobal::$extraHeaderJS, $html) === false)
                 CGlobal::$extraHeaderJS .= $html . "\n";
             elseif ($position == CGlobal::$POS_END && strpos(CGlobal::$extraFooterJS, $html) === false)
@@ -683,7 +692,7 @@ class FunctionLib {
     
     public static function SEO($img='', $meta_title='', $meta_keywords='', $meta_description='', $url=''){
     	if($img == ''){
-    		$img = Config::get('config.WEB_ROOT').'uploads/default.jpg';
+    		$img = self::getDirRoot().'uploads/default.jpg';
     	}
     	if($meta_title ==''){
     		$meta_title = CGlobal::web_name;

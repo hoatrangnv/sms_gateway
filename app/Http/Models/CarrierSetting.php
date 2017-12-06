@@ -149,4 +149,39 @@ class CarrierSetting extends BaseModel
         }
         return $data;
     }
+
+    public static function getOptionCarrier() {
+        $data = Cache::get(Define::CACHE_OPTION_CARRIER);
+        if (sizeof($data) == 0) {
+            $arr =  CarrierSetting::getListAll();
+            foreach ($arr as $value){
+                $data[$value->carrier_setting_id] = $value->carrier_name;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_CARRIER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+
+        $data = Cache::get(Define::CACHE_INFO_CARRIER);
+        if (sizeof($data) == 0) {
+            $arr =  CarrierSetting::getListAll();
+            foreach ($arr as $value){
+                $data[$value->carrier_setting_id] = array(
+                    'carrier_setting_id'=>$value->carrier_setting_id,
+                    'carrier_name'=>$value->carrier_name,
+                    'slipt_number'=>$value->slipt_number,
+                    'first_number'=>$value->first_number,
+                    'min_number'=>$value->min_number,
+                    'max_number'=>$value->max_number,
+                );
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_INFO_CARRIER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+
+
 }

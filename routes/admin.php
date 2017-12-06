@@ -52,6 +52,7 @@ Route::post('menu/deleteMenu', array('as' => 'admin.deleteMenu','uses' => Admin.
 
 /*Cài đặt hệ thống */
 Route::get('systemSetting/view',array('as' => 'admin.systemSettingView','uses' => Admin.'\AdminSystemSettingController@view'));
+Route::post('systemSetting/view/{id?}', array('as' => 'admin.systemSettingView','uses' => Admin.'\AdminSystemSettingController@postItem'));
 Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
 Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));
 Route::post('systemSetting/deleteSystemSetting', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax\
@@ -90,6 +91,20 @@ Route::post('dashboard/customer_api_edit/{id?}', array('as' => 'admin.customer_a
 
 /*Cài đặt station */
 Route::get('stationSetting/view',array('as' => 'admin.stationSettingView','uses' => Admin.'\AdminStationSettingController@view'));
-Route::get('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@getItem'));
-Route::post('stationSetting/edit/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@postItem'));
-Route::post('stationSetting/deleteModem', array('as' => 'admin.deleteModem','uses' => Admin.'\AdminStationSettingController@deleteModem'));//ajax
+Route::post('stationSetting/view/{id?}', array('as' => 'admin.stationSettingEdit','uses' => Admin.'\AdminStationSettingController@postItem'));
+
+/*Station List*/
+Route::get('stationList/view',array('as' => 'admin.stationListView','uses' => Admin.'\AdminStationListController@view'));
+
+/*Station Report*/
+Route::get('stationReport/view',array('as' => 'admin.stationReportView','uses' => Admin.'\AdminStationReportController@view'));
+
+/*SMS History*/
+Route::get('smsHistory/view',array('as' => 'admin.smsHistoryView','uses' => Admin.'\AdminSendSMSHistory@view'));
+Route::get('smsHistory/details',array('as' => 'admin.smsHistoryDetailsView','uses' => Admin.'\AdminSendSMSHistory@viewDetails'));
+
+/*Report Chart*/
+Route::get('reportChart/view',array('as' => 'admin.reportChart','uses' => Admin.'\AdminReportChartController@view'));
+
+/*SMS Report Chart*/
+Route::get('smsReportChart/view',array('as' => 'admin.smsReportChart','uses' => Admin.'\AdminSMSReportChartController@view'));

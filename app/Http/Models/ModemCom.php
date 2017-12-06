@@ -90,12 +90,19 @@ class ModemCom extends BaseModel
         }
     }
 
-    public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
-//        FunctionLib::debug($dataSearch);
+    public static function searchByCondition($dataSearch = array(),&$total){
+
+        $table_modem_com = Define::TABLE_MODEM_COM;
+        $table_web_user = Define::TABLE_USER;
+        $table_modem = Define::TABLE_MODEM;
+
         try{
-            $query = ModemCom::where('modem_com_id','>',0);
-            if (isset($dataSearch['modem_com_name']) && $dataSearch['modem_com_name'] != '') {
-                $query->where('modem_com_name','LIKE', '%' . $dataSearch['modem_com_name'] . '%');
+            $query = ModemCom::query()
+                ->select($table_modem_com.'.modem_com_name',$table_modem_com.'.carrier_name',$table_modem_com.'.mei_com',$table_modem_com.'.success_number',$table_modem_com.'.error_number',$table_modem_com.'.updated_date',$table_modem_com.'.content',$table_modem_com.'.is_active',$table_web_user.'.user_name',$table_modem.'.modem_name',$table_modem.'.status_content')
+                ->join($table_web_user,$table_modem_com.'.user_id','=',$table_web_user.'.user_id')
+                ->join($table_modem,$table_modem_com.'.modem_id','=',$table_modem.'.modem_id');
+            if (isset($dataSearch['station_account']) && $dataSearch['station_account'] != '') {
+                $query->where($table_modem_com.'.user_id','=', $dataSearch['station_account']);
             }
 
             $total = $query->count();
@@ -104,12 +111,11 @@ class ModemCom extends BaseModel
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
             if(!empty($fields)){
-                $result = $query->take($limit)->skip($offset)->get($fields);
+                $result = $query->get($fields);
             }else{
-                $result = $query->take($limit)->skip($offset)->get();
+                $result = $query->get();
             }
             return $result;
-
         }catch (PDOException $e){
             throw new PDOException();
         }

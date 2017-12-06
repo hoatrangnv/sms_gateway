@@ -19,23 +19,9 @@ class UserSetting extends BaseModel
         ,'role_type','role_name','sms_send_auto','concatenation_rule','created_date','updated_date');
 
     public static function getUserSettingByUserId($user_id) {
-        $tbl_user= Define::TABLE_USER;
         $tbl_user_setting = Define::TABLE_USER_SETTING;
-
-        $query = DB::table($tbl_user);
-        $query->join($tbl_user_setting, function ($join) use ($tbl_user, $tbl_user_setting,$user_id) {
-            $join->on($tbl_user.'.user_id', '=', $tbl_user_setting.'.user_id');
-        });
-        $query->where($tbl_user.'.user_id', '=', $user_id);
-        $fields = array(
-            $tbl_user.'.user_id',
-            $tbl_user.'.role_type',
-            $tbl_user.'.role_name',
-            $tbl_user.'.user_full_name',
-
-            $tbl_user_setting.'.*',
-        );
-        $users = $query->get($fields);
+        $tbl_user = Define::TABLE_USER;
+        $users = DB::table($tbl_user_setting)->where('user_id', '=', $user_id)->get();
         return isset($users[0]) ? $users[0]: array();
     }
 

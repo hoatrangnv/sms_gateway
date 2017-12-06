@@ -58,6 +58,12 @@
     "client_api": "API kết nối trạm",
     "customer_api": "API khách hàng",
 	"edit_api":"Chỉnh sửa API",
+	"to":"đến",
+	"station_management":"Quản lý trạm",
+	"station_setting":"Cài đặt trạm",
+	"station_list":"Danh sách trạm",
+	"sent_sms_history":"Lịch sử gửi tin nhắn",
+	"incorrect_number_list":"Chuỗi số không hợp lệ",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",
@@ -84,7 +90,7 @@
 	"failure": "Thất bại",
 	"com": "COM",
 	"imei_com": "IMEI COM",
-	"content": "Content",
+	"content": "Nội dung",
 	"phone_number": "Số điện thoại",
 	"upload from file excel": "Lấy từ file excel",
 	"sms_content": "Nội dung tin nhắn",
@@ -138,6 +144,9 @@
 	"report_by_month": "Báo cáo theo tháng",
 	"report_by_year": "Báo cáo theo năm",
 	"from_year": "Từ năm",
-	"to_year": "Đến năm",	
+	"from_day": "Từ ngày",
+	"to_year": "Đến năm",
+	"to_day": "Đến ngày",
+	"all": "Tất cả",
 	"": ""
 }

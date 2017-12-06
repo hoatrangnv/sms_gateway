@@ -14,7 +14,12 @@ class RoleMenu extends BaseModel
     protected $primaryKey = 'role_menu_id';
     public $timestamps = false;
 
-    protected $fillable = array('role_group_menu_id', 'role_status', 'role_id', 'role_name');
+    protected $fillable = array('role_group_menu_id','role_group_permission', 'role_status', 'role_id', 'role_name');
+
+    public static function getInfoByRoleId($role_id){
+        $infor = RoleMenu::where('role_id', $role_id)->first();
+        return $infor;
+    }
 
     public static function createItem($data){
         try {

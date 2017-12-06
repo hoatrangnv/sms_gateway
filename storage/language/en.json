@@ -57,6 +57,12 @@
 	"client_api": "Client API",
 	"customer_api": "Customer API",
 	"edit_api":"Edit API",
+	"to":"to",
+	"station_management":"Station management",
+	"station_setting":"Station setting",
+	"station_list":"Station list",
+	"sent_sms_history":"Send SMS history",
+	"incorrect_number_list":"Incorrect number list",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",
@@ -138,6 +144,6 @@
 	"report_by_year": "Report by year",
 	"from_year": "From year",
 	"to_year": "To year",
-
+	"all": "All",
 	"": ""
 }

@@ -116,6 +116,44 @@ class SmsSendTo extends BaseModel
         }
     }
 
+    public static function joinByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
+//        FunctionLib::debug($dataSearch);
+        try{
+            $web_sms_sendTo = Define::TABLE_SMS_SENDTO;
+            $web_carrier_setting = Define::TABLE_CARRIER_SETTING;
+            $web_sms_customer = Define::TABLE_SMS_CUSTOMER;
+
+            $query = SmsSendTo::query()
+                ->select($web_carrier_setting.'.carrier_name',$web_sms_sendTo.'.sms_sendTo_id',$web_sms_sendTo.'.send_date_at',$web_sms_sendTo.'.phone_receive',$web_sms_sendTo.'.content',$web_sms_sendTo.'.cost',$web_sms_sendTo.'.status',$web_sms_customer.'.incorrect_number_list',$web_sms_customer.'.sms_customer_id')
+                ->leftJoin($web_carrier_setting,$web_sms_sendTo.'.carrier_id','=',$web_carrier_setting.'.carrier_setting_id')
+                ->leftJoin($web_sms_customer,$web_sms_sendTo.'.sms_customer_id','=',$web_sms_customer.'.sms_customer_id')
+            ;
+
+            $query ->where($web_sms_sendTo.'.sms_customer_id','=',$dataSearch['id_cs']);
+            if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id'] != '') {
+                $query->where('carrier_id','=',$dataSearch['carrier_id']);
+            }
+            if (isset($dataSearch['status']) && $dataSearch['status'] != '') {
+                $query->where('web_sms_sendTo.status','=',$dataSearch['status']);
+            }
+
+            $total = $query->count();
+            $query->orderBy('sms_sendTo_id', 'desc');
+
+            //get field can lay du lieu
+            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
+            if(!empty($fields)){
+                $result = $query->take($limit)->skip($offset)->get($fields);
+            }else{
+                $result = $query->take($limit)->skip($offset)->get();
+            }
+            return $result;
+
+        }catch (PDOException $e){
+            throw new PDOException();
+        }
+    }
+
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);

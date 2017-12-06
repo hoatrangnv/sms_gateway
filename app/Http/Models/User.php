@@ -229,6 +229,33 @@ class User extends BaseModel{
         }
         return $data;
     }
+    public  static function getOptionUserFullNameAndMail(){
+        $data = Cache::get(Define::CACHE_OPTION_USER);
+        if (sizeof($data) == 0) {
+            $arr =  User::getList();
+            foreach ($arr as $value){
+                $data[$value->user_id] = $value->user_full_name.' - '.$value->user_email;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+
+    public  static function getOptionUserMail(){
+        $data = Cache::get(Define::CACHE_OPTION_USER_MAIL);
+        if (sizeof($data) == 0) {
+            $arr =  User::getList();
+            foreach ($arr as $value){
+                $data[$value->user_id] = $value->user_email;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_OPTION_USER_MAIL, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
     public static function remove($user){
         try {
             DB::connection()->getPdo()->beginTransaction();
@@ -283,5 +310,10 @@ class User extends BaseModel{
             // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
         Cache::forget(Define::CACHE_OPTION_USER);
+    }
+
+    public static function executesSQL($str_sql = ''){
+        //return (trim($str_sql) != '') ? DB::statement(trim($str_sql)): array();
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
     }
 }

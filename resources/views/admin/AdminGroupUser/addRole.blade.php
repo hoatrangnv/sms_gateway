@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách menu</a></li>
-            <li class="active">@if($id > 0)Cập nhật menu @else Tạo mới menu @endif</li>
+            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách phân quyền theo role</a></li>
+            <li class="active">@if($id > 0)Cập nhật @else Tạo mới @endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -27,90 +27,77 @@
                     </div>
                 @endif
                 <div style="float: left; width: 50%">
-                    <div class="col-sm-6">
+                    <div class="col-sm-10">
                         <div class="form-group">
-                            <label for="name" class="control-label">Tên menu Viet Nam<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name" name="menu_name"  class="form-control input-sm" value="@if(isset($data['menu_name'])){{$data['menu_name']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Router menu<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="link menu" id="menu_url" name="menu_url"  class="form-control input-sm" value="@if(isset($data['menu_url'])){{$data['menu_url']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Tên menu English<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name_en" name="menu_name_en"  class="form-control input-sm" value="@if(isset($data['menu_name_en'])){{$data['menu_name_en']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Thuộc menu cha</label>
-                            <select name="parent_id" id="parent_id" class="form-control input-sm">
-                                <option value="0">--- Chọn menu cha ---</option>
-                                {!! $optionMenuParent !!}}
+                            <label for="name" class="control-label">Phân quyền theo Role</label>
+                            <select name="role_id" id="role_id" class="form-control input-sm">
+                                {!! $optionRole !!}
                             </select>
                         </div>
                     </div>
-
-                    <div class="clearfix"></div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Icons menu</label>
-                            <input type="text" placeholder="Icons menu" id="menu_icons" name="menu_icons"  class="form-control input-sm" value="@if(isset($data['menu_icons'])){{$data['menu_icons']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Thứ tự hiển thị</label>
-                            <input type="text" placeholder="Thứ tự hiển thị" id="ordering" name="ordering"  class="form-control input-sm" value="@if(isset($data['ordering'])){{$data['ordering']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-10">
                         <div class="form-group">
                             <label for="name" class="control-label">Trạng thái</label>
-                            <select name="active" id="active" class="form-control input-sm">
+                            <select name="role_status" id="role_status" class="form-control input-sm">
                                 {!! $optionStatus !!}
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Menu</label>
-                            <select name="show_menu" id="show_menu" class="form-control input-sm">
-                                {!! $optionShowMenu !!}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Phân quyền</label>
-                            <select name="show_permission" id="show_permission" class="form-control input-sm">
-                                {!! $optionShowPermission !!}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Nội dung</label>
-                            <select name="showcontent" id="showcontent" class="form-control input-sm">
-                                {!! $optionShowContent !!}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="form-group col-sm-12 text-left">
-                        <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
-                        <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
-                    </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
+                </div>
+
+                <div style="float: left; width: 50%">
+                    <div id="show_category_sub_campaign" class="body">
+                        <label for="name" class="control-label">Menu hiển thị</label>
+                        @if(isset($menuAdmin) && !empty($menuAdmin))
+                            <div style="float: left; width: 100%;min-height: 250px;max-height:405px;overflow-x: hidden;">
+                                <table class="table table-bordered table-hover">
+                                    @foreach ($menuAdmin as $menu_id => $menu_name)
+                                        <tr>
+                                            <td class="text-center text-middle">
+                                                <input type="checkbox" class="checkItem" name="user_group_menu[]"
+                                                       @if(in_array($menu_id,$arrUserGroupMenu)) checked="checked" @endif
+                                                       value="{{(int)$menu_id}}" />
+                                            </td>
+                                            <td class="text-left text-middle">
+                                                @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
+                                                    <b>{{ $menu_name['menu_name'] }}</b>
+                                                @else
+                                                    <b>{{ $menu_name['menu_name_en'] }}</b>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="col-sm-2">
+                    <label for="name" class="control-label">Danh sách nhóm quyền</label>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+                <div class="clearfix"></div>
+                <div style="float: left; width: 100%;min-height: 100px;max-height:100px;overflow-x: hidden;">
+                    @foreach($arrGroupUser as $key => $val)
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="user_group[]" id="user_group_{{$val['group_user_id']}}" value="{{$val['group_user_id']}}" @if(isset($data['role_group_permission']) && in_array($val['group_user_id'],$data['role_group_permission'])) checked="checked" @endif> {{$val['group_user_name']}}
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="clearfix"></div>
+                {!! csrf_field() !!}
+                <div class="form-group col-sm-12 text-left">
+                    <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                    <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                 </div>
                 {{ Form::close() }}
             </div>

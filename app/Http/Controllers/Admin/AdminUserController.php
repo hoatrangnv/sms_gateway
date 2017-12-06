@@ -14,6 +14,7 @@ use App\Http\Models\MenuSystem;
 use App\Http\Models\UserSetting;
 use App\Http\Models\CarrierSetting;
 use App\Http\Models\UserCarrierSetting;
+use App\Http\Models\RoleMenu;
 
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -148,7 +149,16 @@ class AdminUserController extends BaseAdminController{
 
         $this->validUser($id,$data);
         //FunctionLib::debug($this->error);
-        $groupUser = $data['user_group'] = Request::get('user_group', array());
+
+        //lấy phân quyền theo role
+        if($data['role_type'] > 0){
+            $infoPermiRole = RoleMenu::getInfoByRoleId((int)$data['role_type']);
+            if($infoPermiRole){
+                $dataInsert['user_group'] = (isset($infoPermiRole->role_group_permission) && trim($infoPermiRole->role_group_permission) != '')?$infoPermiRole->role_group_permission:'';
+                $dataInsert['user_group_menu'] = (isset($infoPermiRole->role_group_menu_id) && trim($infoPermiRole->role_group_menu_id) != '')?$infoPermiRole->role_group_menu_id:'';
+            }
+        }
+        /*$groupUser = $data['user_group'] = Request::get('user_group', array());
         if ($groupUser) {
             $strGroupUser = implode(',', $groupUser);
             $dataInsert['user_group'] = $strGroupUser;
@@ -157,7 +167,8 @@ class AdminUserController extends BaseAdminController{
         if ($groupUserMenu) {
             $strGroupUserMenu = implode(',', $groupUserMenu);
             $dataInsert['user_group_menu'] = $strGroupUserMenu;
-        }
+        }*/
+
         if (empty($this->error)) {
             //Insert dữ liệu
             $dataInsert['user_name'] = $data['user_name'];

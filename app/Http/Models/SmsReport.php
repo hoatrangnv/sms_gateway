@@ -124,4 +124,9 @@ class SmsReport extends BaseModel
         Cache::forget(Define::CACHE_ALL_PARENT_MENU);
         Cache::forget(Define::CACHE_TREE_MENU);
     }
+
+    public static function executesSQL($str_sql = ''){
+        //return (trim($str_sql) != '') ? DB::statement(trim($str_sql)): array();
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+    }
 }
