@@ -62,10 +62,10 @@ class BaseAdminController extends Controller{
            //get lang
             if(isset($_GET['lang']) && (int)$_GET['lang'] > 0){
                 $get_lang = $_GET['lang'];
-                $lang = (isset(Define::$arrLanguage[$get_lang]))? $get_lang : Define::VIETNAM_LANGUAGE;
+                $lang = (isset(Define::$arrLanguage[$get_lang]))? $get_lang : $this->languageSite;
                 $request->session()->put('languageSite', $lang, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
-            $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite'): Define::ENGLISH_LANGUAGE ;
+            $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite'): $this->languageSite ;
 
             //FunctionLib::debug($this->languageSite);
            View::share('languageSite', $this->languageSite);

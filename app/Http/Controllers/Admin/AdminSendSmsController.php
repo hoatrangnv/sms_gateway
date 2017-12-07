@@ -86,6 +86,9 @@ class AdminSendSmsController extends BaseAdminController
             $this->error[] = FunctionLib::controLanguage('phone_number',$this->languageSite).' null';
         }
 
+        //nội dung tin nhắn
+        $contenstSms = trim($data['sms_content']);
+
         //đẩy dữ liệu theo nhà mạng
         if( empty($this->error)){
             $carrier = CarrierSetting::getInfoCarrier();
@@ -104,33 +107,55 @@ class AdminSendSmsController extends BaseAdminController
                     }
                 }
             }
+
+
             //check số có phù hợp với nhà mạng
             if(!empty($carrier)){
+                $arrMsg = array();
+                $infoPhone = array();
                 foreach ($dataPhone as $kkk=>$phone_number){
                     $lenghtNumber = strlen($phone_number);
                     foreach ($arrNumberCarries as $kk =>$dauso){
                         $pos = strpos(trim($phone_number), trim($dauso['first_number']));
                         if($pos === 0){
                             if($dauso['min_number'] >= $lenghtNumber || $lenghtNumber <= $dauso['max_number']){
-                                $dataSend[trim($phone_number)] = array(
+                                $infoPhone[trim($phone_number)] = array(
                                     'phone_number'=>$phone_number,
                                     'lenght'=>strlen($phone_number),
+                                    'slipt_number'=>$dauso['slipt_number'],
                                     'carrier_id'=>$dauso['carrier_id'],
                                     'carrier_name'=>$dauso['carrier_name']);
+                                $arrMsg[$dauso['carrier_id']] = $this->splitStringSms($contenstSms,$dauso['slipt_number']);
+                                //$arrMsg[$dauso['carrier_id']] = $contenstSms;
                             }else{
                                 $this->error[] = trim($phone_number).' not valiable';
                             }
                         }
                     }
-                    if(!empty($dataSend) && !in_array(trim($phone_number),array_keys($dataSend))){
+                    if(!empty($infoPhone) && !in_array(trim($phone_number),array_keys($infoPhone))){
                         $this->error[] = trim($phone_number).' not number first';
+                    }
+                }
+                //ghep data
+                if(!empty($infoPhone) && !empty($arrMsg)){
+                    foreach ($infoPhone as $k=>$phone){
+                        foreach ($arrMsg[$phone['carrier_id']] as $kk =>$msgSms){
+                            $dataSend[] = array(
+                                'phone_number'=>$phone['phone_number'],
+                                'content'=>$msgSms,
+                                'carrier_id'=>$phone['carrier_id'],
+                                'carrier_name'=>$phone['carrier_name']);
+                        }
                     }
                 }
             }
         }
-        //FunctionLib::debug($dataSend);
+        FunctionLib::debug($dataSend);
 
         if($this->valid($data) && empty($this->error)) {
+            /*if(!empty($dataSend)){
+                foreach ($dataSend as $)
+            }*/
             FunctionLib::debug($dataSend);
             //web_sms_customer
 
@@ -154,6 +179,28 @@ class AdminSendSmsController extends BaseAdminController
             }
         }
         return true;
+    }
+
+    public function splitStringSms($stringSms,$numberCut) {
+        if(trim($stringSms) != '') {
+            if(strlen($stringSms) <= $numberCut){
+                return array(1=>$stringSms);
+            }else{
+                return $arrResult = $this->cutStringSms($stringSms,$numberCut);
+            }
+        }
+    }
+
+    public function cutStringSms($str, $len){
+        $arr = array();
+        $strLen = strlen($str);
+        for ($i = 0; $i < $strLen; ){
+            $msg = mb_substr($str, $i, $len, 'UTF-8');
+            if($msg != '')
+            $arr[] = $msg;
+            $i = $i+$len;
+        }
+        return $arr;
     }
 
     public function checkNumberFone($stringFone = ''){

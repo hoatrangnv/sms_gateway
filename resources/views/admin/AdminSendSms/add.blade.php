@@ -30,19 +30,19 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label">{{FunctionLib::viewLanguage('phone_number')}}</label>
-                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5"></textarea>
+                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label">{{functionlib::viewlanguage('sms_content')}}</label>
-                            <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5"></textarea>
+                            <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5">@if(isset($data['sms_content'])){{$data['sms_content']}}@endif</textarea>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="name" class="control-label">{{FunctionLib::viewLanguage('send_sms_deadline')}}</label>
-                            <input type="text" class="form-control" id="send_sms_deadline" name="send_sms_deadline"  data-date-format="dd-mm-yyyy" value="">
+                            <input type="text" class="form-control" id="send_sms_deadline" name="send_sms_deadline"  data-date-format="dd-mm-yyyy" value="@if(isset($data['send_sms_deadline'])){{$data['send_sms_deadline']}}@endif">
                         </div>
                     </div>
                     <div class="clearfix"></div>
