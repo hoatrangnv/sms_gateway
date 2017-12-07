@@ -12,6 +12,7 @@ use App\Library\AdminFunction\Pagging;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSReportChartController extends BaseAdminController
 {
@@ -51,9 +52,6 @@ class AdminSMSReportChartController extends BaseAdminController
     public function getPermissionPage(){
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
-//            'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
-//            'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
-//            'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
         ];
     }
@@ -63,33 +61,64 @@ class AdminSMSReportChartController extends BaseAdminController
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
-        $number_day_of_month = cal_days_in_month(CAL_GREGORIAN,2,2017);
+
+        $dataSearch['month'] = addslashes(Request::get('month',''));
+        $dataSearch['year'] = addslashes(Request::get('year',''));
+        $month = date('m',time());
+        $year = date('Y',time());
+        if ($dataSearch['month'] !="" && $dataSearch['year'] !=""){
+            $month = $dataSearch['month'];
+            $year = $dataSearch['year'];
+        }
+
+        $number_day_of_month = cal_days_in_month(CAL_GREGORIAN,$month,$year);
         $arrDay = array();
         for($i =1;$i<=$number_day_of_month;$i++){
             $arrDay[] = $i;
         }
 
-        $sql = "SELECT wsr.sms_report_id,wsr.carrier_id,wsr.day,wsr.month,wsr.success_number,wsr.fail_number,(wsr.success_number + wsr.fail_number) as num_mess,wcs.carrier_name from web_sms_report wsr INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id";
+        $sql = "SELECT wsr.sms_report_id,wsr.carrier_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id 
+                WHERE wsr.user_id = 8
+                GROUP BY wsr.carrier_id,wsr.day,wsr.month,wsr.hour,wsr.year,wsr.user_id
+";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
-            
-        }
-        FunctionLib::debug($data);
 
-        $page_no = (int) Request::get('page_no',1);
-        $sbmValue = Request::get('submit', 1);
+        }
+
+        $arrData = array();
+        foreach ($data as $k => $v){
+            foreach ($arrDay as $v1){
+                if ($v['day'] == $v1){
+                    $arrData[$v['carrier_name']][$v1] = $v['num_mess'];
+                }
+            }
+        }
+        foreach ($arrDay as $d1){
+            foreach ($arrData as $k=>$v){
+                if (!array_key_exists($d1,$v)){
+                    $arrData[$k][$d1] = 0;
+                }
+            }
+        }
+        foreach ($arrData as $k=>$v){
+            ksort($v);
+            $arrData[$k] = $v;
+        }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $total = 0;
-
         $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminReportChart.view',array_merge([
-            'data'=>array(),
+        return view('admin.AdminSMSReportChart.view',array_merge([
+            'data'=>$data,
+            'arrDay'=>$arrDay,
+            'arrData'=>$arrData,
             'search'=>$dataSearch,
             'size'=>$total,
             'optionUser'=>$optionUser,
+            'title_line_chart'=>FunctionLib::controLanguage('report',$this->languageSite).' '.$month.'/'.$year,
         ],$this->viewPermission));
     }
 }
