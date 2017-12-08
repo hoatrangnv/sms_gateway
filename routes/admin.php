@@ -107,4 +107,4 @@ Route::get('smsHistory/details',array('as' => 'admin.smsHistoryDetailsView','use
 Route::get('reportChart/view',array('as' => 'admin.reportChart','uses' => Admin.'\AdminReportChartController@view'));
 
 /*SMS Report Chart*/
-Route::get('smsReportChart/view',array('as' => 'admin.smsReportChart','uses' => Admin.'\AdminSMSReportChartController@view'));
+Route::get('smsMonthChart/view',array('as' => 'admin.smsMonthChart','uses' => Admin.'\AdminSMSReportChartController@view'));
