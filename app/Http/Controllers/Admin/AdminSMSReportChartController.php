@@ -77,7 +77,18 @@ class AdminSMSReportChartController extends BaseAdminController
             $arrDay[] = $i;
         }
 
-        $sql = "SELECT wsr.sms_report_id,wsr.carrier_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id 
+        $year_range = date('Y',time())-date("Y",strtotime("-10 year"));
+        $current_year = date("Y",time());
+        $last_10_year = date("Y",strtotime("-10 year"));
+        $arrYear = array();
+        for($i=$last_10_year;$i<=$current_year;$i++){
+            $arrYear[$i] = $i;
+            $i++;
+        }
+//        FunctionLib::debug($arrYear);
+
+        $sql = "SELECT wsr.sms_report_id,wcs.carrier_setting_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr 
+                INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id 
                 WHERE wsr.user_id = 8
                 GROUP BY wsr.carrier_id,wsr.day,wsr.month,wsr.hour,wsr.year,wsr.user_id
 ";
@@ -102,9 +113,33 @@ class AdminSMSReportChartController extends BaseAdminController
                 }
             }
         }
+        $arrPieChart = array();
         foreach ($arrData as $k=>$v){
             ksort($v);
             $arrData[$k] = $v;
+            $total_num=0;
+            foreach ($v as $item){
+                $total_num += $item;
+            }
+            $arrPieChart[$k] = $total_num;
+        }
+        foreach ($arrPieChart as $k =>$v){
+            if (min($arrPieChart) == $v){
+                $arrPieChart1[] = array(
+                    "name"=>$k,
+                    "percent"=>$v,
+                    "sliced"=>"true",
+                    "selected"=> "true"
+                );
+            }else{
+                $arrPieChart1[] = array(
+                    "name"=>$k,
+                    "percent"=>$v,
+                    "sliced"=>"false",
+                    "selected"=> "false"
+                );
+            }
+
         }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $total = 0;
@@ -115,6 +150,7 @@ class AdminSMSReportChartController extends BaseAdminController
             'data'=>$data,
             'arrDay'=>$arrDay,
             'arrData'=>$arrData,
+            'arrPieChart'=>$arrPieChart1,
             'search'=>$dataSearch,
             'size'=>$total,
             'optionUser'=>$optionUser,

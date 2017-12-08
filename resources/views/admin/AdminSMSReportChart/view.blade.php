@@ -57,6 +57,8 @@
                 @endif
                 <!--view biểu đồ 2-->
                     <div id="container_2"></div>
+                    <!--view biểu đồ 1-->
+                    <div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
                 </div>
             </div>
         </div>
@@ -91,19 +93,124 @@
                 },
                 series: [
                     <?php
-                    foreach ($arrData as $k=>$v){
+                    foreach ($arrData as $k => $v) {
                         echo "
                         {
-                        name:'".$k."',
+                        name:'" . $k . "',
                         data:[
-                        ".join($v,',')."
+                        " . join($v, ',') . "
                         ]
                         },
                         ";
                     }
                     ?>
-                    ]
+                ]
 
+            });
+            Highcharts.chart('container', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Browser market shares January, 2015 to May, 2015'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Microsoft Internet Explorer',
+                        y: 56.33
+                    }, {
+                        name: 'Chrome',
+                        y: 24.03,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Firefox',
+                        y: 10.38
+                    }, {
+                        name: 'Safari',
+                        y: 4.77
+                    }, {
+                        name: 'Opera',
+                        y: 0.91
+                    }, {
+                        name: 'Proprietary or Undetectable',
+                        y: 0.2
+                    }]
+                }]
+            });
+            $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie',
+//                    type: 'pie',
+//                    options3d: {
+//                        enabled: true,
+//                        alpha: 50,
+//                        beta: 0
+//                    }
+                },
+                title: {
+                    text: '<?php echo $title_line_chart?>'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        depth: 35,
+//                        dataLabels: {
+//                            enabled: true,
+//                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+//                            style: {
+//                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+//                            }
+//                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [
+                        <?php
+                        foreach ($arrPieChart as $k => $v) {
+                            echo "
+                            {
+                            name:'" . $v['name'] . "',
+                            y:" . $v['percent'] . ",
+                            sliced: " . $v['sliced'] . ",
+                            selected: " . $v['selected'] . "
+                            },
+                            ";
+                        }
+                        ?>
+                    ]
+                }]
             });
         });
     </script>
