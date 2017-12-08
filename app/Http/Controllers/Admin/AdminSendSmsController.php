@@ -152,7 +152,7 @@ class AdminSendSmsController extends BaseAdminController
         }
         FunctionLib::debug($dataSend);
 
-        if($this->valid($data) && empty($this->error)) {
+        if(empty($this->error)) {
             /*if(!empty($dataSend)){
                 foreach ($dataSend as $)
             }*/
