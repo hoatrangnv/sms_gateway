@@ -29,21 +29,21 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
+                                    <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
+                                    <select name="carrier_id" id="carrier_id" class="form-control input-sm">
+                                        {!! $optionCarrier !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <label for="year">{{FunctionLib::viewLanguage('choose_year')}}</label>
                                     <select name="year" id="year" class="form-control input-sm">
-                                        {!! $optionUser !!}
+                                        {!! $optionYear !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <label for="month">{{FunctionLib::viewLanguage('choose_month')}}</label>
                                     <select name="month" id="month" class="form-control input-sm">
-                                        {!! $optionUser !!}
+                                        {!! $optionMonth !!}
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">
@@ -54,11 +54,25 @@
                             </div>
                             {{ Form::close() }}
                         </div>
-                @endif
-                <!--view biểu đồ 2-->
-                    <div id="container_2"></div>
-                    <!--view biểu đồ 1-->
-                    <div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+                    @endif
+                    @if(!empty($arrData))
+                    <!--view biểu đồ line-->
+                        <div id="container_2"></div>
+                    @else
+                        <div class="alert">
+                            {{FunctionLib::viewLanguage('no_data')}}
+                        </div>
+                    @endif
+                    @if(!empty($arrPieChart))
+                    <!--view biểu đồ tròn-->
+                        <div id="container"
+                             style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto">
+                        </div>
+                        <div id=""
+                             style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto">
+                            <p>{{FunctionLib::viewLanguage('total').' '.$total_num_pie}}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -107,55 +121,6 @@
                 ]
 
             });
-            Highcharts.chart('container', {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: 'Browser market shares January, 2015 to May, 2015'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Brands',
-                    colorByPoint: true,
-                    data: [{
-                        name: 'Microsoft Internet Explorer',
-                        y: 56.33
-                    }, {
-                        name: 'Chrome',
-                        y: 24.03,
-                        sliced: true,
-                        selected: true
-                    }, {
-                        name: 'Firefox',
-                        y: 10.38
-                    }, {
-                        name: 'Safari',
-                        y: 4.77
-                    }, {
-                        name: 'Opera',
-                        y: 0.91
-                    }, {
-                        name: 'Proprietary or Undetectable',
-                        y: 0.2
-                    }]
-                }]
-            });
             $('#container').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -180,16 +145,16 @@
                         allowPointSelect: true,
                         cursor: 'pointer',
                         depth: 35,
-//                        dataLabels: {
-//                            enabled: true,
-//                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-//                            style: {
-//                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-//                            }
-//                        },
                         dataLabels: {
-                            enabled: false
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
                         },
+//                        dataLabels: {
+//                            enabled: false
+//                        },
                         showInLegend: true
                     }
                 },
