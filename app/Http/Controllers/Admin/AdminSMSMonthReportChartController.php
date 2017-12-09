@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\Translation\Dumper\FileDumper;
 
-class AdminSMSReportChartController extends BaseAdminController
+class AdminSMSMonthReportChartController extends BaseAdminController
 {
     private $permission_view = 'stationReport_view';
     private $permission_full = 'stationReport_full';
@@ -94,66 +94,67 @@ class AdminSMSReportChartController extends BaseAdminController
             $arrMonth[$i] = $i;
         }
 
-        $sql_where = "wsr.user_id = 8 AND wsr.month=".$month." AND wsr.year=".$year." ";
+        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." ";
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
 
-        $sql = "SELECT wsr.sms_report_id,wcs.carrier_setting_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr 
-                INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id 
-                WHERE {$sql_where} 
-                GROUP BY wsr.carrier_id,wsr.day,wsr.month,wsr.hour,wsr.year,wsr.user_id
-";
+        $sql = "
+        SELECT Sum(wsr.success_number) as total_sms_month,wcs.carrier_name,wsr.month,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+WHERE {$sql_where} 
+GROUP BY wsr.month,wsr.year,wsr.carrier_id
+        ";
+//        FunctionLib::debug($sql);
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
 
         $arrData = array();
-        foreach ($data as $k => $v){
-            foreach ($arrDay as $v1){
-                if ($v['day'] == $v1){
-                    $arrData[$v['carrier_name']][$v1] = $v['num_mess'];
-                }
-            }
-        }
-        foreach ($arrDay as $d1){
-            foreach ($arrData as $k=>$v){
-                if (!array_key_exists($d1,$v)){
-                    $arrData[$k][$d1] = 0;
-                }
-            }
-        }
+//        foreach ($data as $k => $v){
+//            foreach ($arrDay as $v1){
+//                if ($v['day'] == $v1){
+//                    $arrData[$v['carrier_name']][$v1] = $v['num_mess'];
+//                }
+//            }
+//        }
+//        foreach ($arrDay as $d1){
+//            foreach ($arrData as $k=>$v){
+//                if (!array_key_exists($d1,$v)){
+//                    $arrData[$k][$d1] = 0;
+//                }
+//            }
+//        }
         $arrPieChart = array();
-        foreach ($arrData as $k=>$v){
-            ksort($v);
-            $arrData[$k] = $v;
-            $total_num=0;
-            foreach ($v as $item){
-                $total_num += $item;
-            }
-            $arrPieChart[$k] = $total_num;
-        }
+//        foreach ($arrData as $k=>$v){
+//            ksort($v);
+//            $arrData[$k] = $v;
+//            $total_num=0;
+//            foreach ($v as $item){
+//                $total_num += $item;
+//            }
+//            $arrPieChart[$k] = $total_num;
+//        }
         $arrPieChart1=array();
         $total_num_pie = 0;
-        foreach ($arrPieChart as $k =>$v){
-            $total_num_pie+=$v;
-            if (min($arrPieChart) == $v){
-                $arrPieChart1[] = array(
-                    "name"=>$k,
-                    "percent"=>$v,
-                    "sliced"=>"true",
-                    "selected"=> "true"
-                );
-            }else{
-                $arrPieChart1[] = array(
-                    "name"=>$k,
-                    "percent"=>$v,
-                    "sliced"=>"false",
-                    "selected"=> "false"
-                );
-            }
-        }
+//        foreach ($arrPieChart as $k =>$v){
+//            $total_num_pie+=$v;
+//            if (min($arrPieChart) == $v){
+//                $arrPieChart1[] = array(
+//                    "name"=>$k,
+//                    "percent"=>$v,
+//                    "sliced"=>"true",
+//                    "selected"=> "true"
+//                );
+//            }else{
+//                $arrPieChart1[] = array(
+//                    "name"=>$k,
+//                    "percent"=>$v,
+//                    "sliced"=>"false",
+//                    "selected"=> "false"
+//                );
+//            }
+//        }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $total = 0;
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
@@ -164,9 +165,9 @@ class AdminSMSReportChartController extends BaseAdminController
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSReportChart.view',array_merge([
             'data'=>$data,
-            'arrDay'=>$arrDay,
-            'arrData'=>$arrData,
-            'arrPieChart'=>$arrPieChart1,
+//            'arrDay'=>$arrDay,
+//            'arrData'=>$arrData,
+//            'arrPieChart'=>$arrPieChart1,
             'search'=>$dataSearch,
             'size'=>$total,
             'optionUser'=>$optionUser,
