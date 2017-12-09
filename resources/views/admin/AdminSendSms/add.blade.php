@@ -19,7 +19,7 @@
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
                 {{Form::open(array('method' => 'POST','role'=>'form','files' => true))}}
-                @if(isset($error))
+                @if(isset($error) && !empty($error))
                     <div class="alert alert-danger" role="alert">
                         @foreach($error as $itmError)
                             <p>{{ $itmError }}</p>

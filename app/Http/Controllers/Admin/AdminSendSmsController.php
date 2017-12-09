@@ -77,8 +77,11 @@ class AdminSendSmsController extends BaseAdminController
         $dataSend = array();
         $dataPhone = array();
         $dataCarriesInput = array();
+        //nội dung tin nhắn
+        $contenstSms = trim($data['sms_content']);
         $send_sms_deadline = (trim($data['send_sms_deadline']) != '')? $data['send_sms_deadline']:'';
         $arr_numberFone = (trim($data['phone_number']) != '')? explode(',',trim($data['phone_number'])): array();
+
         if(!empty($arr_numberFone)){
             foreach ($arr_numberFone as $k =>$number){
                 $checkNumber = FunctionLib::checkNumberPhone($number);
@@ -92,8 +95,7 @@ class AdminSendSmsController extends BaseAdminController
             $this->error[] = FunctionLib::controLanguage('phone_number',$this->languageSite).' null';
         }
 
-        //nội dung tin nhắn
-        $contenstSms = trim($data['sms_content']);
+
 
         //đẩy dữ liệu theo nhà mạng
         if( empty($this->error)){
@@ -176,8 +178,10 @@ class AdminSendSmsController extends BaseAdminController
                 'user_customer_id'=>$this->user['user_id'],
                 'status'=>Define::SMS_STATUS_PENDING,
                 'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
-                'sms_deadline'=>FunctionLib::getDateTime($send_sms_deadline),
                 'created_date'=>FunctionLib::getDateTime(),);
+            if(trim($send_sms_deadline) != ''){
+                $dataInsertSmsCustomer['sms_deadline'] = FunctionLib::getDateTime($send_sms_deadline);
+            }
             $sms_customer_id = SmsCustomer::createItem($dataInsertSmsCustomer);
 
             //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
