@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\CarrierSetting;
 use App\Http\Models\MenuSystem;
+use App\Http\Models\SmsCustomer;
+use App\Http\Models\SmsLog;
+use App\Http\Models\SmsSendTo;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -59,6 +62,7 @@ class AdminSendSmsController extends BaseAdminController
         return view('admin.AdminSendSms.add',array_merge([
             'data'=>$data,
             'id'=>0,
+            'error'=>$this->error,
             'arrStatus'=>$this->arrStatus,
         ],$this->viewPermission));
     }
@@ -72,10 +76,12 @@ class AdminSendSmsController extends BaseAdminController
         //check số hợp lệ
         $dataSend = array();
         $dataPhone = array();
+        $dataCarriesInput = array();
+        $send_sms_deadline = (trim($data['send_sms_deadline']) != '')? $data['send_sms_deadline']:'';
         $arr_numberFone = (trim($data['phone_number']) != '')? explode(',',trim($data['phone_number'])): array();
         if(!empty($arr_numberFone)){
             foreach ($arr_numberFone as $k =>$number){
-                $checkNumber = $this->checkNumberFone($number);
+                $checkNumber = FunctionLib::checkNumberPhone($number);
                 if($checkNumber > 0){
                     $dataPhone[] = trim($checkNumber);
                 }else{
@@ -125,8 +131,7 @@ class AdminSendSmsController extends BaseAdminController
                                     'slipt_number'=>$dauso['slipt_number'],
                                     'carrier_id'=>$dauso['carrier_id'],
                                     'carrier_name'=>$dauso['carrier_name']);
-                                $arrMsg[$dauso['carrier_id']] = $this->splitStringSms($contenstSms,$dauso['slipt_number']);
-                                //$arrMsg[$dauso['carrier_id']] = $contenstSms;
+                                $arrMsg[$dauso['carrier_id']] = FunctionLib::splitStringSms($contenstSms,$dauso['slipt_number']);
                             }else{
                                 $this->error[] = trim($phone_number).' not valiable';
                             }
@@ -145,22 +150,73 @@ class AdminSendSmsController extends BaseAdminController
                                 'content'=>$msgSms,
                                 'carrier_id'=>$phone['carrier_id'],
                                 'carrier_name'=>$phone['carrier_name']);
+
+                            $dataCarriesInput[$phone['carrier_id']] = array(
+                                'carrier_id'=>$phone['carrier_id'],
+                                'carrier_name'=>$phone['carrier_name']);
                         }
                     }
                 }
+
             }
         }
-        FunctionLib::debug($dataSend);
+        //FunctionLib::debug($dataSend);
+        if(!empty($dataSend) && empty($this->error)) {
+            //get tổng send SMS theo nhà mạng
+            foreach ($dataSend as $kkk=>$valu){
+                if(isset($dataCarriesInput[$valu['carrier_id']]['tong_sms'])){
+                    $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = $dataCarriesInput[$valu['carrier_id']]['tong_sms']+1;
+                }else{
+                    $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = 1;
+                }
+            }
 
-        if(empty($this->error)) {
-            /*if(!empty($dataSend)){
-                foreach ($dataSend as $)
-            }*/
-            FunctionLib::debug($dataSend);
             //web_sms_customer
+            $dataInsertSmsCustomer = array(
+                'user_customer_id'=>$this->user['user_id'],
+                'status'=>Define::SMS_STATUS_PENDING,
+                'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                'sms_deadline'=>FunctionLib::getDateTime($send_sms_deadline),
+                'created_date'=>FunctionLib::getDateTime(),);
+            $sms_customer_id = SmsCustomer::createItem($dataInsertSmsCustomer);
 
             //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
-            //user_manager_id = 0;
+            foreach ($dataCarriesInput as $carrier_id =>&$val_carr){
+                $dataInsertSmsLog = array(
+                    'user_customer_id'=>$this->user['user_id'],
+                    'user_manager_id'=>0,
+                    'sms_customer_id'=>$sms_customer_id,
+                    'carrier_id'=>$val_carr['carrier_id'],
+                    'carrier_name'=>$val_carr['carrier_name'],
+                    'total_sms'=>$val_carr['tong_sms'],
+                    'status'=>Define::SMS_STATUS_PENDING,
+                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                    'send_date'=>FunctionLib::getIntDate(),
+                    'created_date'=>FunctionLib::getDateTime(),);
+                $sms_log_id = SmsLog::createItem($dataInsertSmsLog);
+                $val_carr['sms_log_id'] = $sms_log_id;
+            }
+
+            //web_sms_sendTo
+            $dataInsertSmsSendTo = array();
+            foreach ($dataSend as $kk=>$val){
+                $dataInsertSmsSendTo[] = array(
+                    'sms_log_id'=>isset($dataCarriesInput[$val['carrier_id']]['sms_log_id']) ? $dataCarriesInput[$val['carrier_id']]['sms_log_id']: 0,
+                    'sms_customer_id'=>$sms_customer_id,
+                    'user_customer_id'=>$this->user['user_id'],
+                    'carrier_id'=>$val['carrier_id'],
+                    'phone_receive'=>$val['phone_number'],
+                    'status'=>Define::SMS_STATUS_PENDING,
+                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                    'content'=>$val['content'],
+                    'content_grafted'=>$val['content'],
+                    );
+            }
+            if(!empty($dataInsertSmsSendTo)){
+                SmsSendTo::insertMultiple($dataInsertSmsSendTo);
+            }
+            $this->error[] = 'Danh sách tin nhắn đang được chờ xử lý';
+            $data = array();
         }
 
         $this->viewPermission = $this->getPermissionPage();
@@ -172,49 +228,5 @@ class AdminSendSmsController extends BaseAdminController
         ],$this->viewPermission));
     }
 
-    private function valid($data=array()) {
-        if(!empty($data)) {
-            if(isset($data['banner_name']) && trim($data['banner_name']) == '') {
-                $this->error[] = 'Null';
-            }
-        }
-        return true;
-    }
 
-    public function splitStringSms($stringSms,$numberCut) {
-        if(trim($stringSms) != '') {
-            if(strlen($stringSms) <= $numberCut){
-                return array(1=>$stringSms);
-            }else{
-                return $arrResult = $this->cutStringSms($stringSms,$numberCut);
-            }
-        }
-    }
-
-    public function cutStringSms($str, $len){
-        $arr = array();
-        $strLen = strlen($str);
-        for ($i = 0; $i < $strLen; ){
-            $msg = mb_substr($str, $i, $len, 'UTF-8');
-            if($msg != '')
-            $arr[] = $msg;
-            $i = $i+$len;
-        }
-        return $arr;
-    }
-
-    public function checkNumberFone($stringFone = ''){
-        if(trim($stringFone) != ''){
-            $stringFone = str_replace(' ', '', $stringFone);
-            $stringFone = str_replace('-', '', $stringFone);
-            $stringFone = str_replace('.', '', $stringFone);
-            $pattern = '/^\d+$/';
-            if (preg_match($pattern, $stringFone)) {
-                return $stringFone;
-            } else {
-                return 0;
-            }
-        }
-        return false;
-    }
 }

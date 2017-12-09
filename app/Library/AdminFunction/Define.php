@@ -92,15 +92,21 @@ class Define{
 
     const PAYMENT_TYPE_FIRST = 1;
     const PAYMENT_TYPE_AFTER = 2;
-    static $arrPayment = array(Define::PAYMENT_TYPE_FIRST => 'Thanh toán trước',Define::PAYMENT_TYPE_AFTER => 'Thanh toán sau');
+    static $arrPayment = array(
+        Define::PAYMENT_TYPE_FIRST => 'Thanh toán trước',
+        Define::PAYMENT_TYPE_AFTER => 'Thanh toán sau');
 
     const SCAN_AUTO_TRUE = 1;
     const SCAN_AUTO_FASLE = 0;
-    static $arrScanAuto = array(Define::SCAN_AUTO_TRUE => 'Có',Define::PAYMENT_TYPE_AFTER => 'Không');
+    static $arrScanAuto = array(
+        Define::SCAN_AUTO_TRUE => 'Có',
+        Define::PAYMENT_TYPE_AFTER => 'Không');
 
     const SEND_AUTO_TRUE = 1;
     const SEND_AUTO_FASLE = 0;
-    static $arrSendAuto = array(Define::SEND_AUTO_TRUE => 'Tự động',Define::PAYMENT_TYPE_AFTER => 'Qua kiểm duyệt');
+    static $arrSendAuto = array(
+        Define::SEND_AUTO_TRUE => 'Tự động',
+        Define::PAYMENT_TYPE_AFTER => 'Qua kiểm duyệt');
 
     const STATUS_SHOW = 1;
     const STATUS_HIDE = 0;
@@ -110,8 +116,21 @@ class Define{
     const ROLE_TYPE_SUPER_ADMIN = 1;
     const ROLE_TYPE_ADMIN = 2;
     const ROLE_TYPE_CUSTOMER = 3;
-    static $arrUserRole = array(Define::ROLE_TYPE_SUPER_ADMIN => 'SuperAdmin',Define::ROLE_TYPE_ADMIN => 'Admin',Define::ROLE_TYPE_CUSTOMER => 'Customer');
+    static $arrUserRole = array(
+        Define::ROLE_TYPE_SUPER_ADMIN => 'SuperAdmin',
+        Define::ROLE_TYPE_ADMIN => 'Admin',
+        Define::ROLE_TYPE_CUSTOMER => 'Customer');
 
 
-
+    //trang thái các tin nhắn
+    //Pending, Success, Fail
+    const SMS_STATUS_PENDING = 0;
+    const SMS_STATUS_SUCCESS = 1;
+    const SMS_STATUS_PROCESSING = 2;
+    const SMS_STATUS_FAIL = -1;
+    static $arrSmsStatus = array(
+        Define::SMS_STATUS_PENDING => 'Pending',
+        Define::SMS_STATUS_SUCCESS => 'Successful',
+        Define::SMS_STATUS_PROCESSING => 'Processing',
+        Define::SMS_STATUS_FAIL => 'Fail');
 }

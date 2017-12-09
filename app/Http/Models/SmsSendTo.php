@@ -18,6 +18,16 @@ class SmsSendTo extends BaseModel
         'modem_id', 'com_id','phone_receive','phone_send','status','status_name',
         'content','hour','day','month','year','send_date','send_date_at','created_date');
 
+    public static function insertMultiple($dataInput){
+        $str_sql = FunctionLib::buildSqlInsertMultiple(Define::TABLE_SMS_SENDTO, $dataInput);
+        if(trim($str_sql) != ''){
+            DB::statement($str_sql);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
