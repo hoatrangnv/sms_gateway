@@ -114,3 +114,6 @@ Route::get('smsMonthReportChart/view',array('as' => 'admin.smsMonthReportChart',
 
 /*SMS Day Report Chart*/
 Route::get('smsDayReportChart/view',array('as' => 'admin.smsDayReportChart','uses' => Admin.'\AdminSMSDayReportChartController@view'));
+
+/*SMS Year Report Chart*/
+Route::get('smsYearReportChart/view',array('as' => 'admin.smsYearReportChart','uses' => Admin.'\AdminSMSYearReportChartController@view'));
