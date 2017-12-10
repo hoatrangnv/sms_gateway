@@ -66,32 +66,18 @@ class AdminSMSMonthReportChartController extends BaseAdminController
         $dataSearch['month'] = addslashes(Request::get('month',''));
         $dataSearch['year'] = addslashes(Request::get('year',''));
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
-        $month = date('m',time());
         $year = date('Y',time());
-        if ($dataSearch['month'] !="" && $dataSearch['year'] !=""){
-            $month = $dataSearch['month'];
+        if (isset($dataSearch['year']) && $dataSearch['year'] !=""){
             $year = $dataSearch['year'];
         }
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
-        $number_day_of_month = cal_days_in_month(CAL_GREGORIAN,$month,$year);
-        $arrDay = array();
-        for($i =1;$i<=$number_day_of_month;$i++){
-            $arrDay[] = $i;
-        }
-
-        $year_range = date('Y',time())-date("Y",strtotime("-10 year"));
         $current_year = date("Y",time());
-        $current_month = date("m",time());
         $last_10_year = date("Y",strtotime("-10 year"));
         $arrYear = array();
-        $arrMonth = array();
         for($i=$current_year;$i>=$last_10_year;$i--){
             $arrYear[$i] = $i;
-        }
-        for($i=12;$i>=1;$i--){
-            $arrMonth[$i] = $i;
         }
 
         $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." ";
@@ -104,78 +90,32 @@ class AdminSMSMonthReportChartController extends BaseAdminController
 WHERE {$sql_where} 
 GROUP BY wsr.month,wsr.year,wsr.carrier_id
         ";
-//        FunctionLib::debug($sql);
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
+        $arr_month_report = array();
+        foreach ($data as $v){
+            $arr_month_report[$v['month']] = $v['month'].'/'.$year;
+        }
+        $data_report = array();
+        foreach ($data as $k => $v){
+            $data_report[$v['carrier_name']][] = $v;
+        }
 
-        $arrData = array();
-//        foreach ($data as $k => $v){
-//            foreach ($arrDay as $v1){
-//                if ($v['day'] == $v1){
-//                    $arrData[$v['carrier_name']][$v1] = $v['num_mess'];
-//                }
-//            }
-//        }
-//        foreach ($arrDay as $d1){
-//            foreach ($arrData as $k=>$v){
-//                if (!array_key_exists($d1,$v)){
-//                    $arrData[$k][$d1] = 0;
-//                }
-//            }
-//        }
-        $arrPieChart = array();
-//        foreach ($arrData as $k=>$v){
-//            ksort($v);
-//            $arrData[$k] = $v;
-//            $total_num=0;
-//            foreach ($v as $item){
-//                $total_num += $item;
-//            }
-//            $arrPieChart[$k] = $total_num;
-//        }
-        $arrPieChart1=array();
-        $total_num_pie = 0;
-//        foreach ($arrPieChart as $k =>$v){
-//            $total_num_pie+=$v;
-//            if (min($arrPieChart) == $v){
-//                $arrPieChart1[] = array(
-//                    "name"=>$k,
-//                    "percent"=>$v,
-//                    "sliced"=>"true",
-//                    "selected"=> "true"
-//                );
-//            }else{
-//                $arrPieChart1[] = array(
-//                    "name"=>$k,
-//                    "percent"=>$v,
-//                    "sliced"=>"false",
-//                    "selected"=> "false"
-//                );
-//            }
-//        }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
-        $total = 0;
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSMSReportChart.view',array_merge([
-            'data'=>$data,
-//            'arrDay'=>$arrDay,
-//            'arrData'=>$arrData,
-//            'arrPieChart'=>$arrPieChart1,
+        return view('admin.AdminSMSMonthReportChart.view',array_merge([
+            'data'=>$data_report,
             'search'=>$dataSearch,
-            'size'=>$total,
             'optionUser'=>$optionUser,
             'optionYear'=>$optionYear,
-            'optionMonth'=>$optionMonth,
             'optionCarrier'=>$optionCarrier,
-            'total_num_pie'=>$total_num_pie,
-            'title_line_chart'=>FunctionLib::controLanguage('report',$this->languageSite).' '.$month.'/'.$year,
+            'arr_month_report'=>$arr_month_report,
         ],$this->viewPermission));
     }
 }
