@@ -14,7 +14,7 @@ class SmsCustomer extends BaseModel
     protected $primaryKey = 'sms_customer_id';
     public $timestamps = false;
 
-    protected $fillable = array('user_id', 'correct_number', 'incorrect_number', 'incorrect_number_list', 'status','status_name', 'send_date','created_date');
+    protected $fillable = array('user_id', 'correct_number', 'incorrect_number', 'incorrect_number_list', 'status','status_name', 'send_date','created_date','cost','sms_deadline');
 
     public static function createItem($data){
         try {

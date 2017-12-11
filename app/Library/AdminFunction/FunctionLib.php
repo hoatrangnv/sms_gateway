@@ -219,9 +219,17 @@ class FunctionLib {
         echo '</pre>';
         die;
     }
-    static function getDateTime() {
-        return date('Y-m-d h:i:s');
+
+    static function getDateTime($time = '') {
+        $time = (trim($time) != '')?strtotime($time): time();
+        return date('Y-m-d h:i:s',$time);
     }
+
+    static function getIntDate($time = '') {
+        $time = (trim($time) != '')?strtotime($time): time();
+        return date('Ymd',$time);
+    }
+
     static function debugOnsite($array) {
         if(Request::get('quynhtm') == 133){
             FunctionLib::debug($array);
@@ -955,5 +963,71 @@ class FunctionLib {
                 }
             }
         }
+    }
+
+    /**
+     * @param $table
+     * @param $arrInput
+     * @return string
+     */
+    public static function buildSqlInsertMultiple($table, $arrInput){
+        if(!empty($arrInput)){
+            $arrSql = array();
+            $arrField = array_keys($arrInput[0]);
+            foreach ($arrInput as $k => $row) {
+                $strVals = '';
+                foreach ($arrField as $key => $field) {
+                    $strVals .= "'" . trim($row[$field]) . '\',';
+                }
+                if ($strVals != '')
+                    $strVals = rtrim($strVals, ',');
+                if ($strVals != '')
+                    $arrSql[] = '(' . $strVals . ')';
+            }
+
+            $fields = implode(',', $arrField);
+            if (!empty($arrSql)) {
+                $query = 'INSERT INTO `' . $table . '` (' . $fields . ') VALUES ' . implode(',', $arrSql);
+                return $query;
+            }
+        }
+        return '';
+    }
+
+    public static function splitStringSms($stringSms,$numberCut) {
+        if(trim($stringSms) != '') {
+            if(strlen($stringSms) <= $numberCut){
+                return array(1=>$stringSms);
+            }else{
+                return $arrResult = self::cutStringSms($stringSms,$numberCut);
+            }
+        }
+    }
+
+    public static function cutStringSms($str, $len){
+        $arr = array();
+        $strLen = strlen($str);
+        for ($i = 0; $i < $strLen; ){
+            $msg = mb_substr($str, $i, $len, 'UTF-8');
+            if($msg != '')
+                $arr[] = $msg;
+            $i = $i+$len;
+        }
+        return $arr;
+    }
+
+    public static function checkNumberPhone($stringFone = ''){
+        if(trim($stringFone) != ''){
+            $stringFone = str_replace(' ', '', $stringFone);
+            $stringFone = str_replace('-', '', $stringFone);
+            $stringFone = str_replace('.', '', $stringFone);
+            $pattern = '/^\d+$/';
+            if (preg_match($pattern, $stringFone)) {
+                return $stringFone;
+            } else {
+                return 0;
+            }
+        }
+        return false;
     }
 }

@@ -16,7 +16,17 @@ class SmsSendTo extends BaseModel
 
     protected $fillable = array('sms_log_id', 'sms_customer_id', 'user_customer_id', 'carrier_id', 'user_manager_id',
         'modem_id', 'com_id','phone_receive','phone_send','status','status_name',
-        'content','hour','day','month','year','send_date','send_date_at','created_date');
+        'content','hour','day','month','year','send_date','send_date_at','created_date','cost','content_grafted');
+
+    public static function insertMultiple($dataInput){
+        $str_sql = FunctionLib::buildSqlInsertMultiple(Define::TABLE_SMS_SENDTO, $dataInput);
+        if(trim($str_sql) != ''){
+            DB::statement($str_sql);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static function createItem($data){
         try {
