@@ -75,7 +75,7 @@
                 xAxis: {
                     categories: [
                         <?php
-                        foreach ($arr_month_report as $value) {
+                        foreach ($arr_year_report as $value) {
                             echo "'" . $value . "',";
                         }
                         ?>
@@ -120,7 +120,7 @@
                             data:[
                             ";
                         foreach ($v as $item) {
-                            echo $item['total_sms_month'] . ",";
+                            echo $item['total_sms_year'] . ",";
                         }
                         echo "]},";
                     }

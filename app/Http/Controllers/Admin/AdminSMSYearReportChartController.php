@@ -63,59 +63,62 @@ class AdminSMSYearReportChartController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
-        $dataSearch['month'] = addslashes(Request::get('month',''));
-        $dataSearch['year'] = addslashes(Request::get('year',''));
+        $dataSearch['year_from'] = addslashes(Request::get('year_from',''));
+        $dataSearch['year_to'] = addslashes(Request::get('year_to',''));
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
         $year = date('Y',time());
-        $month = date('m',time());
 
-        if (isset($dataSearch['year']) && $dataSearch['year'] !="" && isset($dataSearch['month']) && $dataSearch['month'] !=""){
-            $year = $dataSearch['year'];
-            $month = $dataSearch['month'];
+        $year_to = date("Y",time());
+        $year_from = date("Y",strtotime("-2 year"));
+        if (isset($dataSearch['year_from']) && $dataSearch['year_from'] !="" && isset($dataSearch['year_to']) && $dataSearch['year_to'] !="" ){
+            $year_from = $dataSearch['year_from'];
+            $year_to = $dataSearch['year_to'];
         }
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
         $current_year = date("Y",time());
-        $current_month = date("m",time());
         $last_10_year = date("Y",strtotime("-10 year"));
         $arrYear = array();
-        $arrMonth = array();
         for($i=$current_year;$i>=$last_10_year;$i--){
             $arrYear[$i] = $i;
         }
-        for($i=12;$i>=1;$i--){
-            $arrMonth[$i] = $i;
-        }
 
-        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." AND wsr.month=".$month." ";
+        $sql_where = "wsr.user_id = 8 AND wsr.year>=".$year_from." AND wsr.month<=".$year_to." ";
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_month,wcs.carrier_name,wsr.day,wsr.month,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_year,wcs.carrier_name,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
-GROUP BY wsr.day,wsr.month,wsr.year,wsr.carrier_id
+GROUP BY wsr.year,wsr.carrier_id
         ";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
-        $arr_month_report = array();
+        $arr_year_report = array();
         foreach ($data as $v){
-            $arr_month_report[$v['day']] = $v['day'].'/'.$month.'/'.$year;
+            $arr_year_report[$v['year']] =$v['year'];
+        }
+        foreach ($arr_year_report as $value ){
+            foreach ($data as $k => $v){
+                if (!isset($v['year']) || $value != $v['year']){
+                    FunctionLib::debug('xx');
+                }
+            }
         }
         $data_report = array();
         foreach ($data as $k => $v){
             $data_report[$v['carrier_name']][] = $v;
         }
 
+        FunctionLib::debug($data_report);
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSYearReportChart.view',array_merge([
@@ -123,9 +126,8 @@ GROUP BY wsr.day,wsr.month,wsr.year,wsr.carrier_id
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
             'optionYear'=>$optionYear,
-            'optionMonth'=>$optionMonth,
             'optionCarrier'=>$optionCarrier,
-            'arr_month_report'=>$arr_month_report,
+            'arr_year_report'=>$arr_year_report,
         ],$this->viewPermission));
     }
 }
