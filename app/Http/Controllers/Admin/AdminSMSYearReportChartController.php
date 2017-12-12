@@ -63,16 +63,16 @@ class AdminSMSYearReportChartController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
-        $dataSearch['year_from'] = addslashes(Request::get('year_from',''));
-        $dataSearch['year_to'] = addslashes(Request::get('year_to',''));
+        $dataSearch['from_year'] = addslashes(Request::get('from_year',''));
+        $dataSearch['to_year'] = addslashes(Request::get('to_year',''));
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
         $year = date('Y',time());
 
         $year_to = date("Y",time());
         $year_from = date("Y",strtotime("-2 year"));
-        if (isset($dataSearch['year_from']) && $dataSearch['year_from'] !="" && isset($dataSearch['year_to']) && $dataSearch['year_to'] !="" ){
-            $year_from = $dataSearch['year_from'];
-            $year_to = $dataSearch['year_to'];
+        if (isset($dataSearch['from_year']) && $dataSearch['from_year'] !="" && isset($dataSearch['to_year']) && $dataSearch['to_year'] !="" ){
+            $year_from = $dataSearch['from_year'];
+            $year_to = $dataSearch['to_year'];
         }
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
@@ -90,9 +90,9 @@ class AdminSMSYearReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_year,wcs.carrier_name,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_year,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
-GROUP BY wsr.year,wsr.carrier_id
+GROUP BY wsr.year
         ";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
@@ -102,30 +102,21 @@ GROUP BY wsr.year,wsr.carrier_id
         foreach ($data as $v){
             $arr_year_report[$v['year']] =$v['year'];
         }
-        foreach ($arr_year_report as $value ){
-            foreach ($data as $k => $v){
-                if (!isset($v['year']) || $value != $v['year']){
-                    FunctionLib::debug('xx');
-                }
-            }
-        }
-        $data_report = array();
-        foreach ($data as $k => $v){
-            $data_report[$v['carrier_name']][] = $v;
-        }
 
-        FunctionLib::debug($data_report);
+
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
-        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
+        $optionYearFrom = FunctionLib::getOption($arrYear, (isset($dataSearch['from_year']) && $dataSearch['from_year']!=""?$dataSearch['from_year']:$year_from));
+        $optionYearTo = FunctionLib::getOption($arrYear, (isset($dataSearch['to_year']) && $dataSearch['to_year']!=""?$dataSearch['to_year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSYearReportChart.view',array_merge([
-            'data'=>$data_report,
+            'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
-            'optionYear'=>$optionYear,
+            'optionYearFrom'=>$optionYearFrom,
+            'optionYearTo'=>$optionYearTo,
             'optionCarrier'=>$optionCarrier,
             'arr_year_report'=>$arr_year_report,
         ],$this->viewPermission));

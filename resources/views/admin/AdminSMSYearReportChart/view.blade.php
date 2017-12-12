@@ -35,9 +35,15 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-1">
-                                    <label for="year">{{FunctionLib::viewLanguage('choose_year')}}</label>
-                                    <select name="year" id="year" class="form-control input-sm">
-                                        {!! $optionYear !!}
+                                    <label for="from_year">{{FunctionLib::viewLanguage('from_year')}}</label>
+                                    <select name="from_year" id="from_year" class="form-control input-sm">
+                                        {!! $optionYearFrom !!}
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label for="to_year">{{FunctionLib::viewLanguage('to_year')}}</label>
+                                    <select name="to_year" id="to_year" class="form-control input-sm">
+                                        {!! $optionYearTo !!}
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">
@@ -70,62 +76,48 @@
                     type: 'column'
                 },
                 title: {
-                    text: '{{FunctionLib::viewLanguage('report_by_month')}}'
+                    text: '{{FunctionLib::viewLanguage('report_by_year')}}'
                 },
                 xAxis: {
-                    categories: [
-                        <?php
-                        foreach ($arr_year_report as $value) {
-                            echo "'" . $value . "',";
-                        }
-                        ?>
-                    ],
-                    crosshair: true
+                    type: 'category'
                 },
                 yAxis: {
-                    min: 0,
                     title: {
                         text: 'Values'
                     }
+
                 },
-                tooltip: {
-//                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-//                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-//                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-//                    footerFormat: '</table>',
-//                    shared: true,
-//                    useHTML: true
-                    headerFormat: '<b>{point.x}</b><br/>',
-                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                legend: {
+                    enabled: false
                 },
                 plotOptions: {
-//                    column: {
-//                        pointPadding: 0.2,
-//                        borderWidth: 0
-//                    }
-                    column: {
-                        stacking: 'normal',
+                    series: {
+                        borderWidth: 0,
                         dataLabels: {
                             enabled: true,
-                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                            format: '{point.y}'
                         }
                     }
                 },
-                series: [
 
-                    <?php
-                    foreach ($data as $k => $v) {
-                        echo "{
-                            name:'" . $k . "',
-                            data:[
-                            ";
-                        foreach ($v as $item) {
-                            echo $item['total_sms_year'] . ",";
-                        }
-                        echo "]},";
-                    }
-                    ?>
-                ]
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [
+                            <?php
+                            foreach ($data as $v) {
+                                echo "{
+                            name:{$v['year']},
+                            y:{$v['total_sms_year']}
+                            },";
+                            }
+                            ?>
+                    ]
+                }]
             });
         });
     </script>
