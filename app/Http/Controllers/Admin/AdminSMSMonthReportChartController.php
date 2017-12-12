@@ -86,9 +86,9 @@ class AdminSMSMonthReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_month,wcs.carrier_name,wsr.month,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_month,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
-GROUP BY wsr.month,wsr.year,wsr.carrier_id
+GROUP BY wsr.month,wsr.year
         ";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
@@ -98,10 +98,10 @@ GROUP BY wsr.month,wsr.year,wsr.carrier_id
         foreach ($data as $v){
             $arr_month_report[$v['month']] = $v['month'].'/'.$year;
         }
-        $data_report = array();
-        foreach ($data as $k => $v){
-            $data_report[$v['carrier_name']][] = $v;
-        }
+//        $data_report = array();
+//        foreach ($data as $k => $v){
+//            $data_report[$v['carrier_name']][] = $v;
+//        }
 
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
@@ -109,8 +109,9 @@ GROUP BY wsr.month,wsr.year,wsr.carrier_id
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+//        FunctionLib::debug($data);
         return view('admin.AdminSMSMonthReportChart.view',array_merge([
-            'data'=>$data_report,
+            'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
             'optionYear'=>$optionYear,
