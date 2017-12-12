@@ -94,9 +94,9 @@ class AdminSMSDayReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_month,wcs.carrier_name,wsr.day,wsr.month,wsr.year,wsr.carrier_id from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_month,wsr.day,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
-GROUP BY wsr.day,wsr.month,wsr.year,wsr.carrier_id
+GROUP BY wsr.day,wsr.month,wsr.year
         ";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
@@ -105,10 +105,6 @@ GROUP BY wsr.day,wsr.month,wsr.year,wsr.carrier_id
         $arr_month_report = array();
         foreach ($data as $v){
             $arr_month_report[$v['day']] = $v['day'].'/'.$month.'/'.$year;
-        }
-        $data_report = array();
-        foreach ($data as $k => $v){
-            $data_report[$v['carrier_name']][] = $v;
         }
 
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
@@ -119,7 +115,7 @@ GROUP BY wsr.day,wsr.month,wsr.year,wsr.carrier_id
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSDayReportChart.view',array_merge([
-            'data'=>$data_report,
+            'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
             'optionYear'=>$optionYear,
