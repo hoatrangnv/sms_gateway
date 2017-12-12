@@ -138,7 +138,7 @@ class AdminSMSReportChartController extends BaseAdminController
         $total_num_pie = 0;
         foreach ($arrPieChart as $k =>$v){
             $total_num_pie+=$v;
-            if (min($arrPieChart) == $v){
+            if (max($arrPieChart) == $v){
                 $arrPieChart1[] = array(
                     "name"=>$k,
                     "percent"=>$v,
