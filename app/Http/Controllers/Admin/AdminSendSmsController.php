@@ -175,7 +175,7 @@ class AdminSendSmsController extends BaseAdminController
 
             //web_sms_customer
             $dataInsertSmsCustomer = array(
-                'user_customer_id'=>$this->user['user_id'],
+                'user_customer_id'=>$this->user_id,
                 'status'=>Define::SMS_STATUS_PENDING,
                 'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
                 'created_date'=>FunctionLib::getDateTime(),);
@@ -187,7 +187,7 @@ class AdminSendSmsController extends BaseAdminController
             //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
             foreach ($dataCarriesInput as $carrier_id =>&$val_carr){
                 $dataInsertSmsLog = array(
-                    'user_customer_id'=>$this->user['user_id'],
+                    'user_customer_id'=>$this->user_id,
                     'user_manager_id'=>0,
                     'sms_customer_id'=>$sms_customer_id,
                     'carrier_id'=>$val_carr['carrier_id'],
@@ -207,7 +207,7 @@ class AdminSendSmsController extends BaseAdminController
                 $dataInsertSmsSendTo[] = array(
                     'sms_log_id'=>isset($dataCarriesInput[$val['carrier_id']]['sms_log_id']) ? $dataCarriesInput[$val['carrier_id']]['sms_log_id']: 0,
                     'sms_customer_id'=>$sms_customer_id,
-                    'user_customer_id'=>$this->user['user_id'],
+                    'user_customer_id'=>$this->user_id,
                     'carrier_id'=>$val['carrier_id'],
                     'phone_receive'=>$val['phone_number'],
                     'status'=>Define::SMS_STATUS_PENDING,

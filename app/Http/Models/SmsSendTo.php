@@ -144,7 +144,7 @@ class SmsSendTo extends BaseModel
                 $query->where('carrier_id','=',$dataSearch['carrier_id']);
             }
             if (isset($dataSearch['status']) && $dataSearch['status'] != '') {
-                $query->where('web_sms_sendTo.status','=',$dataSearch['status']);
+                $query->where($web_sms_sendTo.'.status','=',$dataSearch['status']);
             }
 
             $total = $query->count();
@@ -164,13 +164,23 @@ class SmsSendTo extends BaseModel
         }
     }
 
+    /**
+     * QuynhTM
+     * @param int $sms_log_id
+     */
+    public static function getListSmsSendToBySmsLogId($sms_log_id =0){
+        if($sms_log_id >0){
+            $query = SmsSendTo::where('sms_sendTo_id','>',0);
+            $query->where('sms_log_id','=', $sms_log_id);
+            $result = $query->orderBy('sms_sendTo_id', 'desc')->get(array('sms_sendTo_id','sms_log_id','carrier_id','phone_receive','content_grafted'));
+            return $result;
+        }
+        return array();
+    }
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
     }
 }

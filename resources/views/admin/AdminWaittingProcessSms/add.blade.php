@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách menu</a></li>
-            <li class="active">@if($id > 0)Cập nhật menu @else Tạo mới menu @endif</li>
+            <li><a href="{{URL::route('admin.waittingSmsView')}}"> SMS Waitting Process</a></li>
+            <li class="active">Edit sms</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -26,91 +26,59 @@
                         @endforeach
                     </div>
                 @endif
-                <div style="float: left; width: 50%">
-                    <div class="col-sm-6">
+                <div style="float: left; width: 35%">
+                    <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="name" class="control-label">Tên menu Viet Nam<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name" name="menu_name"  class="form-control input-sm" value="@if(isset($data['menu_name'])){{$data['menu_name']}}@endif">
+                            <label for="name" class="control-label">{{FunctionLib::viewLanguage('phone_number')}}</label>
+                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Router menu<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="link menu" id="menu_url" name="menu_url"  class="form-control input-sm" value="@if(isset($data['menu_url'])){{$data['menu_url']}}@endif">
-                        </div>
+                    <div class="col-sm-12">
+                        <label for="category_status">{{FunctionLib::viewLanguage('concatenation_rule')}}</label>
+                        <select name="carrier_id" id="carrier_id" class="form-control input-sm">
+                            {!!$optionStatus!!}
+                        </select>
                     </div>
-
                     <div class="clearfix"></div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Tên menu English<span class="red"> (*) </span></label>
-                            <input type="text" placeholder="Tên menu" id="menu_name_en" name="menu_name_en"  class="form-control input-sm" value="@if(isset($data['menu_name_en'])){{$data['menu_name_en']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Thuộc menu cha</label>
-                            <select name="parent_id" id="parent_id" class="form-control input-sm">
-                                <option value="0">--- Chọn menu cha ---</option>
-                                {!! $optionMenuParent !!}}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Icons menu</label>
-                            <input type="text" placeholder="Icons menu" id="menu_icons" name="menu_icons"  class="form-control input-sm" value="@if(isset($data['menu_icons'])){{$data['menu_icons']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Thứ tự hiển thị</label>
-                            <input type="text" placeholder="Thứ tự hiển thị" id="ordering" name="ordering"  class="form-control input-sm" value="@if(isset($data['ordering'])){{$data['ordering']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Trạng thái</label>
-                            <select name="active" id="active" class="form-control input-sm">
-                                {!! $optionStatus !!}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Menu</label>
-                            <select name="show_menu" id="show_menu" class="form-control input-sm">
-                                {!! $optionShowMenu !!}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Phân quyền</label>
-                            <select name="show_permission" id="show_permission" class="form-control input-sm">
-                                {!! $optionShowPermission !!}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="name" class="control-label">Nội dung</label>
-                            <select name="showcontent" id="showcontent" class="form-control input-sm">
-                                {!! $optionShowContent !!}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                    <div class="form-group col-sm-12 text-left">
+                    <div class="form-group col-sm-12 text-left marginTop10">
                         <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                         <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
+                </div>
+                <!--Danh sách các tin nhắn-->
+                <div style="float: left; width: 65%">
+                    <div class="span clearfix"> @if(count($data) >0) Có tổng số <b>{{count($data)}}</b> sms @endif </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thin-border-bottom">
+                            <tr class="">
+                                <th width="3%" class="text-center">TT</th>
+                                <th width="14%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
+                                <th width="12%" class="text-center">{{FunctionLib::viewLanguage('phone_number')}}</th>
+                                <th width="68%">{{FunctionLib::viewLanguage('sms_content')}}</th>
+                                <th width="3%"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($data as $key => $item)
+                                <tr>
+                                    <td class="text-center text-middle">{!! $key+1 !!}</td>
+                                    <td class="text-center text-middle">{!! $item['carrier_id'] !!}</td>
+                                    <td class="text-center text-middle">{!! $item['phone_receive'] !!}</td>
+                                    <td>{!! $item['content_grafted'] !!}</td>
+                                    <td class="text-center text-middle">
+                                        @if($is_root || $permission_full ==1|| $permission_edit ==1  )
+                                           <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                        @endif
+                                        <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 {{ Form::close() }}
             </div>

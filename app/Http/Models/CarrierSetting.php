@@ -120,6 +120,7 @@ class CarrierSetting extends BaseModel
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
         }
         Cache::forget(Define::CACHE_INFO_CARRIER);
+        Cache::forget(Define::CACHE_OPTION_CARRIER);
     }
 
     public static function getListAll() {
