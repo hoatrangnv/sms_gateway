@@ -63,7 +63,7 @@ class AdminModemController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['carrier_name'] = addslashes(Request::get('carrier_name',''));
+        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
 
         $limit = CGlobal::number_limit_show;
         $total = 0;
@@ -72,6 +72,7 @@ class AdminModemController extends BaseAdminController
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         return view('admin.AdminModem.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
@@ -79,6 +80,7 @@ class AdminModemController extends BaseAdminController
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
             'arrUser'=>$this->arrManager,
+            'optionUser'=>$optionUser,
         ],$this->viewPermission));
     }
 

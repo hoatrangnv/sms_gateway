@@ -21,17 +21,13 @@
                     {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                     <div class="panel-body">
                         <div class="form-group col-lg-4">
-                            <label for="carrier_name">{{FunctionLib::viewLanguage('carrier_name')}}</label>
-                            <input type="text" class="form-control input-sm" id="carrier_name" name="carrier_name" placeholder="" @if(isset($search['carrier_name']) && $search['carrier_name'] != '')value="{{$search['carrier_name']}}"@endif>
+                            <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                            <select name="station_account" id="station_account" class="form-control input-sm">
+                                {!! $optionUser !!}
+                            </select>
                         </div>
 
                         <div class="form-group col-lg-12 text-right">
-                            @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.modemEdit',array('id' => FunctionLib::inputId(0)))}}">
-                                    <i class="ace-icon fa fa-plus-circle"></i>
-                                    {{FunctionLib::viewLanguage('add')}}
-                                </a>
-                            @endif
                                 {{--<button class="btn btn-warning btn-sm" type="submit" name="submit" value="2"><i class="fa fa-file-excel-o"></i> Xuất Excel</button>--}}
                                 <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i class="fa fa-search"></i> {{FunctionLib::viewLanguage('search')}}</button>
                         </div>
@@ -46,32 +42,37 @@
                         <tr class="">
                             <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
                             <th width="w50">{{FunctionLib::viewLanguage('modem_name')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('acc')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('device_id')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('modem_type')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('station_account')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('successful')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('failure')}}</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('update')}}</th>
                             <th width="w100">{{FunctionLib::viewLanguage('digital')}}</th>
-                            <th width="w100">{{FunctionLib::viewLanguage('is_active')}}</th>
-                            <th width="w50" class="text-center">Thao tác</th>
+                            <th width="w100">{{FunctionLib::viewLanguage('status')}}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($data as $key => $item)
-                            <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
+                        @foreach ($data as $key1 => $item1)
+                            @foreach ($item1 as $key => $item)
+                            <tr class="middle">
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>{{ $item['modem_name'] }}</td>
-                                <td>{{ $arrUser[$item['user_id']] }}</td>
-                                <td>{{ $item['device_id'] }}</td>
+                                <td>{{ $item['modem_type'] }}</td>
+                                <td>{{ $item['user_name'] }}</td>
+                                <td>{{ $item['sum_success'] }}</td>
+                                <td>{{ $item['sum_error'] }}</td>
+                                <td>{{ $item['updated_date'] }}</td>
                                 <td>{{ $item['digital'] }}</td>
-                                <td>{{ $item['is_active'] }}</td>
-                                <td class="text-center middle" align="center">
-                                    @if($is_root || $permission_edit)
-                                        <a href="{{URL::route('admin.modemEdit',array('id' => FunctionLib::inputId($item['modem_id'])))}}" title="Sửa item"><i class="fa fa-pencil-square-o fa-2x"></i></a>
-                                    @endif
-                                    @if($is_boss || $permission_remove)
-                                            <a href="javascript:void(0);" onclick="Admin.deleteItem({{$item['device_token_id']}},15)" title="Xóa Item"><i class="fa fa-trash fa-2x"></i></a>
-                                            <span class="img_loading" id="img_loading_{{$item['permission_id']}}"></span>
+                                <td>
+                                    @if($item['is_active']=='1')
+                                        <i class="fa fa-toggle-on fa-2x green" aria-hidden="true"></i>
+                                    @else
+                                        <i class="fa fa-toggle-off fa-2x red" aria-hidden="true"></i>
                                     @endif
                                 </td>
+
                             </tr>
+                            @endforeach
                         @endforeach
                         </tbody>
                     </table>
