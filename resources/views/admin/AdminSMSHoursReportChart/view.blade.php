@@ -35,15 +35,9 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
-                                    <label for="month">{{FunctionLib::viewLanguage('choose_month')}}</label>
-                                    <select name="month" id="month" class="form-control input-sm">
-                                        {!! $optionMonth !!}
-                                    </select>
-                                </div>
-                                <div class="col-sm-2">
-                                    <label for="year">{{FunctionLib::viewLanguage('choose_year')}}</label>
-                                    <select name="year" id="year" class="form-control input-sm">
-                                        {!! $optionYear !!}
+                                    <label for="hours">{{FunctionLib::viewLanguage('divide_by_hour')}}</label>
+                                    <select name="hours" id="hours" class="form-control input-sm">
+                                        {!! $optionHours !!}
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">

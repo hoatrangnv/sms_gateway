@@ -110,10 +110,9 @@ class Modem extends BaseModel
                 ->groupBy($table_modem.'.modem_id')
 //                ->orderBy($table_modem.'modem_id', 'desc');
             ;
-            FunctionLib::debug($query);
-//            if (isset($dataSearch['modem_name']) && $dataSearch['modem_name'] != '') {
-//                $query->where('modem_name', 'LIKE', '%' . $dataSearch['modem_name'] . '%');
-//            }
+            if (isset($dataSearch['station_account']) && $dataSearch['station_account'] != '') {
+                $query->where($table_modem.'user_id', '=', $dataSearch['station_account']);
+            }
 
             $total = $query->count();
 

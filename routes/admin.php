@@ -79,6 +79,11 @@ Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Adm
 Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
 Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
 
+/*thông sms chờ xử lý*/
+Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));
+Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
+Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
+
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
 Route::get('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiClientEdit'));
@@ -117,3 +122,6 @@ Route::get('smsDayReportChart/view',array('as' => 'admin.smsDayReportChart','use
 
 /*SMS Year Report Chart*/
 Route::get('smsYearReportChart/view',array('as' => 'admin.smsYearReportChart','uses' => Admin.'\AdminSMSYearReportChartController@view'));
+
+/*SMS Hours Report Chart*/
+Route::get('smsHoursReportChart/view',array('as' => 'admin.smsHoursReportChart','uses' => Admin.'\AdminSMSHoursReportChartController@view'));

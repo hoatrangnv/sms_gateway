@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\Translation\Dumper\FileDumper;
 
-class AdminSMSDayReportChartController extends BaseAdminController
+class AdminSMSHoursReportChartController extends BaseAdminController
 {
     private $permission_view = 'stationReport_view';
     private $permission_full = 'stationReport_full';
@@ -24,7 +24,7 @@ class AdminSMSDayReportChartController extends BaseAdminController
 //    private $permission_edit = 'carrierSetting_edit';
 
     private $arrManager = array();
-    private $arrStatus = array();
+    private $hours = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
@@ -44,9 +44,14 @@ class AdminSMSDayReportChartController extends BaseAdminController
     public function getDataDefault()
     {
         $this->arrManager = User::getOptionUserFullNameAndMail();
-        $this->arrStatus = array(
-            CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
-            CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
+        $this->hours = array(
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            4 => 4,
+            6 => 6,
+            8 => 8,
+            12 => 12,
         );
     }
 
@@ -112,14 +117,16 @@ GROUP BY wsr.day,wsr.month,wsr.year
         $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
+        $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours'])?$dataSearch['hours']:8));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSMSDayReportChart.view',array_merge([
+        return view('admin.AdminSMSHoursReportChart.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
             'optionYear'=>$optionYear,
             'optionMonth'=>$optionMonth,
+            'optionHours'=>$optionHours,
             'optionCarrier'=>$optionCarrier,
             'arr_month_report'=>$arr_month_report,
         ],$this->viewPermission));
