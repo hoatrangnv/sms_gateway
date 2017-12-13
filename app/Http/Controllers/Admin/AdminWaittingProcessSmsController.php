@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\SmsLog;
 use App\Http\Models\User;
+use App\Http\Models\CarrierSetting;
+use App\Http\Models\SmsSendTo;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -25,25 +27,24 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     private $error = array();
     private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
-    private $infoListUser = array();//check quyen
+    private $infoListUser = array();
+    private $arrCarrier = array();//check quyen
 
     public function __construct()
     {
         parent::__construct();
         CGlobal::$pageAdminTitle = 'SMS Waitting Process';
-        $this->infoListUser = User::getListUserNameFullName();
     }
 
     public function getDataDefault(){
-        $this->arrStatus = array(
-            CGlobal::status_block => FunctionLib::controLanguage('status_choose',$this->languageSite),
-            CGlobal::status_show => FunctionLib::controLanguage('status_show',$this->languageSite),
-            CGlobal::status_hide => FunctionLib::controLanguage('status_hidden',$this->languageSite));
+        $this->infoListUser = User::getListUserNameFullName();
+        $this->arrCarrier = CarrierSetting::getOptionCarrier();
     }
 
     public function getPermissionPage(){
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
+            'user_role_type'=> $this->role_type,
             'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
             'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
             'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
@@ -58,20 +59,23 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         }
         $pageNo = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $limit = 10;
+        $limit = CGlobal::number_show_30;
         $offset = ($pageNo - 1) * $limit;
         $search = $data = array();
         $total = 0;
 
-        $search['menu_name'] = addslashes(Request::get('menu_name',''));
-        $search['active'] = (int)Request::get('active',-1);
+        $search['carrier_id'] = (int)Request::get('carrier_id',-1);
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $search['user_customer_id'] = (int)Request::get('user_customer_id',-1);
+        }else{
+            $search['user_customer_id'] = $this->user_id;
+        }
         //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
         $data = SmsLog::searchByCondition($search, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$pageNo,$total,$limit,$search) : '';
 
-        //FunctionLib::debug($data);
         $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, $search['active']);
+        $optionCarrier = FunctionLib::getOption(array(-1=>'')+$this->arrCarrier, $search['carrier_id']);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.view',array_merge([
@@ -80,39 +84,31 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'total'=>$total,
             'stt'=>($pageNo - 1) * $limit,
             'paging'=>$paging,
-            'optionStatus'=>$optionStatus,
+            'optionCarrier'=>$optionCarrier,
             'infoListUser'=>$this->infoListUser,
         ],$this->viewPermission));
     }
 
     public function getItem($ids) {
-        $id = FunctionLib::outputId($ids);
+        $sms_log_id = FunctionLib::outputId($ids);
 
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $data = array();
-        if($id > 0) {
-            $data = MenuSystem::find($id);
+        if($sms_log_id > 0) {
+            $data = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
         }
-
+        //FunctionLib::debug($data);
         $this->getDataDefault();
         $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
-        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
-        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
-        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.add',array_merge([
             'data'=>$data,
-            'id'=>$id,
+            'id'=>$sms_log_id,
             'arrStatus'=>$this->arrStatus,
             'optionStatus'=>$optionStatus,
-            'optionShowContent'=>$optionShowContent,
-            'optionShowPermission'=>$optionShowPermission,
-            'optionShowMenu'=>$optionShowMenu,
-            'optionMenuParent'=>$optionMenuParent,
         ],$this->viewPermission));
     }
 
