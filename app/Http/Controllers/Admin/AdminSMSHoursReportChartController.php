@@ -70,43 +70,26 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
         $dataSearch['day'] = addslashes(Request::get('day',''));
-        $year = date('Y',time());
-        $month = date('m',time());
+        $dataSearch['hours'] = addslashes(Request::get('hours',''));
 
-        if (isset($dataSearch['year']) && $dataSearch['year'] !="" && isset($dataSearch['month']) && $dataSearch['month'] !=""){
-            $year = $dataSearch['year'];
-            $month = $dataSearch['month'];
-        }
         $hours_div = 8 ;
         if (isset($dataSearch['hours']) && $dataSearch['hours'] >1){
             $hours_div= $dataSearch['hours'];
         }
-        $current_day = date('m-d-Y');
+        $current_day = date('m/d/Y');
         if (isset($dataSearch['day']) && $dataSearch['day'] !=""){
             $current_day= $dataSearch['day'];
         }else{
             $dataSearch['day'] = $current_day;
         }
 
+        $month_search = date('m',strtotime($current_day));
+        $day_search = date('d',strtotime($current_day));
+        $year_search = date('Y',strtotime($current_day));
+
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
-        $timestamp = strtotime((string)$current_day);
-
-        $day = date('d', $timestamp);
-        FunctionLib::debug($day);
-        $current_year = date("Y",time());
-        $current_month = date("m",time());
-        $last_10_year = date("Y",strtotime("-10 year"));
-        $arrYear = array();
-        $arrMonth = array();
-        for($i=$current_year;$i>=$last_10_year;$i--){
-            $arrYear[$i] = $i;
-        }
-        for($i=12;$i>=1;$i--){
-            $arrMonth[$i] = $i;
-        }
-
-        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." AND wsr.month=".$month." AND wsr.day=".$month;
+        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
@@ -120,16 +103,10 @@ GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
-        $arr_month_report = array();
-        foreach ($data as $v){
-            $arr_month_report[$v['day']] = $v['day'].'/'.$month.'/'.$year;
-        }
-
+//        FunctionLib::debug($data);
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
-        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
         $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours'])?$dataSearch['hours']:8));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
@@ -137,11 +114,8 @@ GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
             'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
-            'optionYear'=>$optionYear,
-            'optionMonth'=>$optionMonth,
             'optionHours'=>$optionHours,
             'optionCarrier'=>$optionCarrier,
-            'arr_month_report'=>$arr_month_report,
         ],$this->viewPermission));
     }
 }

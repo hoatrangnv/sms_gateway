@@ -76,7 +76,7 @@
                     type: 'column'
                 },
                 title: {
-                    text: '{{FunctionLib::viewLanguage('report_by_date')}}'
+                    text: '{{FunctionLib::viewLanguage('report_by_hour')}}'
                 },
                 xAxis: {
                     type: 'category'
@@ -112,8 +112,8 @@
                             <?php
                             foreach ($data as $v) {
                                 echo "{
-                            name:{$v['day']},
-                            y:{$v['total_sms_month']}
+                            name:{$v['hour']},
+                            y:{$v['total_sms_hour']}
                             },";
                             }
                             ?>
