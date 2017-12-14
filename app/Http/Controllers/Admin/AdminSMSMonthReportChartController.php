@@ -86,7 +86,7 @@ class AdminSMSMonthReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_month,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as success_per,Sum(wsr.success_number+wsr.fail_number) as total_sms_month,Sum(wsr.success_number) as total_success,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
 GROUP BY wsr.month,wsr.year
         ";

@@ -95,8 +95,10 @@
                 },
 
                 tooltip: {
-                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+//                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '{point.y}</b> of total<br/>' +
+                    '<b>{point.success}</b> of success <br/>' +
+                    '<b>{point.success_per:.1f}%</b> success <br/>'
                 },
                 series: [
                     {
@@ -106,8 +108,10 @@
                             <?php
                             foreach ($data as $v) {
                                 echo "{
-                            name:{$v['month']},
-                            y:{$v['total_sms_month']}
+                            name:'{$v['month']}/{$v['year']}',
+                            y:{$v['total_sms_month']},
+                            success:{$v['total_success']},
+                            success_per:{$v['success_per']}
                             },";
                             }
                             ?>
