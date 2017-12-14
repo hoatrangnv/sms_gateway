@@ -58,7 +58,7 @@
                         <tr class="">
                             <th width="3%" class="text-center"><input type="checkbox"></th>
                             <th width="3%" class="text-center">TT</th>
-                            <th width="10%">{{FunctionLib::viewLanguage('carrier')}}</th>
+                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
                             <th width="30%" class="text-center">{{FunctionLib::viewLanguage('choose_processing_web_modem')}}</th>

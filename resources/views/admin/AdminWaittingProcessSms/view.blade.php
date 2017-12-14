@@ -67,7 +67,7 @@
                             @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                             <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
                             @endif
-                            <th width="10%">{{FunctionLib::viewLanguage('carrier')}}</th>
+                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
                             <th width="30%" class="text-center">
