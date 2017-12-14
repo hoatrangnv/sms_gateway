@@ -73,7 +73,7 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         $dataSearch['hours'] = addslashes(Request::get('hours',''));
 
         $hours_div = 8 ;
-        if (isset($dataSearch['hours']) && $dataSearch['hours'] >1){
+        if (isset($dataSearch['hours']) && $dataSearch['hours'] >0){
             $hours_div= $dataSearch['hours'];
         }
         $current_day = date('m/d/Y');
