@@ -20,12 +20,6 @@
                 <div class="panel panel-info">
                     {{ Form::open(array('method' => 'POST', 'role'=>'form')) }}
                     <div class="panel-body">
-                        @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                        <div class="form-group col-lg-3">
-                            <label for="banner_name">{{FunctionLib::viewLanguage('station_account')}}</label>
-                            <input type="text" class="form-control input-sm" id="user_customer_id" name="user_customer_id" @if(isset($search['user_customer_id']) && $search['user_customer_id'] != '')value="{{$search['user_customer_id']}}"@endif>
-                        </div>
-                        @endif
                         <div class="form-group col-lg-3">
                             <label for="category_status">{{FunctionLib::viewLanguage('carrier')}}</label>
                             <select name="carrier_id" id="carrier_id" class="form-control input-sm">
@@ -64,19 +58,10 @@
                         <tr class="">
                             <th width="3%" class="text-center"><input type="checkbox"></th>
                             <th width="3%" class="text-center">TT</th>
-                            @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                            <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
-                            @endif
                             <th width="10%">{{FunctionLib::viewLanguage('carrier')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
-                            <th width="30%" class="text-center">
-                                @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                                    {{FunctionLib::viewLanguage('choose_processing_station')}}
-                                @else
-                                    {{FunctionLib::viewLanguage('choose_processing_web_modem')}}
-                                @endif
-                            </th>
+                            <th width="30%" class="text-center">{{FunctionLib::viewLanguage('choose_processing_web_modem')}}</th>
                             <th width="9%"></th>
                         </tr>
                         </thead>
@@ -85,19 +70,10 @@
                             <tr>
                                 <td class="text-center text-middle"><input type="checkbox"></td>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
-                                @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                                <td>@if(isset($infoListUser[$item['user_customer_id']])){!! $infoListUser[$item['user_customer_id']] !!} @endif</td>
-                                @endif
                                 <td class="text-center text-middle">{!! $item['carrier_name'] !!}</td>
                                 <td class="text-center text-middle">{!! $item['total_sms'] !!}</td>
                                 <td class="text-center text-middle"></td>
-                                <td class="text-center text-middle">
-                                    @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                                        {!! $item['user_manager_id'] !!}
-                                    @else
-                                        {!! $item['list_modem'] !!}
-                                    @endif
-                                </td>
+                                <td class="text-center text-middle">{!! $item['list_modem'] !!}</td>
                                 <td class="text-center text-middle">
                                     @if($is_root || $permission_full ==1|| $permission_edit ==1  )
                                         <a href="javascript:void(0);" onclick="" title="Xóa Item"><i class="fa fa-sign-in fa-2x"></i></a>

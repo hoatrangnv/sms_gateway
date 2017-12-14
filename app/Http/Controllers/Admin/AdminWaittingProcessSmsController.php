@@ -28,7 +28,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
     private $infoListUser = array();
-    private $arrCarrier = array();//check quyen
+    private $arrCarrier = array();
+    private $arrDuplicateString = array();
 
     public function __construct()
     {
@@ -39,6 +40,10 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getDataDefault(){
         $this->infoListUser = User::getListUserNameFullName();
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
+        $this->arrDuplicateString = array(
+            1=>FunctionLib::controLanguage('the_first_of_sms'),
+            2=>FunctionLib::controLanguage('the_end_of_sms'),
+            3=>FunctionLib::controLanguage('the_random_of_sms'));
     }
 
     public function getPermissionPage(){
@@ -52,6 +57,9 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         ];
     }
 
+    /**
+     * @return view process
+     */
     public function view() {
         //Check phan quyen.
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
@@ -89,6 +97,51 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         ],$this->viewPermission));
     }
 
+    /**
+     * @return view Send
+     */
+    public function viewSend() {
+        //Check phan quyen.
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $pageNo = (int) Request::get('page_no',1);
+        $sbmValue = Request::get('submit', 1);
+        $limit = CGlobal::number_show_30;
+        $offset = ($pageNo - 1) * $limit;
+        $search = $data = array();
+        $total = 0;
+
+        $search['carrier_id'] = (int)Request::get('carrier_id',-1);
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $search['user_customer_id'] = (int)Request::get('user_customer_id',-1);
+        }else{
+            $search['user_customer_id'] = $this->user_id;
+        }
+        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
+        $data = SmsLog::searchByCondition($search, $limit, $offset, $total);
+        $paging = $total > 0 ? Pagging::getNewPager(3,$pageNo,$total,$limit,$search) : '';
+
+        $this->getDataDefault();
+        $optionCarrier = FunctionLib::getOption(array(-1=>'')+$this->arrCarrier, $search['carrier_id']);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminWaittingProcessSms.viewSend',array_merge([
+            'data'=>$data,
+            'search'=>$search,
+            'total'=>$total,
+            'stt'=>($pageNo - 1) * $limit,
+            'paging'=>$paging,
+            'optionCarrier'=>$optionCarrier,
+            'infoListUser'=>$this->infoListUser,
+        ],$this->viewPermission));
+    }
+
+    /**
+     * Sửa sms log
+     * @param $ids
+     * @return
+     */
     public function getItem($ids) {
         $sms_log_id = FunctionLib::outputId($ids);
 
@@ -101,17 +154,16 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         }
         //FunctionLib::debug($data);
         $this->getDataDefault();
-        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_show);
+        $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.add',array_merge([
             'data'=>$data,
             'id'=>$sms_log_id,
-            'arrStatus'=>$this->arrStatus,
-            'optionStatus'=>$optionStatus,
+            'arrCarrier'=>$this->arrCarrier,
+            'optionDuplicateString'=>$optionDuplicateString,
         ],$this->viewPermission));
     }
-
     public function postItem($ids) {
         $id = FunctionLib::outputId($ids);
         if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
@@ -144,6 +196,76 @@ class AdminWaittingProcessSmsController extends BaseAdminController
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.add',array_merge([
+            'data'=>$data,
+            'id'=>$id,
+            'error'=>$this->error,
+            'arrStatus'=>$this->arrStatus,
+            'optionStatus'=>$optionStatus,
+            'optionShowContent'=>$optionShowContent,
+            'optionShowPermission'=>$optionShowPermission,
+            'optionShowMenu'=>$optionShowMenu,
+            'optionMenuParent'=>$optionMenuParent,
+        ],$this->viewPermission));
+    }
+
+    /**
+     * Sửa chi tiết 1 SMS
+     * @return
+     */
+    public function getDetailSms($ids) {
+        $sms_sendTo_id = FunctionLib::outputId($ids);
+
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $data = array();
+        if($sms_sendTo_id > 0) {
+            $data = SmsSendTo::find($sms_sendTo_id);
+        }
+        //FunctionLib::debug($data);
+        $this->getDataDefault();
+        $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminWaittingProcessSms.editSms',array_merge([
+            'data'=>$data,
+            'id'=>$sms_sendTo_id,
+            'arrCarrier'=>$this->arrCarrier,
+            'optionDuplicateString'=>$optionDuplicateString,
+        ],$this->viewPermission));
+    }
+    public function postDetailSms($ids) {
+        $id = FunctionLib::outputId($ids);
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+        $id_hiden = (int)Request::get('id_hiden', 0);
+        $data = $_POST;
+        $data['ordering'] = (int)($data['ordering']);
+        if($this->valid($data) && empty($this->error)) {
+            $id = ($id == 0)?$id_hiden: $id;
+            if($id > 0) {
+                //cap nhat
+                if(MenuSystem::updateItem($id, $data)) {
+                    return Redirect::route('admin.menuView');
+                }
+            }else{
+                //them moi
+                if(MenuSystem::createItem($data)) {
+                    return Redirect::route('admin.menuView');
+                }
+            }
+        }
+
+        $this->getDataDefault();
+        $optionStatus = FunctionLib::getOption($this->arrStatus, isset($data['active'])? $data['active']: CGlobal::status_hide);
+        $optionShowContent = FunctionLib::getOption($this->arrStatus, isset($data['showcontent'])? $data['showcontent']: CGlobal::status_show);
+        $optionShowMenu = FunctionLib::getOption($this->arrStatus, isset($data['show_menu'])? $data['show_menu']: CGlobal::status_show);
+        $optionShowPermission = FunctionLib::getOption($this->arrStatus, isset($data['show_permission'])? $data['show_permission']: CGlobal::status_hide);
+        $optionMenuParent = FunctionLib::getOption($this->arrMenuParent, isset($data['parent_id'])? $data['parent_id'] : 0);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminWaittingProcessSms.editSms',array_merge([
             'data'=>$data,
             'id'=>$id,
             'error'=>$this->error,
