@@ -91,7 +91,7 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 
         $sql_where = "wsr.user_id = 8 AND wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
-            $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
+            $sql_where.=" AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
 
         $sql = "
