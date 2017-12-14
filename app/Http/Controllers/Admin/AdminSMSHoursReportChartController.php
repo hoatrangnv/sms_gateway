@@ -95,11 +95,16 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_hour,wsr.hour,wsr.day,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT  Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
+        (Sum(wsr.success_number)/ Sum(wsr.success_number + wsr.fail_number)) * 100 as success_percent,
+        wsr.day,wsr.month,wsr.year,concat((ceil(wsr.hour/{$hours_div})-1)*{$hours_div},'-',((ceil(wsr.hour/{$hours_div})-1)*{$hours_div})+{$hours_div}) as range_time from web_sms_report wsr 
+        inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
 GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         ";
         $data = SmsReport::executesSQL($sql);
+//        FunctionLib::debug($data);
+
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
@@ -107,7 +112,7 @@ GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours'])?$dataSearch['hours']:8));
+        $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours']) && $dataSearch['hours']>0?$dataSearch['hours']:8));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSHoursReportChart.view',array_merge([
@@ -116,6 +121,7 @@ GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
             'optionUser'=>$optionUser,
             'optionHours'=>$optionHours,
             'optionCarrier'=>$optionCarrier,
+            'hours_div'=>$hours_div,
         ],$this->viewPermission));
     }
 }
