@@ -68,9 +68,8 @@ class AdminSMSHoursReportChartController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
-        $dataSearch['month'] = addslashes(Request::get('month',''));
-        $dataSearch['year'] = addslashes(Request::get('year',''));
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
+        $dataSearch['day'] = addslashes(Request::get('day',''));
         $year = date('Y',time());
         $month = date('m',time());
 
@@ -78,9 +77,23 @@ class AdminSMSHoursReportChartController extends BaseAdminController
             $year = $dataSearch['year'];
             $month = $dataSearch['month'];
         }
+        $hours_div = 8 ;
+        if (isset($dataSearch['hours']) && $dataSearch['hours'] >1){
+            $hours_div= $dataSearch['hours'];
+        }
+        $current_day = date('m-d-Y');
+        if (isset($dataSearch['day']) && $dataSearch['day'] !=""){
+            $current_day= $dataSearch['day'];
+        }else{
+            $dataSearch['day'] = $current_day;
+        }
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
+        $timestamp = strtotime((string)$current_day);
+
+        $day = date('d', $timestamp);
+        FunctionLib::debug($day);
         $current_year = date("Y",time());
         $current_month = date("m",time());
         $last_10_year = date("Y",strtotime("-10 year"));
@@ -93,15 +106,15 @@ class AdminSMSHoursReportChartController extends BaseAdminController
             $arrMonth[$i] = $i;
         }
 
-        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." AND wsr.month=".$month." ";
+        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year." AND wsr.month=".$month." AND wsr.day=".$month;
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_month,wsr.day,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_hour,wsr.hour,wsr.day,wsr.month,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
-GROUP BY wsr.day,wsr.month,wsr.year
+GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         ";
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){

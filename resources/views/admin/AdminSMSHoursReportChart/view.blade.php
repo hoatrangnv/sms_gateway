@@ -1,3 +1,5 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -33,6 +35,10 @@
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">
                                         {!! $optionCarrier !!}
                                     </select>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
+                                    <input type="text" class="form-control input-sm date-picker" name="day" autocomplete="off"  @if(isset($search['day']))value="{{$search['day']}}"@endif>
                                 </div>
                                 <div class="col-sm-2">
                                     <label for="hours">{{FunctionLib::viewLanguage('divide_by_hour')}}</label>
@@ -118,3 +124,12 @@
         });
     </script>
 @stop
+<script>
+    $(document).ready(function(){
+        $(".date-picker").datepicker({
+            format: "dd-mm-YYYY",
+            language: "vi",
+            autoclose: true,
+            keyboardNavigation:true
+        })});
+</script>

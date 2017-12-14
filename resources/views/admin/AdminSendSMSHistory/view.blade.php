@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="to_day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                <input type="text" class="form-control input-sm date-picker" name="to_day" autocomplete="off"  @if(isset($dataSearch['to_day']))value="{{$dataSearch['to_day']}}"@endif>
+                                <input type="text" class="form-control input-sm date-picker" name="to_day" autocomplete="off"  @if(isset($search['to_day']))value="{{$search['to_day']}}"@endif>
                             </div>
                         </div>
                         <div class="panel-footer text-right">
