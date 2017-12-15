@@ -81,8 +81,8 @@ class AdminSMSGraphReportChartController extends BaseAdminController
             $arrYear[$i] = $i;
         }
 
-        $to_date = date('Y-m-d',time());
-        $from_date = date('Y-m-d',strtotime("-1 month"));
+        $to_date = date('m/d/Y',time());
+        $from_date = date('m/d/Y',strtotime("-1 month"));
         if (isset($dataSearch['from_date']) && $dataSearch['from_date'] !=""){
             $from_date= $dataSearch['from_date'];
         }else{
@@ -93,8 +93,8 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         }else{
             $dataSearch['to_date'] = $to_date;
         }
-        $sql_where = "wsr.user_id = 8 AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) > UNIX_TIMESTAMP('".$from_date."') OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day))=UNIX_TIMESTAMP('".$from_date."'))  ";
-        $sql_where.=" AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) < UNIX_TIMESTAMP('".$to_date."') OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day))=UNIX_TIMESTAMP('".$to_date."')) ";
+        $sql_where = "wsr.user_id = 8 AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) > unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) = unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')))  ";
+        $sql_where.=" AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) < unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day))= unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) ) ";
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
@@ -107,6 +107,7 @@ class AdminSMSGraphReportChartController extends BaseAdminController
 WHERE {$sql_where} 
 GROUP BY wsr.month,wsr.year
         ";
+//        FunctionLib::debug($sql);
         $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
