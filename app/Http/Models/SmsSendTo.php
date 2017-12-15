@@ -172,7 +172,7 @@ class SmsSendTo extends BaseModel
         if($sms_log_id >0){
             $query = SmsSendTo::where('sms_sendTo_id','>',0);
             $query->where('sms_log_id','=', $sms_log_id);
-            $result = $query->orderBy('sms_sendTo_id', 'desc')->get(array('sms_sendTo_id','sms_log_id','carrier_id','phone_receive','content_grafted'));
+            $result = $query->orderBy('sms_sendTo_id', 'asc')->get(array('sms_sendTo_id','sms_log_id','carrier_id','phone_receive','content_grafted'));
             return $result;
         }
         return array();
