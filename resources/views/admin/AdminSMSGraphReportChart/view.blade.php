@@ -1,5 +1,5 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>--}}
+{{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>--}}
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -38,11 +38,11 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="from_date"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker" name="from_date" autocomplete="off"  @if(isset($search['from_date']))value="{{$search['from_date']}}"@endif>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtFromDate" name="from_date" autocomplete="off"  @if(isset($search['from_date']))value="{{$search['from_date']}}"@endif>
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="to_date"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker" name="to_date" autocomplete="off"  @if(isset($search['to_date']))value="{{$search['to_date']}}"@endif>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtToDate" name="to_date" autocomplete="off"  @if(isset($search['to_date']))value="{{$search['to_date']}}"@endif>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">
                                     <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i
@@ -124,14 +124,23 @@
                 ]
             });
         });
+
+        $(document).ready(function(){
+//            var checkin = $('.date-picker1212').datepicker({ });
+
+            $("#txtFromDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function(selected) {
+                    $("#txtToDate").datepicker("option", "minDate", selected)
+                }
+            });
+            $("#txtToDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function (selected) {
+                    $("#txtFromDate").datepicker("option", "maxDate", selected)
+                }
+            });
+            });
+
     </script>
 @stop
-<script>
-    $(document).ready(function(){
-        $(".date-picker").datepicker({
-            format: "dd-mm-YYYY",
-            language: "vi",
-            autoclose: true,
-            keyboardNavigation:true
-        })});
-</script>

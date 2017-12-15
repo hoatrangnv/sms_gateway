@@ -98,7 +98,6 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         SELECT  Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
         (Sum(wsr.success_number)/ Sum(wsr.success_number + wsr.fail_number)) * 100 as success_percent,
         wsr.day,wsr.month,wsr.year,concat((ceil(wsr.hour/{$hours_div})-1)*{$hours_div},'-',((ceil(wsr.hour/{$hours_div})-1)*{$hours_div})+{$hours_div}) as range_time from web_sms_report wsr 
-        inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
 WHERE {$sql_where} 
 GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         ";

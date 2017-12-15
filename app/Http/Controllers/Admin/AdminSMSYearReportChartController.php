@@ -90,7 +90,7 @@ class AdminSMSYearReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_year,wsr.year from web_sms_report wsr inner join web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id
+        SELECT Sum(wsr.success_number) as total_sms_year,wsr.year from web_sms_report wsr 
 WHERE {$sql_where} 
 GROUP BY wsr.year
         ";
