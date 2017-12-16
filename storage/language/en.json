@@ -121,11 +121,11 @@
 	"send_sms_deadline": "Send SMS deadline",
 	"total_sms": "Total SMS",
 	"total_sent": "Total sent",
-	"incrorrect_numbers": "Incrorrect numbers",
+	"incrorrect_numbers": "Incorrect numbers",
 	"total_cost_vnd": "Total cost (VND)",
 	"cost_vnd": "Cost (VND)",
 	"sent_date": "Sent date",
-	"subscriber": "Cost (VND)",
+	"subscriber": "Subscriber",
 	"customer": "Customer",
 	"carrier": "Carrier",
 	"choose_year": "Choose year",
@@ -146,5 +146,13 @@
 	"from_year": "From year",
 	"to_year": "To year",
 	"all": "All",
+	
+	"enter_strings_separated_by_comma": "Enter strings separated by comma",
+	"upload_from_file_excel": "Upload from file excel",
+    "the_first_of_sms":"Into the first of messages",
+    "the_random_of_sms":"Into the random of messages",
+    "the_end_of_sms":"Into the end of messages",
+	"sms_content_grafted": "SMS content_grafted",
+	"reject": "reject",
 	"": ""
 }
