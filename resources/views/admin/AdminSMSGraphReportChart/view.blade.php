@@ -24,12 +24,15 @@
                         <div class="panel panel-info">
                             {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                             <div class="panel-body">
-                                <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
-                                    </select>
-                                </div>
+                                @if($user_role_type)
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <select name="station_account" id="station_account"
+                                                class="form-control input-sm">
+                                            {!! $optionUser !!}
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-sm-2">
                                     <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">
@@ -38,11 +41,15 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="from_date"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker1212" id="txtFromDate" name="from_date" autocomplete="off"  @if(isset($search['from_date']))value="{{$search['from_date']}}"@endif>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtFromDate"
+                                           name="from_date" autocomplete="off"
+                                           @if(isset($search['from_date']))value="{{$search['from_date']}}"@endif>
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="to_date"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker1212" id="txtToDate" name="to_date" autocomplete="off"  @if(isset($search['to_date']))value="{{$search['to_date']}}"@endif>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtToDate"
+                                           name="to_date" autocomplete="off"
+                                           @if(isset($search['to_date']))value="{{$search['to_date']}}"@endif>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">
                                     <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i
@@ -125,12 +132,12 @@
             });
         });
 
-        $(document).ready(function(){
+        $(document).ready(function () {
 //            var checkin = $('.date-picker1212').datepicker({ });
 
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
-                onSelect: function(selected) {
+                onSelect: function (selected) {
                     $("#txtToDate").datepicker("option", "minDate", selected)
                 }
             });
@@ -140,7 +147,7 @@
                     $("#txtFromDate").datepicker("option", "maxDate", selected)
                 }
             });
-            });
+        });
 
     </script>
 @stop

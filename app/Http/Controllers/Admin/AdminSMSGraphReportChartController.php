@@ -54,6 +54,7 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
+            'user_role_type' => $this->role_type,
         ];
     }
 
@@ -70,6 +71,12 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         $year = date('Y',time());
         if (isset($dataSearch['year']) && $dataSearch['year'] !=""){
             $year = $dataSearch['year'];
+        }
+
+        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
+            $dataSearch['user_id'] = addslashes(Request::get('station_account', ''));
+        } else {
+            $dataSearch['user_id'] = $this->user_id;
         }
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
@@ -93,13 +100,16 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         }else{
             $dataSearch['to_date'] = $to_date;
         }
-        $sql_where = "wsr.user_id = 8 AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) > unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) = unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')))  ";
+        $sql_where = " (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) > unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) = unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')))  ";
         $sql_where.=" AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) < unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day))= unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) ) ";
+
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
-
-        $sql = "
+        $data = array();
+        if (isset($dataSearch['user_id']) && $dataSearch['user_id']>0 && $dataSearch['user_id']!=""){
+            $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
+            $sql = "
         SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as success_per,
         Sum(wsr.success_number+wsr.fail_number) as total_sms_month,Sum(wsr.success_number) as total_success,
         wsr.month,wsr.year from web_sms_report wsr 
@@ -107,8 +117,9 @@ class AdminSMSGraphReportChartController extends BaseAdminController
 WHERE {$sql_where} 
 GROUP BY wsr.month,wsr.year
         ";
-//        FunctionLib::debug($sql);
-        $data = SmsReport::executesSQL($sql);
+            $data = SmsReport::executesSQL($sql);
+        }
+
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
