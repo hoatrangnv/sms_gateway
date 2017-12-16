@@ -99,7 +99,7 @@ class AdminSMSReportChartController extends BaseAdminController
             $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
 
-        $sql = "SELECT wsr.sms_report_id,wcs.carrier_setting_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr 
+        $sql = "SELECT SUM(wsr.cost) total_cost,wsr.sms_report_id,wcs.carrier_setting_id,wsr.hour,wsr.day,wsr.month,sum(wsr.success_number) as num_mess,wsr.user_id,wcs.carrier_name from web_sms_report wsr 
                 INNER JOIN web_carrier_setting wcs ON wsr.carrier_id = wcs.carrier_setting_id 
                 WHERE {$sql_where} 
                 GROUP BY wsr.carrier_id,wsr.day,wsr.month,wsr.hour,wsr.year,wsr.user_id

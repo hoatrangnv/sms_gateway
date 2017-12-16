@@ -59,6 +59,7 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
+            'user_role_type'=> $this->role_type,
         ];
     }
 
@@ -66,6 +67,12 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         //Check phan quyen.
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
+        }
+
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['user_id'] = (int)Request::get('station_account');
+        }else{
+            $dataSearch['user_id'] = $this->user_id;
         }
 
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
@@ -89,20 +96,22 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
-        $sql_where = "wsr.user_id = 8 AND wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
+        $sql_where = "wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.=" AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
-
-        $sql = "
-        SELECT  Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
+        $data = array();
+        if (isset($dataSearch['user_id']) && $dataSearch['user_id']>0 && $dataSearch['user_id']!=""){
+            $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
+            $sql = "
+        SELECT  SUM(wsr.cost) as total_cost,Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
         (Sum(wsr.success_number)/ Sum(wsr.success_number + wsr.fail_number)) * 100 as success_percent,
         wsr.day,wsr.month,wsr.year,concat((ceil(wsr.hour/{$hours_div})-1)*{$hours_div},'-',((ceil(wsr.hour/{$hours_div})-1)*{$hours_div})+{$hours_div}) as range_time from web_sms_report wsr 
 WHERE {$sql_where} 
 GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         ";
-        $data = SmsReport::executesSQL($sql);
-//        FunctionLib::debug($data);
+            $data = SmsReport::executesSQL($sql);
+        }
 
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;

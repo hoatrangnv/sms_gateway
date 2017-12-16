@@ -34,13 +34,13 @@
                                         {!! $optionCarrier !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-1">
+                                <div class="col-sm-2">
                                     <label for="year">{{FunctionLib::viewLanguage('choose_year')}}</label>
                                     <select name="year" id="year" class="form-control input-sm">
                                         {!! $optionYear !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-1">
+                                <div class="col-sm-2">
                                     <label for="month">{{FunctionLib::viewLanguage('choose_month')}}</label>
                                     <select name="month" id="month" class="form-control input-sm">
                                         {!! $optionMonth !!}
@@ -121,6 +121,8 @@
                 ]
 
             });
+
+            //Biểu đồ tròn
             $('#container').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -138,7 +140,8 @@
                     text: '<?php echo $title_line_chart?>'
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/>' +
+                    ' Cost: <b>{point.nam:.1f}</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -169,7 +172,8 @@
                             name:'" . $v['name'] . "',
                             y:" . $v['percent'] . ",
                             sliced: " . $v['sliced'] . ",
-                            selected: " . $v['selected'] . "
+                            selected: " . $v['selected'] . ",
+                            nam: " . $v['percent'] . ",
                             },
                             ";
                         }
