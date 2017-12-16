@@ -27,6 +27,8 @@ class BaseAdminController extends Controller{
     protected $user_group_menu = array();
     protected $is_root = false;
     protected $is_boss = false;
+    protected $user_id = 0;
+    protected $role_type = Define::ROLE_TYPE_CUSTOMER;
     protected $languageSite = Define::VIETNAM_LANGUAGE;
 
     public function __construct(){
@@ -42,6 +44,12 @@ class BaseAdminController extends Controller{
                if(trim($this->user['user_group_menu']) != ''){
                    $this->user_group_menu = explode(',',$this->user['user_group_menu']);
                }
+               if(isset($this->user['role_type']) && trim($this->user['role_type'])){
+                   $this->role_type = $this->user['role_type'];
+               }
+               if(isset($this->user['user_id']) && trim($this->user['user_id'])){
+                   $this->user_id = $this->user['user_id'];
+               }
            }
             if(in_array('is_boss',$this->permission) || $this->user['user_view'] == CGlobal::status_hide){
                 $this->is_boss = true;
@@ -52,9 +60,9 @@ class BaseAdminController extends Controller{
            $this->is_root = ($this->is_boss)? true: $this->is_root;
            $this->menuSystem = $this->getMenuSystem();
 
-           //FunctionLib::debug($this->menuSystem);
+           //FunctionLib::debug($this->user);
            $error = isset($_GET['error'])? $_GET['error']: 0;
-           $msg=array();
+           $msg = array();
            if($error == Define::ERROR_PERMISSION){
                $msg[] = 'Bạn không có quyền truy cập';
                View::share('error', $msg);
@@ -73,6 +81,8 @@ class BaseAdminController extends Controller{
            View::share('aryPermissionMenu', $this->user_group_menu);
            View::share('is_root', $this->is_root);
            View::share('is_boss', $this->is_boss);
+           View::share('role_type', $this->role_type);
+           View::share('user_id', $this->user_id);
            View::share('user', $this->user);
            return $next($request);
         });

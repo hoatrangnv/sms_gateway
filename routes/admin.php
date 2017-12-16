@@ -81,8 +81,11 @@ Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSend
 
 /*thông sms chờ xử lý*/
 Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));
+Route::match(['GET','POST'], 'waittingSms/viewSend',array('as' => 'admin.waittingSendSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@viewSend'));
 Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
 Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
+Route::get('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getDetailSms'));
+Route::post('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postDetailSms'));
 
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
@@ -125,3 +128,6 @@ Route::get('smsYearReportChart/view',array('as' => 'admin.smsYearReportChart','u
 
 /*SMS Hours Report Chart*/
 Route::get('smsHoursReportChart/view',array('as' => 'admin.smsHoursReportChart','uses' => Admin.'\AdminSMSHoursReportChartController@view'));
+
+/*SMS graphSuccessful Report Chart*/
+Route::get('graphSuccessful/view',array('as' => 'admin.graphSuccessful','uses' => Admin.'\AdminSMSGraphReportChartController@view'));

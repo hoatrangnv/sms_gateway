@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Response;
 
 class AdminDeviceTokenController extends BaseAdminController
 {
-    private $permission_view = 'carrierSetting_view';
-    private $permission_full = 'carrierSetting_full';
-    private $permission_delete = 'carrierSetting_delete';
-    private $permission_create = 'carrierSetting_create';
-    private $permission_edit = 'carrierSetting_edit';
+    private $permission_view = 'deviceToken_view';
+    private $permission_full = 'deviceToken_full';
+    private $permission_delete = 'deviceToken_delete';
+    private $permission_create = 'deviceToken_create';
+    private $permission_edit = 'deviceToken_edit';
 
     private $arrManager = array();
     private $arrStatus = array();

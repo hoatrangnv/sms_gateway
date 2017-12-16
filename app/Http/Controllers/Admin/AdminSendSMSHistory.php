@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Response;
 
 class AdminSendSMSHistory extends BaseAdminController
 {
-    private $permission_view = 'carrierSetting_view';
-    private $permission_full = 'carrierSetting_full';
-    private $permission_delete = 'carrierSetting_delete';
-    private $permission_create = 'carrierSetting_create';
-    private $permission_edit = 'carrierSetting_edit';
+    private $permission_view = 'sendSmsHistory_view';
+    private $permission_full = 'sendSmsHistory_full';
+    private $permission_delete = 'sendSmsHistory_delete';
+    private $permission_create = 'sendSmsHistory_create';
+    private $permission_edit = 'sendSmsHistory_edit';
 
     private $arrMenuParent = array();
     private $arrStatus = array();

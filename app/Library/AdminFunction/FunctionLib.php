@@ -933,7 +933,7 @@ class FunctionLib {
         $json = file_get_contents($path);
         $json = mb_convert_encoding($json, 'UTF8', 'auto');
         $language = json_decode($json,true);
-        return isset($language[$key]) ? $language[$key]: '';
+        return isset($language[$key]) ? $language[$key]: $key;
     }
 
     /**
@@ -948,7 +948,7 @@ class FunctionLib {
         $json = file_get_contents($path);
         $json = mb_convert_encoding($json, 'UTF8', 'auto');
         $language = json_decode($json,true);
-        return isset($language[$key]) ? $language[$key]: '';
+        return isset($language[$key]) ? $language[$key]: $key;
     }
 
     /**

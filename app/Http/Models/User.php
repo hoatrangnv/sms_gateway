@@ -324,6 +324,7 @@ class User extends BaseModel{
             // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
         Cache::forget(Define::CACHE_OPTION_USER);
+        Cache::forget(Define::CACHE_INFO_USER);
     }
 
     public static function executesSQL($str_sql = ''){

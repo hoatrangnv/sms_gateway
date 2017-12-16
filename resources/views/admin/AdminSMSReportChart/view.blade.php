@@ -22,25 +22,28 @@
                         <div class="panel panel-info">
                             {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                             <div class="panel-body">
-                                <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
-                                    </select>
-                                </div>
+                                @if($user_role_type)
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <select name="station_account" id="station_account"
+                                                class="form-control input-sm">
+                                            {!! $optionUser !!}
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-sm-2">
                                     <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">
                                         {!! $optionCarrier !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-1">
+                                <div class="col-sm-2">
                                     <label for="year">{{FunctionLib::viewLanguage('choose_year')}}</label>
                                     <select name="year" id="year" class="form-control input-sm">
                                         {!! $optionYear !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-1">
+                                <div class="col-sm-2">
                                     <label for="month">{{FunctionLib::viewLanguage('choose_month')}}</label>
                                     <select name="month" id="month" class="form-control input-sm">
                                         {!! $optionMonth !!}
@@ -121,6 +124,8 @@
                 ]
 
             });
+
+            //Biểu đồ tròn
             $('#container').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -138,7 +143,8 @@
                     text: '<?php echo $title_line_chart?>'
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/>' +
+                    ' Cost: <b>{point.nam:.1f}</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -169,7 +175,8 @@
                             name:'" . $v['name'] . "',
                             y:" . $v['percent'] . ",
                             sliced: " . $v['sliced'] . ",
-                            selected: " . $v['selected'] . "
+                            selected: " . $v['selected'] . ",
+                            nam: " . $v['percent'] . ",
                             },
                             ";
                         }

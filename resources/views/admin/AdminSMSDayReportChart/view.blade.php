@@ -22,12 +22,15 @@
                         <div class="panel panel-info">
                             {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                             <div class="panel-body">
-                                <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
-                                    </select>
-                                </div>
+                                @if($user_role_type == \App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <select name="station_account" id="station_account"
+                                                class="form-control input-sm">
+                                            {!! $optionUser !!}
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-sm-2">
                                     <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">
@@ -101,8 +104,10 @@
                 },
 
                 tooltip: {
-                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+//                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<b>{point.y}</b> of total<br/>' +
+                    '<b>{point.success}</b> of success <br/>' +
+                    '<b>{point.success_per:.1f}%</b> success <br/>'
                 },
                 series: [
                     {
@@ -112,8 +117,10 @@
                             <?php
                             foreach ($data as $v) {
                                 echo "{
-                            name:{$v['day']},
-                            y:{$v['total_sms_month']}
+                            name:'{$v['day']}/{$v['month']}/{$v['year']}',
+                            y:{$v['total_sms_day']},
+                            success:{$v['total_sms_success']},
+                            success_per:{$v['per_success']}
                             },";
                             }
                             ?>
