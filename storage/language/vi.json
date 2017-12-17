@@ -149,5 +149,13 @@
 	"to_year": "Đến năm",
 	"to_day": "Đến ngày",
 	"all": "Tất cả",
+	
+	"enter_strings_separated_by_comma": "Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy",
+	"upload_from_file_excel": "Tải từ file excel",
+	"the_first_of_sms":"Vào đầu tin nhắn",
+    "the_random_of_sms":"Vào vị trí bất kỳ tin nhắn",
+    "the_end_of_sms":"Vào cuối tin nhắn",
+	"reject": "Từ chối",
+	"sms_content_grafted": "Nội dung tin nhắn",
 	"": ""
 }

@@ -1,3 +1,5 @@
+{{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>--}}
+{{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>--}}
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -37,17 +39,17 @@
                                         {!! $optionCarrier !!}
                                     </select>
                                 </div>
-                                <div class="col-sm-1">
-                                    <label for="from_year">{{FunctionLib::viewLanguage('from_year')}}</label>
-                                    <select name="from_year" id="from_year" class="form-control input-sm">
-                                        {!! $optionYearFrom !!}
-                                    </select>
+                                <div class="form-group col-lg-3">
+                                    <label for="from_date"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtFromDate"
+                                           name="from_date" autocomplete="off"
+                                           @if(isset($search['from_date']))value="{{$search['from_date']}}"@endif>
                                 </div>
-                                <div class="col-sm-1">
-                                    <label for="to_year">{{FunctionLib::viewLanguage('to_year')}}</label>
-                                    <select name="to_year" id="to_year" class="form-control input-sm">
-                                        {!! $optionYearTo !!}
-                                    </select>
+                                <div class="form-group col-lg-3">
+                                    <label for="to_date"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
+                                    <input type="text" class="form-control input-sm date-picker1212" id="txtToDate"
+                                           name="to_date" autocomplete="off"
+                                           @if(isset($search['to_date']))value="{{$search['to_date']}}"@endif>
                                 </div>
                                 <div class="form-group col-lg-12 text-right">
                                     <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i
@@ -79,7 +81,7 @@
                     type: 'column'
                 },
                 title: {
-                    text: '{{FunctionLib::viewLanguage('report_by_year')}}'
+                    text: '{{FunctionLib::viewLanguage('report_by_month')}}'
                 },
                 xAxis: {
                     type: 'category'
@@ -104,24 +106,48 @@
                 },
 
                 tooltip: {
-                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+//                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '{point.y}</b> of total<br/>' +
+                    '<b>{point.success}</b> of success <br/>' +
+                    '<b>{point.success_per:.1f}%</b> success <br/>'
                 },
-                series: [{
-                    name: 'Brands',
-                    colorByPoint: true,
-                    data: [
-                        <?php
-                        foreach ($data as $v) {
-                            echo "{
-                            name:{$v['year']},
-                            y:{$v['total_sms_year']}
+                series: [
+                    {
+                        name: 'Brands',
+                        colorByPoint: true,
+                        data: [
+                            <?php
+                            foreach ($data as $v) {
+                                echo "{
+                            name:'{$v['month']}/{$v['year']}',
+                            y:{$v['total_sms_month']},
+                            success:{$v['total_success']},
+                            success_per:{$v['success_per']}
                             },";
-                        }
-                        ?>
-                    ]
-                }]
+                            }
+                            ?>
+                        ]
+                    }
+                ]
             });
         });
+
+        $(document).ready(function () {
+//            var checkin = $('.date-picker1212').datepicker({ });
+
+            $("#txtFromDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function (selected) {
+                    $("#txtToDate").datepicker("option", "minDate", selected)
+                }
+            });
+            $("#txtToDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function (selected) {
+                    $("#txtFromDate").datepicker("option", "maxDate", selected)
+                }
+            });
+        });
+
     </script>
 @stop

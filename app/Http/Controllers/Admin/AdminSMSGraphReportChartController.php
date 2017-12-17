@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\Translation\Dumper\FileDumper;
 
-class AdminSMSHoursReportChartController extends BaseAdminController
+class AdminSMSGraphReportChartController extends BaseAdminController
 {
     private $permission_view = 'stationReport_view';
     private $permission_full = 'stationReport_full';
@@ -24,7 +24,7 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 //    private $permission_edit = 'carrierSetting_edit';
 
     private $arrManager = array();
-    private $hours = array();
+    private $arrStatus = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
@@ -44,14 +44,9 @@ class AdminSMSHoursReportChartController extends BaseAdminController
     public function getDataDefault()
     {
         $this->arrManager = User::getOptionUserFullNameAndMail();
-        $this->hours = array(
-            1 => 1,
-            2 => 2,
-            3 => 3,
-            4 => 4,
-            6 => 6,
-            8 => 8,
-            12 => 12,
+        $this->arrStatus = array(
+            CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
+            CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
         );
     }
 
@@ -59,7 +54,7 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         return $this->viewPermission = [
             'is_root'=> $this->is_root ? 1:0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
-            'user_role_type'=> $this->role_type,
+            'user_role_type' => $this->role_type,
         ];
     }
 
@@ -69,46 +64,58 @@ class AdminSMSHoursReportChartController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
-        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
-            $dataSearch['user_id'] = (int)Request::get('station_account');
-        }else{
+        $dataSearch['from_date'] = addslashes(Request::get('from_date',''));
+        $dataSearch['to_date'] = addslashes(Request::get('to_date',''));
+        $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
+
+        $year = date('Y',time());
+        if (isset($dataSearch['year']) && $dataSearch['year'] !=""){
+            $year = $dataSearch['year'];
+        }
+
+        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
+            $dataSearch['user_id'] = addslashes(Request::get('station_account', ''));
+        } else {
             $dataSearch['user_id'] = $this->user_id;
         }
 
-        $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
-        $dataSearch['day'] = addslashes(Request::get('day',''));
-        $dataSearch['hours'] = addslashes(Request::get('hours',''));
-
-        $hours_div = 8 ;
-        if (isset($dataSearch['hours']) && $dataSearch['hours'] >0){
-            $hours_div= $dataSearch['hours'];
-        }
-        $current_day = date('m/d/Y');
-        if (isset($dataSearch['day']) && $dataSearch['day'] !=""){
-            $current_day= $dataSearch['day'];
-        }else{
-            $dataSearch['day'] = $current_day;
-        }
-
-        $month_search = date('m',strtotime($current_day));
-        $day_search = date('d',strtotime($current_day));
-        $year_search = date('Y',strtotime($current_day));
-
         $arrCarrier = CarrierSetting::getOptionCarrier();
 
-        $sql_where = "wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
+        $current_year = date("Y",time());
+        $last_10_year = date("Y",strtotime("-10 year"));
+        $arrYear = array();
+        for($i=$current_year;$i>=$last_10_year;$i--){
+            $arrYear[$i] = $i;
+        }
+
+        $to_date = date('m/d/Y',time());
+        $from_date = date('m/d/Y',strtotime("-1 month"));
+        if (isset($dataSearch['from_date']) && $dataSearch['from_date'] !=""){
+            $from_date= $dataSearch['from_date'];
+        }else{
+            $dataSearch['from_date'] = $from_date;
+        }
+        if (isset($dataSearch['to_date']) && $dataSearch['to_date'] !=""){
+            $to_date= $dataSearch['to_date'];
+        }else{
+            $dataSearch['to_date'] = $to_date;
+        }
+        $sql_where = " (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) > unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) = unix_timestamp(str_to_date('".$from_date."','%m/%d/%Y')))  ";
+        $sql_where.=" AND (UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day)) < unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) OR  UNIX_TIMESTAMP(concat(wsr.year,'-',wsr.month,'-',wsr.day))= unix_timestamp(str_to_date('".$to_date."','%m/%d/%Y')) ) ";
+
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
-            $sql_where.=" AND wsr.carrier_id=".$dataSearch['carrier_id'];
+            $sql_where.="AND wsr.carrier_id=".$dataSearch['carrier_id'];
         }
         $data = array();
         if (isset($dataSearch['user_id']) && $dataSearch['user_id']>0 && $dataSearch['user_id']!=""){
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
             $sql = "
-        SELECT  SUM(wsr.cost) as total_cost,Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
-        (Sum(wsr.success_number)/ Sum(wsr.success_number + wsr.fail_number)) * 100 as success_percent,
-        wsr.day,wsr.month,wsr.year,concat((ceil(wsr.hour/{$hours_div})-1)*{$hours_div},'-',((ceil(wsr.hour/{$hours_div})-1)*{$hours_div})+{$hours_div}) as range_time from web_sms_report wsr 
+        SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as success_per,
+        Sum(wsr.success_number+wsr.fail_number) as total_sms_month,Sum(wsr.success_number) as total_success,
+        wsr.month,wsr.year from web_sms_report wsr 
+      
 WHERE {$sql_where} 
-GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
+GROUP BY wsr.month,wsr.year
         ";
             $data = SmsReport::executesSQL($sql);
         }
@@ -116,20 +123,19 @@ GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
-//        FunctionLib::debug($data);
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
         $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours']) && $dataSearch['hours']>0?$dataSearch['hours']:8));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSMSHoursReportChart.view',array_merge([
+//        FunctionLib::debug($data);
+        return view('admin.AdminSMSGraphReportChart.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
             'optionUser'=>$optionUser,
-            'optionHours'=>$optionHours,
+            'optionYear'=>$optionYear,
             'optionCarrier'=>$optionCarrier,
-            'hours_div'=>$hours_div,
         ],$this->viewPermission));
     }
 }

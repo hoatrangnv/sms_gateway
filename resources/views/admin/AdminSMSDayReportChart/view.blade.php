@@ -22,12 +22,15 @@
                         <div class="panel panel-info">
                             {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                             <div class="panel-body">
-                                <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
-                                    </select>
-                                </div>
+                                @if($user_role_type == \App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <select name="station_account" id="station_account"
+                                                class="form-control input-sm">
+                                            {!! $optionUser !!}
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-sm-2">
                                     <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">

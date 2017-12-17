@@ -24,12 +24,15 @@
                         <div class="panel panel-info">
                             {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                             <div class="panel-body">
-                                <div class="col-sm-2">
-                                    <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                    <select name="station_account" id="station_account" class="form-control input-sm">
-                                        {!! $optionUser !!}
-                                    </select>
-                                </div>
+                                @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <select name="station_account" id="station_account"
+                                                class="form-control input-sm">
+                                            {!! $optionUser !!}
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-sm-2">
                                     <label for="carrier_id">{{FunctionLib::viewLanguage('choose_carrier')}}</label>
                                     <select name="carrier_id" id="carrier_id" class="form-control input-sm">
@@ -38,7 +41,9 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker" name="day" autocomplete="off"  @if(isset($search['day']))value="{{$search['day']}}"@endif>
+                                    <input type="text" class="form-control input-sm date-picker" name="day"
+                                           autocomplete="off"
+                                           @if(isset($search['day']))value="{{$search['day']}}"@endif>
                                 </div>
                                 <div class="col-sm-2">
                                     <label for="hours">{{FunctionLib::viewLanguage('divide_by_hour')}}</label>
@@ -103,7 +108,8 @@
                 tooltip: {
                     pointFormat: '<b>{point.y}</b> of total<br/>' +
                     '<b>{point.success}</b> of success <br/>' +
-                    '<b>{point.success_per:.1f}%</b> success <br/>'
+                    '<b>{point.success_per:.1f}%</b> success <br/>' +
+                    '<b>{point.total_cost:.1f}</b> total cost <br/>'
                 },
                 series: [
                     {
@@ -113,10 +119,11 @@
                             <?php
                             foreach ($data as $v) {
                                 echo "{
-                            name:'".$v['range_time']."',
+                            name:'" . $v['range_time'] . "',
                             y:{$v['total_sms_hour']},
                             success:{$v['total_sms_success']},
-                            success_per:{$v['success_percent']}
+                            success_per:{$v['success_percent']},
+                            total_cost:{$v['total_cost']}
                             },";
                             }
                             ?>
@@ -128,11 +135,12 @@
     </script>
 @stop
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $(".date-picker").datepicker({
             format: "dd-mm-YYYY",
             language: "vi",
             autoclose: true,
-            keyboardNavigation:true
-        })});
+            keyboardNavigation: true
+        })
+    });
 </script>
