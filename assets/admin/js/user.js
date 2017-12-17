@@ -39,18 +39,18 @@ $(document).ready(function () {
 var SmsAdmin = {
     /**
      *********************************************************************************************************************
-     * @param id
      * Function cho SMS
      * *******************************************************************************************************************
      */
     changeUserWaittingProcessSms: function(sms_log_id,total_sms,status) {
         var user_manager_id = $('#user_manager_id_'+sms_log_id).val();
+        var _token = $('input[name="_token"]').val();
         if(user_manager_id > 0 && total_sms > 0 && sms_log_id > 0){
             $('#img_loading_'+sms_log_id).show();
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: WEB_ROOT + '/manager/waittingSms/changeUserWaittingProcessSms',
-                data: {sms_log_id : sms_log_id, total_sms : total_sms, user_manager_id : user_manager_id},
+                data: {sms_log_id : sms_log_id, total_sms : total_sms, user_manager_id : user_manager_id, _token : _token},
                 dataType: 'json',
                 success: function(res) {
                     $('#img_loading_'+sms_log_id).hide();
@@ -63,20 +63,51 @@ var SmsAdmin = {
             });
         }
     },
-
-    updateWaittingSms2: function(user_id) {
-        $('#sys_showPopupInfoSetting').modal('show');
-        $('#img_loading_').show();
-        $('#sys_show_infor').html('');
+    getSettingContentAttach: function() {
         $.ajax({
             type: "GET",
-            url: WEB_ROOT + '/manager/user/getInfoSettingUser',
-            data: {user_id : user_id},
+            url: WEB_ROOT + '/manager/waittingSms/getSettingContentAttach',
+            data: {},
             dataType: 'json',
             success: function(res) {
-                $('#img_loading').hide();
-                $('#sys_show_infor').html(res.html);
+                if(res.isIntOk == 1){
+                    $('#concatenation_strings').val(res.msg);
+                }
             }
         });
     },
+    getContentGraftedSms: function(sms_sendTo_id) {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/waittingSms/getContentGraftedSms',
+            data: {sms_sendTo_id:sms_sendTo_id, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('show');
+                    $('#content_grafted').val(res.content_grafted);
+                    $('#sms_sendTo_id_popup').val(res.sms_sendTo_id);
+                }
+            }
+        });
+    },
+    submitContentGraftedSms: function() {
+        var _token = $('input[name="_token"]').val();
+        var content_grafted = $('#content_grafted').val();
+        var sms_sendTo_id = $('#sms_sendTo_id_popup').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/waittingSms/submitContentGraftedSms',
+            data: {sms_sendTo_id:sms_sendTo_id, content_grafted:content_grafted, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    },
+
 }
