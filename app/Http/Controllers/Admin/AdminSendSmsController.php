@@ -176,8 +176,8 @@ class AdminSendSmsController extends BaseAdminController
             //web_sms_customer
             $dataInsertSmsCustomer = array(
                 'user_customer_id'=>$this->user_id,
-                'status'=>Define::SMS_STATUS_PENDING,
-                'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                'status'=>Define::SMS_STATUS_PROCESSING,
+                'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
                 'created_date'=>FunctionLib::getDateTime(),);
             if(trim($send_sms_deadline) != ''){
                 $dataInsertSmsCustomer['sms_deadline'] = FunctionLib::getDateTime($send_sms_deadline);
@@ -193,8 +193,8 @@ class AdminSendSmsController extends BaseAdminController
                     'carrier_id'=>$val_carr['carrier_id'],
                     'carrier_name'=>$val_carr['carrier_name'],
                     'total_sms'=>$val_carr['tong_sms'],
-                    'status'=>Define::SMS_STATUS_PENDING,
-                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                    'status'=>Define::SMS_STATUS_PROCESSING,
+                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
                     'send_date'=>FunctionLib::getIntDate(),
                     'created_date'=>FunctionLib::getDateTime(),);
                 $sms_log_id = SmsLog::createItem($dataInsertSmsLog);
@@ -210,8 +210,8 @@ class AdminSendSmsController extends BaseAdminController
                     'user_customer_id'=>$this->user_id,
                     'carrier_id'=>$val['carrier_id'],
                     'phone_receive'=>$val['phone_number'],
-                    'status'=>Define::SMS_STATUS_PENDING,
-                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PENDING],
+                    'status'=>Define::SMS_STATUS_PROCESSING,
+                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
                     'content'=>$val['content'],
                     'content_grafted'=>$val['content'],
                     );

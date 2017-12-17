@@ -20,7 +20,6 @@ class UserSetting extends BaseModel
 
     public static function getUserSettingByUserId($user_id) {
         $tbl_user_setting = Define::TABLE_USER_SETTING;
-        $tbl_user = Define::TABLE_USER;
         $users = DB::table($tbl_user_setting)->where('user_id', '=', $user_id)->get();
         return isset($users[0]) ? $users[0]: array();
     }

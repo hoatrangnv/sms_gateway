@@ -212,7 +212,7 @@ class User extends BaseModel{
     }
 
     public static function getList() {
-        $user = User::where('user_status', '>', 0)->get();
+        $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
         return $user ? $user : array();
     }
 

@@ -23,7 +23,9 @@
                         @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                         <div class="form-group col-lg-3">
                             <label for="banner_name">{{FunctionLib::viewLanguage('station_account')}}</label>
-                            <input type="text" class="form-control input-sm" id="user_customer_id" name="user_customer_id" @if(isset($search['user_customer_id']) && $search['user_customer_id'] != '')value="{{$search['user_customer_id']}}"@endif>
+                            <select name="user_customer_id" id="user_customer_id" class="form-control input-sm">
+                                {!!$optionListUser!!}
+                            </select>
                         </div>
                         @endif
                         <div class="form-group col-lg-3">
@@ -44,10 +46,10 @@
 
                         <div class="form-group col-lg-12 text-right">
                             @if($is_root || $permission_full ==1 || $permission_create == 1)
-                                <a class="btn btn-danger btn-sm" href="{{URL::route('admin.menuEdit',array('id' => FunctionLib::inputId(0)))}}">
+                                {{--<a class="btn btn-danger btn-sm" href="{{URL::route('admin.menuEdit',array('id' => FunctionLib::inputId(0)))}}">
                                     <i class="ace-icon fa fa-plus-circle"></i>
                                     {{FunctionLib::viewLanguage('add')}}
-                                </a>
+                                </a>--}}
                             @endif
                                 {{--<button class="btn btn-warning btn-sm" type="submit" name="submit" value="2"><i class="fa fa-file-excel-o"></i> Xuất Excel</button>--}}
                                 <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i class="fa fa-search"></i> {{FunctionLib::viewLanguage('search')}}</button>
@@ -62,8 +64,7 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="3%" class="text-center"><input type="checkbox"></th>
-                            <th width="3%" class="text-center">TT</th>
+                            <th width="6%" class="text-center">TT</th>
                             @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                             <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
                             @endif
@@ -83,7 +84,6 @@
                         <tbody>
                         @foreach ($data as $key => $item)
                             <tr>
-                                <td class="text-center text-middle"><input type="checkbox"></td>
                                 <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                 <td>@if(isset($infoListUser[$item['user_customer_id']])){!! $infoListUser[$item['user_customer_id']] !!} @endif</td>
@@ -92,20 +92,22 @@
                                 <td class="text-center text-middle">{!! $item['total_sms'] !!}</td>
                                 <td class="text-center text-middle"></td>
                                 <td class="text-center text-middle">
-                                    @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                                        {!! $item['user_manager_id'] !!}
-                                    @else
-                                        {!! $item['list_modem'] !!}
-                                    @endif
+                                    <?php $optionListUser2 = FunctionLib::getOption(array(-1=>'')+$infoListUser, $item['user_manager_id'])?>
+                                    <select name="user_manager_id_{{$item['sms_log_id']}}" id="user_manager_id_{{$item['sms_log_id']}}" class="form-control input-sm">
+                                        {!!$optionListUser2!!}
+                                    </select>
+                                    <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
                                 </td>
                                 <td class="text-center text-middle">
                                     @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                        <a href="javascript:void(0);" onclick="" title="Xóa Item"><i class="fa fa-sign-in fa-2x"></i></a>
+                                        @if($item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_PROCESSING && $item['user_manager_id'] == 0
+                                        || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['user_manager_id'] > 0)
+                                            <a href="javascript:void(0);" onclick="SmsAdmin.changeUserWaittingProcessSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>
+                                        @endif
                                     @endif
                                     @if($is_root || $permission_full ==1|| $permission_edit ==1  )
                                         &nbsp;&nbsp;&nbsp;<a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                     @endif
-                                    <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
                                 </td>
                             </tr>
                         @endforeach

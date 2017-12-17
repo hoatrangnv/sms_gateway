@@ -86,7 +86,7 @@ Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses
 Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
 Route::get('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getDetailSms'));
 Route::post('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postDetailSms'));
-
+Route::get('waittingSms/changeUserWaittingProcessSms', array('as' => 'admin.changeUserWaittingProcessSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeUserWaittingProcessSms'));//ajax
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
 Route::get('dashboard/client_api_edit/{id?}', array('as' => 'admin.client_api_edit','uses' => Admin.'\AdminSystemSettingController@getApiClientEdit'));
