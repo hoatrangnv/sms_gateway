@@ -50,6 +50,7 @@ class Define{
     const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
     const TABLE_USER_SETTING = 'web_user_setting';
     const TABLE_ROLE_MENU = 'web_role_menu';
+    const TABLE_SMS_TEMPLATE = 'web_sms_template';
 
     /***************************************************************************************************************
     //Memcache
