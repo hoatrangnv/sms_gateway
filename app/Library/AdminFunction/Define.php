@@ -126,12 +126,12 @@ class Define{
 
     //trang thái các tin nhắn
     //Pending, Success, Fail
-    const SMS_STATUS_PENDING = 0;
+    const SMS_STATUS_REJECT = 2;
     const SMS_STATUS_SUCCESS = 1;
-    const SMS_STATUS_PROCESSING = 2;
-    const SMS_STATUS_FAIL = -1;
+    const SMS_STATUS_PROCESSING = 0;
+    const SMS_STATUS_FAIL = 3;
     static $arrSmsStatus = array(
-        Define::SMS_STATUS_PENDING => 'Pending',
+        Define::SMS_STATUS_REJECT => 'Reject',
         Define::SMS_STATUS_SUCCESS => 'Successful',
         Define::SMS_STATUS_PROCESSING => 'Processing',
         Define::SMS_STATUS_FAIL => 'Fail');

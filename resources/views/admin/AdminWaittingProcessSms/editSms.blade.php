@@ -31,10 +31,10 @@
                         <div class="form-group">
                             <label for="name" class="control-label alert-danger">{{FunctionLib::viewLanguage('perform_concatenate_strings_or_edit_each_sms')}}</label>
                             <label for="name" class="control-label">
-                                <input name=”choose_type” type="radio" value=”type_input” checked />{{FunctionLib::viewLanguage('concatenation_strings')}}
-                                &nbsp;&nbsp;&nbsp;<input name=”choose_type”  type="radio" value=”type_setting” />Chọn mặc đinh từ cài đặt
+                                <input name=”choose_type” type="radio" value=1 checked  class="radio2"/>{{FunctionLib::viewLanguage('concatenation_strings')}}
+                                &nbsp;&nbsp;&nbsp;<input name=”choose_type”  type="radio" value=2 class="radio2"/>Chọn mặc đinh từ cài đặt
                             </label>
-                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
+                            <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8"></textarea>
                             <label for="name" class="control-label" style="font-size: 9px">Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy</label>
                         </div>
                     </div>
@@ -50,6 +50,7 @@
                         <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('Thực hiện ghép')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
+
                 </div>
                 <!--Danh sách các tin nhắn-->
                 <div style="float: left; width: 65%">
@@ -77,7 +78,7 @@
                                     <td>{!! $item['content_grafted'] !!}</td>
                                     <td class="text-center text-middle">
                                         @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                           <a href="{{URL::route('admin.smsEdit',array('id' => FunctionLib::inputId($item['sms_sendTo_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                            <a href="#" onclick="SmsAdmin.getContentGraftedSms('{{$item['sms_sendTo_id']}}')" title="Sửa item item"><i class="fa fa-edit fa-2x"></i></a>
                                         @endif
                                         <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
                                     </td>
@@ -87,9 +88,42 @@
                         </table>
                     </div>
                 </div>
+                {{ csrf_field() }}
                 {{ Form::close() }}
             </div>
         </div>
     </div><!-- /.page-content -->
+</div>
+<script>
+    $(document).ready(function() {
+        $('.radio2').click(function () {
+            var choose_type  = $(this).val();
+            if(parseInt(choose_type) == 1){
+                $('#concatenation_strings').val('');
+            }else{
+                $('#concatenation_strings').val('');
+                SmsAdmin.getSettingContentAttach();
+            }
+        });
+    });
+</script>
+<!--Popup anh khac de chen vao noi dung bai viet-->
+<div class="modal fade" id="sys_showContentSms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Sửa nội dung send Sms</h4>
+            </div>
+            <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/ajax-loader.gif" width="20" style="display: none" id="img_loading_district">
+            <div class="modal-body" id="sys_show_infor">
+                <textarea type="text" id="content_grafted" name="content_grafted"  class="form-control input-sm" rows="8"></textarea>
+                <input type="hidden" id="sms_sendTo_id_popup" name="sms_sendTo_id_popup" value=""/>
+                <div class="text-left marginTop10">
+                    <a href="#" class="btn btn-primary" onclick="SmsAdmin.submitContentGraftedSms();"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @stop

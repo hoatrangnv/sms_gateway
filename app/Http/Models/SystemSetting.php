@@ -120,8 +120,10 @@ class SystemSetting extends BaseModel
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
+    }
+
+    public static function getSystemSetting() {
+        $data = DB::table(Define::TABLE_SYSTEM_SETTING)->where('system_setting_id', '>', 0)->orderBy('system_setting_id', 'desc')->get();
+        return isset($data[0]) ? $data[0]: array();
     }
 }

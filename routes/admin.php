@@ -84,8 +84,10 @@ Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSms
 Route::match(['GET','POST'], 'waittingSms/viewSend',array('as' => 'admin.waittingSendSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@viewSend'));
 Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
 Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
-Route::get('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getDetailSms'));
-Route::post('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postDetailSms'));
+Route::post('waittingSms/changeUserWaittingProcessSms', array('as' => 'admin.changeUserWaittingProcessSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeUserWaittingProcessSms'));//ajax
+Route::get('waittingSms/getSettingContentAttach', array('as' => 'admin.getSettingContentAttach','uses' => Admin.'\AdminWaittingProcessSmsController@getSettingContentAttach'));//ajax
+Route::get('waittingSms/getContentGraftedSms', array('as' => 'admin.getContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@getContentGraftedSms'));//ajax
+Route::get('waittingSms/submitContentGraftedSms', array('as' => 'admin.submitContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@submitContentGraftedSms'));//ajax
 
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
