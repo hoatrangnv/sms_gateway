@@ -19,7 +19,7 @@
 
     <link media="all" type="text/css" rel="stylesheet" href="{{URL::asset('assets/css/jquery-ui.min.css')}}" />
     <!-- text fonts -->
-    <link media="all" type="text/css" rel="stylesheet" href="{{URL::asset('assets/fonts/fonts.googleapis.com.css')}}" />
+    {{--<link media="all" type="text/css" rel="stylesheet" href="{{URL::asset('assets/fonts/fonts.googleapis.com.css')}}" />--}}
 
     <link media="all" type="text/css" rel="stylesheet" href="{{URL::asset('assets/css/chosen.min.css')}}" />
     <!-- ace styles -->
