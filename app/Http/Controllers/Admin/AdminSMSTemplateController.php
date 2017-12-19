@@ -99,7 +99,6 @@ class AdminSMSTemplateController extends BaseAdminController
             'optionStatus'=>$optionStatus,
             'arrStatus'=>$this->arrStatus,
             'optionUser'=>$optionUser,
-//            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
@@ -166,11 +165,13 @@ class AdminSMSTemplateController extends BaseAdminController
         ],$this->viewPermission));
     }
     public function addTemplate(){
-//        FunctionLib::debug($data_view);
+
         $name_template = isset($_POST['name_template'])?$_POST['name_template']:"";
         $content = isset($_POST['content'])?$_POST['content']:"";
         $update_at = date("Y-m-d H:i",time());
         $customer_id = $this->user_id;
+
+        $id = isset($_POST['id'])?FunctionLib::outputId($_POST['id']):0;
 
         $data = array(
             "template_name"=>$name_template,
@@ -179,7 +180,13 @@ class AdminSMSTemplateController extends BaseAdminController
             "created_date"=>$update_at,
             "customer_id"=>$customer_id,
         );
-        SmsTemplate::createItem($data);
+
+        if ($id!=0 || $id!="0"){
+            unset($data['created_date']);
+            SmsTemplate::updateItem($id,$data);
+        }else{
+            SmsTemplate::createItem($data);
+        }
         $data_full = SmsTemplate::getAll();
         $data_view = [
             'view' => View::make('admin.AdminSMSTemplate.list')
@@ -187,6 +194,20 @@ class AdminSMSTemplateController extends BaseAdminController
                 ->render()
         ];
 
+        return Response::json($data_view, 200);
+    }
+
+    public function deleteTemplate(){
+        $id = isset($_GET['id'])?FunctionLib::outputId($_GET['id']):0;
+        if ($id>0){
+            SmsTemplate::deleteItem($id);
+        }
+        $data_full = SmsTemplate::getAll();
+        $data_view = [
+            'view' => View::make('admin.AdminSMSTemplate.list')
+                ->with('data', $data_full)
+                ->render()
+        ];
         return Response::json($data_view, 200);
     }
     public function postItem($ids) {

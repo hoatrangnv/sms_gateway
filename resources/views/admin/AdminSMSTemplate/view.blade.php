@@ -23,27 +23,31 @@
         <div class="col-md-8 panel-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4><i class="fa fa-child"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('web_sms_template_list')}}</h4>
+                    <h4><i class="fa fa-list" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('web_sms_template_list')}}</h4>
                 </div> <!-- /widget-header -->
                 <div class="panel-body" id="element">
                     @if(sizeof($data) > 0)
                         <table class="table table-bordered">
                             <thead class="thin-border-bottom">
                             <tr class="">
-                                <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
-                                <th width="w50">{{FunctionLib::viewLanguage('template_name')}}</th>
-                                <th width="w100">{{FunctionLib::viewLanguage('content')}}</th>
-                                <th width="w100">{{FunctionLib::viewLanguage('update')}}</th>
-                                <th width="w100">{{FunctionLib::viewLanguage('action')}}</th>
+                                <th class="text-center w10 center">{{FunctionLib::viewLanguage('no')}}</th>
+                                <th class="center w50">{{FunctionLib::viewLanguage('template_name')}}</th>
+                                <th class="center w200">{{FunctionLib::viewLanguage('content')}}</th>
+                                <th class="center w150">{{FunctionLib::viewLanguage('update')}}</th>
+                                <th class="center w100">{{FunctionLib::viewLanguage('action')}}</th>
                             </tr>
                             </thead>
                             <tbody id="list_sms_template">
                             @foreach ($data as $key => $item)
                                 <td class="text-center middle">{{$key+1 }}</td>
                                 <td>{{$item['template_name']}}</td>
-                                <td>{{ $item['content'] }}</td>
-                                <td>{{ $item['updated_date'] }}</td>
-                                <td>thao tac</td>
+                                <td>{{ $item['content']}}</td>
+                                <td>{{ $item['updated_date'] }}
+                                </td>
+                                <td class="center">
+                                    <a onclick="edit_sms_template('{{FunctionLib::inputId($item['sms_template_id'])}}','{{$item['template_name']}}','{{$item['content']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
+                                    <a onclick="delete_item('{{FunctionLib::inputId($item['sms_template_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
+                                </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -59,20 +63,22 @@
         <div class="col-md-4 panel-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4><i class="fa fa-user"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_template_sms')}}</h4>
+                    <h4><i class="fa fa-plus-square" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_template_sms')}}</h4>
                 </div> <!-- /widget-header -->
                 <div class="panel-body">
                     <form id="form" method="post">
+                        <input type="hidden" name="id" value="{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}" class="form-control" id="id">
                         <div class="form-group">
                             <label for="name_template">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}</label>
                             <input type="" name="name_template" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}" class="form-control input-required" id="name_template">
                         </div>
                         <div class="form-group">
                             <label for="content">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_content_grafted')}}</label>
-                            <textarea name="content" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="content"></textarea>
+                            <textarea onkeyup="count_character(this)" name="content" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="content"></textarea>
                         </div>
-                        <a class="btn btn-success" onclick="add_sms_template()">Submit</a>
-                        <a class="btn btn-default" onclick="reset()">Reset</a>
+                        <span style="float: right" class="right">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_length')}}:<strong id="num_character" >0</strong></span>
+                        <a class="btn btn-success" id="submit" onclick="add_sms_template()">Submit</a>
+                        <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
                     </form>
                 </div> <!-- /widget-content -->
             </div>
@@ -86,6 +92,28 @@
     function reset() {
         $("#name_template").val("");
         $("#content").val("");
+        $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
+        $("#num_character").html(0)
+    }
+    function delete_item(id) {
+        $.ajax({
+            type: 'get',
+            url: '/manager/smsTeplate/deleteTemplate',
+            data: {
+                'id':id
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                if ((data.errors)) {
+                    alert(data.errors)
+                }else {
+                    $("#element").html(data.view)
+                    reset();
+                }
+            },
+        });
     }
     function add_sms_template() {
         var is_error = false;
@@ -108,19 +136,23 @@
             alert(error_msg);
             return false;
         }else {
+            $("#submit").attr("disabled","true");
             var name_template = $("#name_template").val()
             var content = $("#content").val()
+            var id = $("#id").val()
             $.ajax({
                 type: 'post',
             url: '/manager/smsTeplate/addTemplate',
                 data: {
                     'name_template':name_template,
-                    'content':content
+                    'content':content,
+                    'id':id
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#submit').removeAttr("disabled")
                     if ((data.errors)) {
                         alert(data.errors)
                     }else {
@@ -131,6 +163,15 @@
             });
         }
     }
+    function count_character(event) {
+        var length = $(event).val().length;
+        $("#num_character").html(length)
+    }
+    function edit_sms_template(id,name,content) {
+        $("#name_template").val(name);
+        $("#content").val(content);
+        $("#id").val(id);
+    }
     $(document).ready(function(){
         $(".date-picker").datepicker({
             format: "yyyy-mm-dd",
@@ -139,3 +180,8 @@
             keyboardNavigation:true
         })});
 </script>
+<style>
+    a:hover {
+        cursor:pointer;
+    }
+</style>

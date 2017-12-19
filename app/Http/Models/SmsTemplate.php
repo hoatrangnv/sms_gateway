@@ -16,7 +16,7 @@ class SmsTemplate extends BaseModel
     protected $primaryKey = 'sms_template_id';
     public $timestamps = false;
 
-    protected $fillable = array('template_name', 'content', 'created_date', 'updated_date');
+    protected $fillable = array('user_id','template_name', 'content', 'created_date', 'updated_date');
 
     public static function createItem($data){
         try {
