@@ -187,22 +187,45 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
+        $concatenation_strings = Request::get('concatenation_strings', '');
+        $concatenation_rule = Request::get('concatenation_rule', 1);
+        if(trim($concatenation_strings) == ''){
+            $this->error[] = FunctionLib::controLanguage('concatenation_strings',$this->languageSite).' null';
+        }
+
+        if(empty($this->error) && $sms_log_id > 0){
+            $arrString = explode(',',$concatenation_strings);
+            $dataSmsLog = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
+            if($dataSmsLog){
+                foreach ($dataSmsLog as $sms_log){
+                    $string_ghep = $arrString[rand(0,(count($arrString)-1))];
+                    $string_send = $sms_log->content_grafted;
+                    FunctionLib::stringConcatenation($string_send,$string_ghep,$concatenation_rule);
+                    $dataUpdate['content_grafted'] = $string_send;
+                    SmsSendTo::updateItem($sms_log->sms_sendTo_id,$dataUpdate);
+                }
+            }
+        }
+
         $data = array();
         if ($sms_log_id > 0) {
             $data = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
         }
         //FunctionLib::debug($data);
         $this->getDataDefault();
-        $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
+        $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, $concatenation_rule);
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.editSms', array_merge([
             'data' => $data,
+            'error' => $this->error,
             'id' => $sms_log_id,
+            'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
         ], $this->viewPermission));
     }
+
 
     //ajax
     public function changeUserWaittingProcessSms()

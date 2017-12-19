@@ -1030,4 +1030,30 @@ class FunctionLib {
         }
         return false;
     }
+
+    /**
+     * Ghep chuỗi theo type
+     * @param $string
+     * @param $string_ghep
+     * @param $type
+     */
+    public static function stringConcatenation(&$string,$string_ghep,$type){
+        if(trim($string) != '' && trim($string_ghep) != ''){
+            switch ($type){
+                case 1: $string = trim($string_ghep).' '.$string;
+                    break;
+                case 2: $string = $string.' '.trim($string_ghep);
+                    break;
+                case 3:
+                    $arrStringRoot = explode(' ',$string);
+                    $count_word = str_word_count($string);
+                    array_splice( $arrStringRoot, rand(0,$count_word), 0, $string_ghep );
+                    $string = implode(' ',$arrStringRoot);
+                    break;
+                default:
+                    $string = trim($string_ghep).' '.$string;
+                    break;
+            }
+        }
+    }
 }

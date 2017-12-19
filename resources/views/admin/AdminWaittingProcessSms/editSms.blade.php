@@ -19,7 +19,7 @@
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
                 {{Form::open(array('method' => 'POST','role'=>'form','files' => true))}}
-                @if(isset($error))
+                @if(isset($error) && !empty($error))
                     <div class="alert alert-danger" role="alert">
                         @foreach($error as $itmError)
                             <p>{{ $itmError }}</p>
@@ -34,13 +34,13 @@
                                 <input name=”choose_type” type="radio" value=1 checked  class="radio2"/>{{FunctionLib::viewLanguage('concatenation_strings')}}
                                 &nbsp;&nbsp;&nbsp;<input name=”choose_type”  type="radio" value=2 class="radio2"/>Chọn mặc đinh từ cài đặt
                             </label>
-                            <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8"></textarea>
+                            <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings)){{$concatenation_strings}}@endif</textarea>
                             <label for="name" class="control-label" style="font-size: 9px">Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <label for="category_status">{{FunctionLib::viewLanguage('concatenation_rule')}}</label>
-                        <select name="carrier_id" id="carrier_id" class="form-control input-sm">
+                        <select name="concatenation_rule" id="concatenation_rule" class="form-control input-sm">
                             {!!$optionDuplicateString!!}
                         </select>
                     </div>
