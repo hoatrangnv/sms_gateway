@@ -137,4 +137,3 @@ Route::get('graphSuccessful/view',array('as' => 'admin.graphSuccessful','uses' =
 /*SMS History*/
 Route::get('smsTeplate/view',array('as' => 'admin.smsTemplate','uses' => Admin.'\AdminSMSTemplateController@view'));
 Route::post('smsTeplate/addTemplate',array('as' => 'admin.addTemplate','uses' => Admin.'\AdminSMSTemplateController@addTemplate'));
-Route::get('smsTeplate/details',array('as' => 'admin.smsHistoryDetailsView','uses' => Admin.'\AdminSMSTemplateController@viewDetails'));
