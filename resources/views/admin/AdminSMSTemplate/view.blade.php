@@ -21,10 +21,24 @@
 
     <div class="page-content">
         <div class="col-md-8 panel-content">
-            <div class="panel panel-default">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4><i class="fa fa-list" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('web_sms_template_list')}}</h4>
                 </div> <!-- /widget-header -->
+                {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
+                <div style="margin-top: 10px">
+                    <div class="col-sm-4" >
+                        <input @if(isset($search['template_name'])) value="{{$search['template_name']}}" @endif placeholder="{{FunctionLib::viewLanguage('sms_template_name')}}" name="name_template_s" class="form-control" id="name_template_s">
+                        {{--<select style="height: 34px" name="name_template" id="name_template" class="form-control input-sm">--}}
+                            {{--{!! $optionUser !!}--}}
+                        {{--</select>--}}
+                    </div>
+                    <div style="float: left" class="form-group">
+                        <button class="btn btn-primary btn-sm" type="submit" name="submit" value="1"><i
+                                    class="fa fa-search"></i> {{FunctionLib::viewLanguage('search')}}</button>
+                    </div>
+                </div>
+                {{ Form::close() }}
                 <div class="panel-body" id="element">
                     @if(sizeof($data) > 0)
                         <table class="table table-bordered">
@@ -61,7 +75,7 @@
             </div> <!-- /widget -->
         </div>
         <div class="col-md-4 panel-content">
-            <div class="panel panel-default">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4><i class="fa fa-plus-square" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_template_sms')}}</h4>
                 </div> <!-- /widget-header -->

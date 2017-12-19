@@ -74,11 +74,7 @@ class AdminSMSTemplateController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
-        $dataSearch['status'] = addslashes(Request::get('status',''));
-        $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
-        $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
-
+        $dataSearch['template_name'] = addslashes(Request::get('name_template_s',''));
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
