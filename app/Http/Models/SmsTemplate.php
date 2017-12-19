@@ -116,6 +116,17 @@ class SmsTemplate extends BaseModel
             throw new PDOException();
         }
     }
+    public static function getAll(){
+        try{
+            $query = SmsTemplate::where('sms_template_id','>',0);
+            $query->orderBy('sms_template_id', 'desc');
+            //get field can lay du lieu
+            $result = $query->get();
+            return $result;
+        }catch (PDOException $e){
+            throw new PDOException();
+        }
+    }
 
     public static function removeCache($id = 0,$data){
         if($id > 0){

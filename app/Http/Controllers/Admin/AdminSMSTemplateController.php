@@ -15,6 +15,7 @@ use App\Library\AdminFunction\Pagging;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use View;
 
 class AdminSMSTemplateController extends BaseAdminController
 {
@@ -179,7 +180,14 @@ class AdminSMSTemplateController extends BaseAdminController
             "customer_id"=>$customer_id,
         );
         SmsTemplate::createItem($data);
-        self::view();
+        $data_full = SmsTemplate::getAll();
+        $data_view = [
+            'view' => View::make('admin.AdminSMSTemplate.list')
+                ->with('data', $data_full)
+                ->render()
+        ];
+
+        return Response::json($data_view, 200);
     }
     public function postItem($ids) {
         $id = FunctionLib::outputId($ids);

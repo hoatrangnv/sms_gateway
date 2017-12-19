@@ -24,7 +24,7 @@
                 <div class="panel-heading">
                     <h4><i class="fa fa-child"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('web_sms_template_list')}}</h4>
                 </div> <!-- /widget-header -->
-                <div class="panel-body">
+                <div class="panel-body" id="element">
                     @if(sizeof($data) > 0)
                         <table class="table table-bordered">
                             <thead class="thin-border-bottom">
@@ -61,16 +61,18 @@
                     <h4><i class="fa fa-user"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_template_sms')}}</h4>
                 </div> <!-- /widget-header -->
                 <div class="panel-body">
-                    <div class="form-group">
-                        <label for="name_template">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}</label>
-                        <input type="" class="form-control" id="name_template">
-                    </div>
-                    <div class="form-group">
-                        <label for="content">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_content_grafted')}}</label>
-                        <textarea style="resize: none" class="form-control" rows="5" id="content"></textarea>
-                    </div>
-                    <a class="btn btn-success" onclick="add_sms_template()">Submit</a>
-                    <a class="btn btn-danger">Cancel</a>
+                    <form id="form" method="post">
+                        <div class="form-group">
+                            <label for="name_template">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}</label>
+                            <input type="" name="name_template" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}" class="form-control input-required" id="name_template">
+                        </div>
+                        <div class="form-group">
+                            <label for="content">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_content_grafted')}}</label>
+                            <textarea name="content" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="content"></textarea>
+                        </div>
+                        <a class="btn btn-success" onclick="add_sms_template()">Submit</a>
+                        <a class="btn btn-default" onclick="reset()">Reset</a>
+                    </form>
                 </div> <!-- /widget-content -->
             </div>
         </div>
@@ -80,26 +82,53 @@
 </div>
 @stop
 <script>
+    function reset() {
+        $("#name_template").val("");
+        $("#content").val("");
+    }
     function add_sms_template() {
-        var name_template = $("#name_template").val()
-        var content = $("#content").val()
-        $.ajax({
-            type: 'post',
-            url: '/manager/smsTeplate/addTemplate',
-            data: {
-                'name_template':name_template,
-                'content':content
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                debugger
-                if ((data.errors)) {
-                    alert(data.errors)
-                }
-            },
+        var is_error = false;
+        var msg = {};
+
+        $("form#form :input").each(function(){
+            var input = $(this); // This is the jquery object of the input, do what you will
+            if ($(this).hasClass("input-required") && $(this).val() == "") {
+                msg[$(this).attr("name")] = "※" + $(this).attr("title");
+                is_error = true;
+            }
         });
+
+        if (is_error == true) {
+            var error_msg = "";
+            $.each(msg, function (key, value) {
+                error_msg = error_msg + value + "\n";
+            });
+//            error_msg += (str_is_sms !="")?str_is_sms:"";
+            alert(error_msg);
+            return false;
+        }else {
+            var name_template = $("#name_template").val()
+            var content = $("#content").val()
+            $.ajax({
+                type: 'post',
+            url: '/manager/smsTeplate/addTemplate',
+                data: {
+                    'name_template':name_template,
+                    'content':content
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    if ((data.errors)) {
+                        alert(data.errors)
+                    }else {
+                        $("#element").html(data.view)
+                        reset();
+                    }
+                },
+            });
+        }
     }
     $(document).ready(function(){
         $(".date-picker").datepicker({
