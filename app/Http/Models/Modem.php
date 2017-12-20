@@ -137,16 +137,29 @@ ORDER BY m.modem_id DESC');
     {
         if ($id > 0) {
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
+        Cache::forget(Define::CACHE_INFO_MODEM);
     }
 
     public static function executesSQL($str_sql = ''){
-        //return (trim($str_sql) != '') ? DB::statement(trim($str_sql)): array();
         return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
     }
 
+    /**
+     * Quynhtm
+     * @return mixed
+     */
+    public  static function getListModemName(){
+        $data = Cache::get(Define::CACHE_INFO_MODEM);
+        if (sizeof($data) == 0) {
+            $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)->orderBy('modem_id', 'desc')->get(array('modem_id','modem_name'));
+            foreach ($arr as $value){
+                $data[$value->modem_id] = $value->modem_name;
+            }
+            if(!empty($data)){
+                Cache::put(Define::CACHE_INFO_MODEM, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
 }

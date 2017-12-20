@@ -42,7 +42,7 @@ var SmsAdmin = {
      * Function cho SMS
      * *******************************************************************************************************************
      */
-    changeUserWaittingProcessSms: function(sms_log_id,total_sms,status) {
+    changeUserWaittingProcessSms: function(sms_log_id,total_sms) {
         var user_manager_id = $('#user_manager_id_'+sms_log_id).val();
         var _token = $('input[name="_token"]').val();
         if(user_manager_id > 0 && total_sms > 0 && sms_log_id > 0){
@@ -63,6 +63,7 @@ var SmsAdmin = {
             });
         }
     },
+
     getSettingContentAttach: function() {
         $.ajax({
             type: "GET",
@@ -110,4 +111,46 @@ var SmsAdmin = {
         });
     },
 
+    /***********************************************************************************************************************
+     * WaittingSendSms
+     * @param sms_log_id
+     * @param total_sms
+     * *********************************************************************************************************************
+     */
+    changeModemWaittingSendSms: function(sms_log_id,total_sms) {
+        var list_modem = $('#list_modem_'+sms_log_id).val();
+        var _token = $('input[name="_token"]').val();
+        if(list_modem > 0 && total_sms > 0 && sms_log_id > 0){
+            $('#img_loading_'+sms_log_id).show();
+            $.ajax({
+                type: "POST",
+                url: WEB_ROOT + '/manager/waittingSms/changeModemWaittingSendSms',
+                data: {sms_log_id : sms_log_id, total_sms : total_sms, list_modem : list_modem, _token : _token},
+                dataType: 'json',
+                success: function(res) {
+                    $('#img_loading_'+sms_log_id).hide();
+                    if(res.isIntOk == 1){
+                        window.location.reload();
+                    }else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        }
+    },
+    refuseModem: function(sms_log_id) {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "POST",
+            url: WEB_ROOT + '/manager/waittingSms/refuseModem',
+            data: {sms_log_id:sms_log_id, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    alert(res.msg);
+                    window.location.reload();
+                }
+            }
+        });
+    },
 }

@@ -83,6 +83,8 @@ class Define{
 
     const CACHE_INFO_CARRIER = 'cache_info_carrier';
 
+    const CACHE_INFO_MODEM = 'cache_info_modem';
+
     /***************************************************************************************************************
     //Define
      ***************************************************************************************************************/
@@ -131,8 +133,8 @@ class Define{
     const SMS_STATUS_PROCESSING = 0;
     const SMS_STATUS_FAIL = 3;
     static $arrSmsStatus = array(
-        Define::SMS_STATUS_REJECT => 'Reject',
-        Define::SMS_STATUS_SUCCESS => 'Successful',
         Define::SMS_STATUS_PROCESSING => 'Processing',
+        Define::SMS_STATUS_SUCCESS => 'Successful',
+        Define::SMS_STATUS_REJECT => 'Reject',
         Define::SMS_STATUS_FAIL => 'Fail');
 }

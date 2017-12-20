@@ -88,6 +88,9 @@ Route::post('waittingSms/changeUserWaittingProcessSms', array('as' => 'admin.cha
 Route::get('waittingSms/getSettingContentAttach', array('as' => 'admin.getSettingContentAttach','uses' => Admin.'\AdminWaittingProcessSmsController@getSettingContentAttach'));//ajax
 Route::get('waittingSms/getContentGraftedSms', array('as' => 'admin.getContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@getContentGraftedSms'));//ajax
 Route::get('waittingSms/submitContentGraftedSms', array('as' => 'admin.submitContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@submitContentGraftedSms'));//ajax
+//waittingSendSMS
+Route::post('waittingSms/changeModemWaittingSendSms', array('as' => 'admin.changeModemWaittingSendSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeModemWaittingSendSms'));//ajax
+Route::post('waittingSms/refuseModem', array('as' => 'admin.refuseModem','uses' => Admin.'\AdminWaittingProcessSmsController@refuseModem'));//ajax
 
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));

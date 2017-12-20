@@ -9,6 +9,7 @@ use App\Http\Models\CarrierSetting;
 use App\Http\Models\SmsSendTo;
 use App\Http\Models\UserSetting;
 use App\Http\Models\ModemCom;
+use App\Http\Models\Modem;
 use App\Http\Models\SystemSetting;
 use Illuminate\Support\Facades\DB;
 use App\Library\AdminFunction\FunctionLib;
@@ -32,13 +33,14 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
     private $infoListUser = array();
+    private $infoListModem = array();
     private $arrCarrier = array();
     private $arrDuplicateString = array();
 
     public function __construct()
     {
         parent::__construct();
-        CGlobal::$pageAdminTitle = 'SMS Waitting Process';
+
         FunctionLib::link_js(array(
             'admin/js/user.js',
         ));
@@ -47,6 +49,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getDataDefault()
     {
         $this->infoListUser = User::getListUserNameFullName();
+        $this->infoListModem = Modem::getListModemName();
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
         $this->arrDuplicateString = array(
             1 => FunctionLib::controLanguage('the_first_of_sms'),
@@ -75,6 +78,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_view, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
+        CGlobal::$pageAdminTitle = 'SMS Waitting Process';
         $pageNo = (int)Request::get('page_no', 1);
         $sbmValue = Request::get('submit', 1);
         $limit = CGlobal::number_show_30;
@@ -108,47 +112,6 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'paging' => $paging,
             'optionCarrier' => $optionCarrier,
             'optionListUser' => $optionListUser,
-            'infoListUser' => $this->infoListUser,
-        ], $this->viewPermission));
-    }
-
-    /**
-     * @return view Send
-     */
-    public function viewSend()
-    {
-        //Check phan quyen.
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_view, $this->permission)) {
-            return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
-        }
-        $pageNo = (int)Request::get('page_no', 1);
-        $sbmValue = Request::get('submit', 1);
-        $limit = CGlobal::number_show_30;
-        $offset = ($pageNo - 1) * $limit;
-        $search = $data = array();
-        $total = 0;
-
-        $search['carrier_id'] = (int)Request::get('carrier_id', -1);
-        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
-            $search['user_customer_id'] = (int)Request::get('user_customer_id', -1);
-        } else {
-            $search['user_manager_id'] = $this->user_id;
-        }
-        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
-        $data = SmsLog::searchByCondition($search, $limit, $offset, $total);
-        $paging = $total > 0 ? Pagging::getNewPager(3, $pageNo, $total, $limit, $search) : '';
-
-        $this->getDataDefault();
-        $optionCarrier = FunctionLib::getOption(array(-1 => '') + $this->arrCarrier, $search['carrier_id']);
-
-        $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminWaittingProcessSms.viewSend', array_merge([
-            'data' => $data,
-            'search' => $search,
-            'total' => $total,
-            'stt' => ($pageNo - 1) * $limit,
-            'paging' => $paging,
-            'optionCarrier' => $optionCarrier,
             'infoListUser' => $this->infoListUser,
         ], $this->viewPermission));
     }
@@ -189,20 +152,20 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         }
         $concatenation_strings = Request::get('concatenation_strings', '');
         $concatenation_rule = Request::get('concatenation_rule', 1);
-        if(trim($concatenation_strings) == ''){
-            $this->error[] = FunctionLib::controLanguage('concatenation_strings',$this->languageSite).' null';
+        if (trim($concatenation_strings) == '') {
+            $this->error[] = FunctionLib::controLanguage('concatenation_strings', $this->languageSite) . ' null';
         }
 
-        if(empty($this->error) && $sms_log_id > 0){
-            $arrString = explode(',',$concatenation_strings);
+        if (empty($this->error) && $sms_log_id > 0) {
+            $arrString = explode(',', $concatenation_strings);
             $dataSmsLog = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
-            if($dataSmsLog){
-                foreach ($dataSmsLog as $sms_log){
-                    $string_ghep = $arrString[rand(0,(count($arrString)-1))];
+            if ($dataSmsLog) {
+                foreach ($dataSmsLog as $sms_log) {
+                    $string_ghep = $arrString[rand(0, (count($arrString) - 1))];
                     $string_send = $sms_log->content_grafted;
-                    FunctionLib::stringConcatenation($string_send,$string_ghep,$concatenation_rule);
+                    FunctionLib::stringConcatenation($string_send, $string_ghep, $concatenation_rule);
                     $dataUpdate['content_grafted'] = $string_send;
-                    SmsSendTo::updateItem($sms_log->sms_sendTo_id,$dataUpdate);
+                    SmsSendTo::updateItem($sms_log->sms_sendTo_id, $dataUpdate);
                 }
             }
         }
@@ -226,11 +189,10 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         ], $this->viewPermission));
     }
 
-
     //ajax
     public function changeUserWaittingProcessSms()
     {
-        $data = array('isIntOk' => 0,'msg'=>'Error update');
+        $data = array('isIntOk' => 0, 'msg' => 'Error update');
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
@@ -265,69 +227,177 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                 } else {
                     $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';
                 }
-            }
-            else {
+            } else {
                 $data['msg'] = 'Không có thông tin trạm được gán';
             }
         }
         return Response::json($data);
     }
+
     //ajax
     public function getSettingContentAttach()
     {
-        $data = array('isIntOk' => 0,'data' => array(),'msg'=>'Error update');
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => 'Error update');
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
         $systemSetting = SystemSetting::getSystemSetting();
-        if(!empty($systemSetting)){
+        if (!empty($systemSetting)) {
             $data['isIntOk'] = 1;
-            $data['msg'] = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '')?$systemSetting->concatenation_strings: '';
+            $data['msg'] = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
         }
         return Response::json($data);
     }
+
     //ajax
     public function getContentGraftedSms()
     {
-        $data = array('isIntOk' => 0,'data' => array(),'msg'=>'');
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
         $sms_sendTo_id = (int)Request::get('sms_sendTo_id', 0);
         $sms_sendTo = SmsSendTo::find($sms_sendTo_id);
-        if(!empty($sms_sendTo)){
+        if (!empty($sms_sendTo)) {
 
             $data['isIntOk'] = 1;
             $data['sms_sendTo_id'] = $sms_sendTo_id;
-            $data['content_grafted'] = (isset($sms_sendTo->content_grafted) && trim($sms_sendTo->content_grafted) != '')?$sms_sendTo->content_grafted: '';
+            $data['content_grafted'] = (isset($sms_sendTo->content_grafted) && trim($sms_sendTo->content_grafted) != '') ? $sms_sendTo->content_grafted : '';
         }
         return Response::json($data);
     }
+
     //ajax
     public function submitContentGraftedSms()
     {
-        $data = array('isIntOk' => 0,'data' => array(),'msg'=>'');
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
         $sms_sendTo_id = (int)Request::get('sms_sendTo_id', 0);
         $content_grafted = Request::get('content_grafted', '');
 
-        if($sms_sendTo_id > 0 && trim($content_grafted) != ''){
+        if ($sms_sendTo_id > 0 && trim($content_grafted) != '') {
             $dataUpdate['content_grafted'] = $content_grafted;
-            SmsSendTo::updateItem($sms_sendTo_id,$dataUpdate);
+            SmsSendTo::updateItem($sms_sendTo_id, $dataUpdate);
             $data['isIntOk'] = 1;
         }
         return Response::json($data);
     }
 
-    private function valid($data = array())
+    /****************************************************************************************************************
+     *
+     * Phần xử lý SMS chờ gửi
+     *****************************************************************************************************************/
+    /**
+     * @return view Send
+     */
+    public function viewSend()
     {
-        if (!empty($data)) {
-            if (isset($data['banner_name']) && trim($data['banner_name']) == '') {
-                $this->error[] = 'Null';
+        //Check phan quyen.
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_view, $this->permission)) {
+            return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
+        }
+        CGlobal::$pageAdminTitle = 'SMS Waitting Send';
+        $pageNo = (int)Request::get('page_no', 1);
+        $sbmValue = Request::get('submit', 1);
+        $limit = CGlobal::number_show_30;
+        $offset = ($pageNo - 1) * $limit;
+        $search = $data = array();
+        $total = 0;
+
+        $search['carrier_id'] = (int)Request::get('carrier_id', -1);
+        $search['from_date'] = Request::get('from_date', '');
+        $search['to_date'] = Request::get('to_date', '');
+        $search['status'] = array(Define::SMS_STATUS_PROCESSING, Define::SMS_STATUS_REJECT);
+        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
+            $search['user_customer_id'] = (int)Request::get('user_customer_id', -1);
+        } else {
+            $search['user_customer_id'] = $this->user_id;
+        }
+        //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
+        $data = SmsLog::searchByCondition($search, $limit, $offset, $total);
+        $paging = $total > 0 ? Pagging::getNewPager(3, $pageNo, $total, $limit, $search) : '';
+
+        $this->getDataDefault();
+        $optionCarrier = FunctionLib::getOption(array(-1 => '') + $this->arrCarrier, $search['carrier_id']);
+        $optionListUser = FunctionLib::getOption(array(-1 => '') + $this->infoListUser, $search['user_customer_id']);
+
+        $this->viewPermission = $this->getPermissionPage();
+        return view('admin.AdminWaittingProcessSms.viewSend', array_merge([
+            'data' => $data,
+            'search' => $search,
+            'total' => $total,
+            'stt' => ($pageNo - 1) * $limit,
+            'paging' => $paging,
+            'optionCarrier' => $optionCarrier,
+            'optionListUser' => $optionListUser,
+            'infoListModem' => $this->infoListModem,
+            'infoListUser' => $this->infoListUser,
+        ], $this->viewPermission));
+    }
+
+    //ajax
+    public function changeModemWaittingSendSms()
+    {
+        $data = array('isIntOk' => 0, 'msg' => 'Error update');
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+            return Response::json($data);
+        }
+        $modem_id = (int)Request::get('list_modem', 0);
+        $sms_log_id = (int)Request::get('sms_log_id', 0);
+        $total_sms = (int)Request::get('total_sms', 0);
+
+        //lấy thông tin người quản lý modem
+        $infoModem = Modem::find($modem_id);
+        $user_manager_id = (isset($infoModem->user_id)) ? $infoModem->user_id : 0;
+
+        if ($sms_log_id > 0 && $user_manager_id > 0) {
+            $infoUser = UserSetting::getUserSettingByUserId($user_manager_id);
+            if (!empty($infoUser)) {
+                //Tổng số lượng SMS cần gửi phải <= Tổng số SMS Trạm đó có thể gửi trong ngày - Số lượng tin đã chuyển xử lý trong ngày
+                $sms_max = $infoUser->sms_max;
+                $infoModemCom = ModemCom::getListModemComAction($user_manager_id);
+                $total_send_day = $sms_max * count($infoModemCom);
+                $number_send_ok = $total_send_day - $infoUser->count_sms_number;
+                if ($total_sms <= $number_send_ok) {
+                    //web_sms_log
+                    $dataUpdate['list_modem'] = $modem_id;
+                    $dataUpdate['status'] = Define::SMS_STATUS_PROCESSING;
+                    SmsLog::updateItem($sms_log_id, $dataUpdate);
+
+                    //web_user_setting
+                    $dataUpdateUser['count_sms_number'] = $total_sms + $infoUser->count_sms_number;
+                    DB::table(Define::TABLE_USER_SETTING)
+                        ->where('user_id', $user_manager_id)
+                        ->update($dataUpdateUser);
+                    $data['isIntOk'] = 1;
+                } else {
+                    $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';
+                }
+            } else {
+                $data['msg'] = 'Không có thông tin trạm được gán';
             }
         }
-        return true;
+        return Response::json($data);
+    }
+
+    //ajax
+    public function refuseModem()
+    {
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => ' Cập nhật lôi');
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+            return Response::json($data);
+        }
+        $sms_log_id = (int)Request::get('sms_log_id', 0);
+        if ($sms_log_id > 0) {
+            $dataUpdate['status'] = Define::SMS_STATUS_REJECT;
+            $dataUpdate['status_name'] = Define::$arrSmsStatus[Define::SMS_STATUS_REJECT];
+            if (SmsLog::updateItem($sms_log_id, $dataUpdate)) {
+                $data['isIntOk'] = 1;
+                $data['msg'] = 'Cập nhật thành công';
+            }
+        }
+        return Response::json($data);
     }
 }
