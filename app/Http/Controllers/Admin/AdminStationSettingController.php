@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\User;
 use App\Http\Models\UserSetting;
+use App\Http\Models\SmsPacket;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
 use App\Library\AdminFunction\Define;
@@ -77,6 +78,28 @@ class AdminStationSettingController extends BaseAdminController
         }
         $data['updated_date'] = date("Y/m/d H:i",time());
         if($this->valid($data) && empty($this->error)) {
+            if ($data['count_sms_number_hd'] != $data['count_sms_number'] || $data['sms_error_max_hd'] != $data['sms_error_max'] || $data['time_delay_from_hd'] != $data['time_delay_from'] || $data['time_delay_to_hd'] != $data['time_delay_to']){
+
+                $packet = SmsPacket::updateOrCreate(
+                    [
+                        "user_manager_id"=>$this->user_id,
+                        "status"=>1
+                    ],
+                    [
+                        "type"=>"2",
+                        "sms_max"=>$data['count_sms_number'],
+                        "sms_error_max"=>$data['sms_error_max'],
+                        "time_delay_from"=> $data['time_delay_from'],
+                        "time_delay_to"=> $data['time_delay_to'],
+                        "status"=>1,
+                        "user_manager_id"=>$this->user_id,
+                        "updated_date"=>date('Y-m-d H:i',time()),
+                    ]
+                );
+
+//                $packet = SmsPacket::firstOrNew(array('user_manager_id' => $this->user_id,'status'=>"Open"));
+            }
+
             if($id > 0) {
                 //cap nhat
                 if(UserSetting::updateItem($id, $data)) {
