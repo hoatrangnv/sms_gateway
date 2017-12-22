@@ -104,9 +104,7 @@
 </div>
 @stop
 <script>
-    $(document).ready(function () {
-        setLang()
-    })
+
     function reset() {
         $("#name_template").val("");
         $("#content").val("");
@@ -201,16 +199,6 @@
             keyboardNavigation:true
         })});
 
-    var lng
-    function setLang() {
-        $.ajaxSetup({async: false});//同期通信(json取ってくるまで待つ)
-        var lang = $("body").attr("lang");
-        //alert(lang);
-        $.getJSON("../../../../storage/language/" + lang + ".json", function (data) {
-            lng = data;
-        });
-        $.ajaxSetup({async: true});
-    }
 </script>
 <style>
     a:hover {
