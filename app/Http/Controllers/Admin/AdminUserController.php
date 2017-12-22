@@ -23,6 +23,7 @@ use App\Library\AdminFunction\Pagging;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 
 class AdminUserController extends BaseAdminController{
     private $permission_view = 'user_view';
@@ -59,11 +60,12 @@ class AdminUserController extends BaseAdminController{
         $page_no = Request::get('page_no', 1);
         $dataSearch['user_status'] = Request::get('user_status', 0);
         $dataSearch['user_email'] = Request::get('user_email', '');
-        $dataSearch['user_full_name'] = Request::get('user_full_name', '');
         $dataSearch['user_name'] = Request::get('user_name', '');
+        $dataSearch['user_phone'] = Request::get('user_phone', '');
         $dataSearch['user_group'] = Request::get('user_group', 0);
+        $dataSearch['role_type'] = Request::get('role_type', 0);
         $dataSearch['user_view'] = ($this->is_boss)? 1: 0;
-
+        //FunctionLib::debug($dataSearch);
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
@@ -72,6 +74,7 @@ class AdminUserController extends BaseAdminController{
 
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
         $this->getDataDefault();
+        $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($dataSearch['role_type'])? $dataSearch['role_type']: 0);
         return view('admin.AdminUser.view',[
                 'data'=>$data,
                 'dataSearch'=>$dataSearch,
@@ -80,6 +83,7 @@ class AdminUserController extends BaseAdminController{
                 'paging'=>$paging,
                 'arrStatus'=>$this->arrStatus,
                 'arrGroupUser'=>$arrGroupUser,
+                'optionRoleType'=>$optionRoleType,
                 'is_root'=>$this->is_root,
                 'permission_edit'=>in_array($this->permission_edit, $this->permission) ? 1 : 0,
                 'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
@@ -113,6 +117,7 @@ class AdminUserController extends BaseAdminController{
         $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
+            'id'=>$id,
             'arrStatus'=>$this->arrStatus,
             'arrGroupUser'=>$arrGroupUser,
             'menuAdmin'=>$menuAdmin,
@@ -142,6 +147,7 @@ class AdminUserController extends BaseAdminController{
         $data['user_email'] = htmlspecialchars(trim(Request::get('user_email', '')));
         $data['user_phone'] = htmlspecialchars(trim(Request::get('user_phone', '')));
         $data['user_name'] = Request::get('user_name', '');
+        $data['user_password'] = Request::get('user_password', '');
         $data['telephone'] = Request::get('telephone', '');
         $data['address_register'] = Request::get('address_register', '');
         $data['number_code'] = Request::get('number_code', '');
@@ -187,6 +193,11 @@ class AdminUserController extends BaseAdminController{
 
             if($id > 0){
                 if (User::updateUser($id, $dataInsert)) {
+                    $dataUpdateUserSetting['role_type'] = $dataInsert['role_type'];
+                    $dataUpdateUserSetting['role_name'] = $dataInsert['role_name'];
+                    DB::table(Define::TABLE_USER_SETTING)
+                        ->where('user_id', $id)
+                        ->update($dataUpdateUserSetting);
                     return Redirect::route('admin.user_view');
                 } else {
                     $this->error[] = 'Lỗi truy xuất dữ liệu';;
@@ -195,6 +206,7 @@ class AdminUserController extends BaseAdminController{
                 $dataInsert['user_create_id'] = User::user_id();
                 $dataInsert['user_create_name'] = User::user_name();
                 $dataInsert['user_created'] = time();
+                $dataInsert['user_password'] = $data['user_password'];
                 if (User::createNew($dataInsert)) {
                     return Redirect::route('admin.user_view');
                 } else {
@@ -211,10 +223,11 @@ class AdminUserController extends BaseAdminController{
         $optionRoleType = FunctionLib::getOption($this->arrRoleType, isset($data['role_type'])? $data['role_type']: Define::ROLE_TYPE_CUSTOMER);
         return view('admin.AdminUser.add',[
             'data'=>$data,
+            'id'=>$id,
             'arrStatus'=>$this->arrStatus,
             'arrGroupUser'=>$arrGroupUser,
             'menuAdmin'=>$menuAdmin,
-            'arrUserGroupMenu'=>$groupUserMenu,
+            'arrUserGroupMenu'=>array(),
             'optionStatus'=>$optionStatus,
             'optionSex'=>$optionSex,
             'optionRoleType'=>$optionRoleType,

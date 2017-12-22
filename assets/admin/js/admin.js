@@ -17,7 +17,7 @@ $(document).ready(function () {
                     $.ajax({
                         dataType: 'json',
                         type: 'POST',
-                        url: WEB_ROOT + '/admin/' + url + id,
+                        url: WEB_ROOT + '/manager/' + url + id,
                         data: {
                             '_token': _token,
                         },
