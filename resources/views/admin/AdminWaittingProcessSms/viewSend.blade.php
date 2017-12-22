@@ -58,9 +58,9 @@
                             <table class="table table-bordered table-hover">
                                 <thead class="thin-border-bottom">
                                 <tr class="">
-                                    <th width="6%" class="text-center">TT</th>
+                                    <th width="3%" class="text-center">TT</th>
                                     @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
-                                        <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
+                                        <th width="22%">{{FunctionLib::viewLanguage('station_account')}}</th>
                                     @endif
                                     <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
                                     <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
@@ -68,7 +68,7 @@
                                     <th width="30%" class="text-center">
                                         {{FunctionLib::viewLanguage('choose_processing_web_modem')}}
                                     </th>
-                                    <th width="9%"></th>
+                                    <th width="15%"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -99,7 +99,7 @@
                                                 &nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="SmsAdmin.refuseModem({{$item['sms_log_id']}})" title="Từ chối"><i class="fa fa-refresh fa-2x"></i></a>
                                             @endif
                                             @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                                &nbsp;&nbsp;&nbsp;<a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                                &nbsp;&nbsp;<a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                             @endif
                                         </td>
                                     </tr>

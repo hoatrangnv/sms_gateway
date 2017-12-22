@@ -178,6 +178,8 @@ class AdminSendSmsController extends BaseAdminController
                 'user_customer_id'=>$this->user_id,
                 'status'=>Define::SMS_STATUS_PROCESSING,
                 'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
+                'correct_number'=>count($dataSend),
+                'sms_deadline'=>FunctionLib::getDateTime($send_sms_deadline),
                 'created_date'=>FunctionLib::getDateTime(),);
             if(trim($send_sms_deadline) != ''){
                 $dataInsertSmsCustomer['sms_deadline'] = FunctionLib::getDateTime($send_sms_deadline);
@@ -196,6 +198,7 @@ class AdminSendSmsController extends BaseAdminController
                     'status'=>Define::SMS_STATUS_PROCESSING,
                     'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
                     'send_date'=>FunctionLib::getIntDate(),
+                    'sms_deadline'=>FunctionLib::getDateTime($send_sms_deadline),
                     'created_date'=>FunctionLib::getDateTime(),);
                 $sms_log_id = SmsLog::createItem($dataInsertSmsLog);
                 $val_carr['sms_log_id'] = $sms_log_id;
@@ -214,6 +217,7 @@ class AdminSendSmsController extends BaseAdminController
                     'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
                     'content'=>$val['content'],
                     'content_grafted'=>$val['content'],
+                    'created_date'=>FunctionLib::getDateTime(),
                     );
             }
             if(!empty($dataInsertSmsSendTo)){
