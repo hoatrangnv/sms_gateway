@@ -75,7 +75,7 @@
     <script type="text/javascript" src="../../../../assets/lib/ckeditor/ckeditor.js"></script>
 </head>
 
-<body class="no-skin">
+<body class="no-skin" @if($languageSite == \App\Library\AdminFunction\Define::VIETNAM_LANGUAGE) lang="vi" @else lang="en" @endif>
 <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="navbar-container" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">

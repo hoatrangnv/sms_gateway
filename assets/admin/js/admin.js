@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    setLang();
     $("#checkAll").click(function () {
         $(".check").prop('checked', $(this).prop('checked'));
     });
@@ -574,4 +575,15 @@ var Admin = {
         }
     });
 },
+}
+var lng
+function setLang() {
+    debugger
+    $.ajaxSetup({async: false});//同期通信(json取ってくるまで待つ)
+    var lang = $("body").attr("lang");
+    //alert(lang);
+    $.getJSON("../../../../storage/language/" + lang + ".json", function (data) {
+        lng = data;
+    });
+    $.ajaxSetup({async: true});
 }

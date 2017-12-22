@@ -83,7 +83,7 @@ class AdminStationSettingController extends BaseAdminController
                 $packet = SmsPacket::updateOrCreate(
                     [
                         "user_manager_id"=>$this->user_id,
-                        "status"=>1
+                        "status"=>0
                     ],
                     [
                         "type"=>"2",
@@ -91,8 +91,9 @@ class AdminStationSettingController extends BaseAdminController
                         "sms_error_max"=>$data['sms_error_max'],
                         "time_delay_from"=> $data['time_delay_from'],
                         "time_delay_to"=> $data['time_delay_to'],
-                        "status"=>1,
+                        "status"=>0,
                         "user_manager_id"=>$this->user_id,
+                        "created_date"=>date('Y-m-d H:i',time()),
                         "updated_date"=>date('Y-m-d H:i',time()),
                     ]
                 );
