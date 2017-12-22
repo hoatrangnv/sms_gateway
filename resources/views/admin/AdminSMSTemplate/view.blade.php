@@ -3,6 +3,7 @@
 {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>--}}
 {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>--}}
 <script src="{{URL::asset('assets/admin/js/jquery.min.js')}}"></script>
+<script src="{{URL::asset('assets/admin/js/admin.js')}}"></script>
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -103,6 +104,9 @@
 </div>
 @stop
 <script>
+    $(document).ready(function () {
+        setLang()
+    })
     function reset() {
         $("#name_template").val("");
         $("#content").val("");
@@ -110,24 +114,27 @@
         $("#num_character").html(0)
     }
     function delete_item(id) {
-        $.ajax({
-            type: 'get',
-            url: '/manager/smsTeplate/deleteTemplate',
-            data: {
-                'id':id
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                if ((data.errors)) {
-                    alert(data.errors)
-                }else {
-                    $("#element").html(data.view)
-                    reset();
-                }
-            },
-        });
+        var a = confirm(lng['txt_mss_confirm_delete']);
+        if (a){
+            $.ajax({
+                type: 'get',
+                url: '/manager/smsTeplate/deleteTemplate',
+                data: {
+                    'id':id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    if ((data.errors)) {
+                        alert(data.errors)
+                    }else {
+                        $("#element").html(data.view)
+                        reset();
+                    }
+                },
+            });
+        }
     }
     function add_sms_template() {
         var is_error = false;
@@ -136,7 +143,7 @@
         $("form#form :input").each(function(){
             var input = $(this); // This is the jquery object of the input, do what you will
             if ($(this).hasClass("input-required") && $(this).val() == "") {
-                msg[$(this).attr("name")] = "※" + $(this).attr("title");
+                msg[$(this).attr("name")] = "※" + $(this).attr("title") + lng['is_required'];
                 is_error = true;
             }
         });
@@ -193,6 +200,17 @@
             autoclose: true,
             keyboardNavigation:true
         })});
+
+    var lng
+    function setLang() {
+        $.ajaxSetup({async: false});//同期通信(json取ってくるまで待つ)
+        var lang = $("body").attr("lang");
+        //alert(lang);
+        $.getJSON("../../../../storage/language/" + lang + ".json", function (data) {
+            lng = data;
+        });
+        $.ajaxSetup({async: true});
+    }
 </script>
 <style>
     a:hover {
