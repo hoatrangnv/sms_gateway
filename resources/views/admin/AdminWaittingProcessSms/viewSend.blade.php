@@ -9,7 +9,7 @@
                     <i class="ace-icon fa fa-home home-icon"></i>
                     <a href="{{URL::route('admin.dashboard')}}">Home</a>
                 </li>
-                <li class="active">SMS Waitting Process</li>
+                <li class="active">SMS Waitting Send</li>
             </ul><!-- /.breadcrumb -->
         </div>
 
@@ -92,14 +92,13 @@
                                             @if($is_root || $permission_full ==1|| $permission_edit ==1  )
                                                 @if($item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_PROCESSING && $item['list_modem'] == ''
                                                 || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['list_modem'] != '')
-                                                    <a href="javascript:void(0);" onclick="SmsAdmin.changeModemWaittingSendSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>
+                                                    <a href="javascript:void(0);" onclick="SmsAdmin.changeModemWaittingSendSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                                                    <a href="javascript:void(0);" onclick="SmsAdmin.refuseModem({{$item['sms_log_id']}})" title="Từ chối: Trả lại gói tin cho supper admin"><i class="fa fa-undo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                                 @endif
                                             @endif
+
                                             @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                                &nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="SmsAdmin.refuseModem({{$item['sms_log_id']}})" title="Từ chối"><i class="fa fa-refresh fa-2x"></i></a>
-                                            @endif
-                                            @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                                &nbsp;&nbsp;<a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                                <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                             @endif
                                         </td>
                                     </tr>

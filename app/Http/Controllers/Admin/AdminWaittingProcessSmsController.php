@@ -11,6 +11,7 @@ use App\Http\Models\UserSetting;
 use App\Http\Models\ModemCom;
 use App\Http\Models\Modem;
 use App\Http\Models\SystemSetting;
+use App\Http\Models\SmsPacket;
 use Illuminate\Support\Facades\DB;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -204,7 +205,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             if (!empty($infoUser)) {
                 //Tổng số lượng SMS cần gửi phải <= Tổng số SMS Trạm đó có thể gửi trong ngày - Số lượng tin đã chuyển xử lý trong ngày
                 $sms_max = $infoUser->sms_max;
-                $infoModemCom = ModemCom::getListModemComAction($user_manager_id);
+                $infoModemCom = ModemCom::getListModemComActionWithUserId($user_manager_id);
                 $total_send_day = $sms_max * count($infoModemCom);
                 $number_send_ok = $total_send_day - $infoUser->count_sms_number;
                 if ($total_sms <= $number_send_ok) {
@@ -349,28 +350,54 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $total_sms = (int)Request::get('total_sms', 0);
 
         //lấy thông tin người quản lý modem
+        $infoSmsLog = SmsLog::find($sms_log_id);
         $infoModem = Modem::find($modem_id);
         $user_manager_id = (isset($infoModem->user_id)) ? $infoModem->user_id : 0;
 
         if ($sms_log_id > 0 && $user_manager_id > 0) {
             $infoUser = UserSetting::getUserSettingByUserId($user_manager_id);
             if (!empty($infoUser)) {
-                //Tổng số lượng SMS cần gửi phải <= Tổng số SMS Trạm đó có thể gửi trong ngày - Số lượng tin đã chuyển xử lý trong ngày
+
                 $sms_max = $infoUser->sms_max;
-                $infoModemCom = ModemCom::getListModemComAction($user_manager_id);
+                $infoModemCom = ModemCom::getListModemComActionWithModemId($modem_id);
+
+                //Tổng số SMS Modem đó có thể gửi trong ngày = sms_max (trong bảng "web_user_setting") * Count số COM đang on của Modem được chọn (Điều kiện: is_active = 1
                 $total_send_day = $sms_max * count($infoModemCom);
-                $number_send_ok = $total_send_day - $infoUser->count_sms_number;
+
+                //Tổng số SMS Modem đó đã gửi = Sum(sms_max_com_day) (trong bảng "web_user_setting") (Điều kiện: is_active = 1 và modem_id)
+                $total_modem_da_gui = 0;
+                foreach ($infoModemCom as $key => $modemCom) {
+                    $total_modem_da_gui = $total_modem_da_gui + $modemCom->sms_max_com_day;
+                }
+
+                //Tổng số lượng SMS cần gửi phải <= Tổng số SMS Modem đó có thể gửi trong ngày - Tổng số SMS Modem đó đã gửi
+                $number_send_ok = $total_send_day - $total_modem_da_gui;
+                //FunctionLib::debug($total_sms.'==='.$total_send_day.'===='.$total_modem_da_gui);
                 if ($total_sms <= $number_send_ok) {
                     //web_sms_log
                     $dataUpdate['list_modem'] = $modem_id;
                     $dataUpdate['status'] = Define::SMS_STATUS_PROCESSING;
                     SmsLog::updateItem($sms_log_id, $dataUpdate);
 
+                    //web_sms_packet
+                    $dataPacket['type'] = 1;
+                    $dataPacket['sms_log_id'] = $sms_log_id;
+                    $dataPacket['send_successful'] = 0;
+                    $dataPacket['send_fail'] = 0;
+                    $dataPacket['user_manager_id'] = $user_manager_id;
+                    $dataPacket['modem_id_list'] = $modem_id;
+                    $dataPacket['modem_history'] = '';//??????? Cộng chuỗi ghi nhận modem đã được chọn xử lý gửi gói tin
+                    $dataPacket['sms_deadline'] = $infoSmsLog->sms_deadline;
+                    $dataPacket['created_date'] = FunctionLib::getDateTime();
+                    $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
+                    SmsPacket::createItem($dataPacket);
+
                     //web_user_setting
-                    $dataUpdateUser['count_sms_number'] = $total_sms + $infoUser->count_sms_number;
+                    $dataUpdateUser['count_sms_number'] = $total_sms + $infoUser->count_sms_number;//???????
                     DB::table(Define::TABLE_USER_SETTING)
                         ->where('user_id', $user_manager_id)
                         ->update($dataUpdateUser);
+
                     $data['isIntOk'] = 1;
                 } else {
                     $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';

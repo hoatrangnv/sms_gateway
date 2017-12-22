@@ -128,8 +128,13 @@ class ModemCom extends BaseModel
         }
     }
 
-    public static function getListModemComAction($user_id) {
-        $users = DB::table(Define::TABLE_MODEM_COM)->where('is_active', '=', Define::STATUS_SHOW)->where('user_id', '=', $user_id)->get();
-        return isset($users) ? $users: array();
+    public static function getListModemComActionWithUserId($user_id) {
+        $data = DB::table(Define::TABLE_MODEM_COM)->where('is_active', '=', Define::STATUS_SHOW)->where('user_id', '=', $user_id)->get();
+        return isset($data) ? $data: array();
+    }
+
+    public static function getListModemComActionWithModemId($modem_id) {
+        $data = DB::table(Define::TABLE_MODEM_COM)->where('is_active', '=', Define::STATUS_SHOW)->where('modem_id', '=', $modem_id)->get();
+        return isset($data) ? $data: array();
     }
 }

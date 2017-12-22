@@ -61,6 +61,8 @@ var SmsAdmin = {
                     }
                 }
             });
+        }else {
+            alert('Bạn chưa tài khoản nào!')
         }
     },
 
@@ -136,6 +138,8 @@ var SmsAdmin = {
                     }
                 }
             });
+        }else {
+            alert('Bạn chưa chọn Modem nào!')
         }
     },
     refuseModem: function(sms_log_id) {
