@@ -9,8 +9,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">{{FunctionLib::viewLanguage('home')}}</a>
             </li>
-            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách menu</a></li>
-            <li class="active">@if($id > 0)Cập nhật menu @else Tạo mới menu @endif</li>
+            <li><a href="{{URL::route('admin.menuView')}}">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('system_management')}}</a></li>
+            <li class="active">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('system_setting')}}</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
