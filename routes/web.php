@@ -3,6 +3,7 @@ Auth::routes();
 
 const Admin = "Admin";
 
+
 // Used for dev by Quynh
 $isDev = Request::get('is_debug','');
 if($isDev == 'tech_code'){
@@ -21,6 +22,6 @@ Route::group(array('prefix' => 'manager', 'before' => ''), function(){
 });
 
 //Router Site
-Route::group(array('prefix' => '/', 'before' => ''), function () {
-    require __DIR__.'/site.php';
+Route::group(array('prefix' => 'api', 'before' => ''), function () {
+    require __DIR__.'/api.php';
 });

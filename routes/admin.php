@@ -1,10 +1,4 @@
 <?php
-/*
-* @Created by: HSS
-* @Author    : nguyenduypt86@gmail.com
-* @Date      : 08/2016
-* @Version   : 1.0
-*/
 
 Route::get('logout', array('as' => 'admin.logout','uses' => Admin.'\AdminLoginController@logout'));
 Route::get('dashboard', array('as' => 'admin.dashboard','uses' => Admin.'\AdminDashBoardController@dashboard'));
