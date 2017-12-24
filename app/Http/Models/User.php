@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 //namespace App\Library\AdminFunction;
 
+use App\Library\AdminFunction\FunctionLib;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -226,10 +227,10 @@ class User extends BaseModel{
         return $user ? $user : array();
     }
 
-    public  static function getOptionUserFullName(){
+    public  static function getOptionUserFullName($role_type=0){
         $data = Cache::get(Define::CACHE_OPTION_USER);
         if (sizeof($data) == 0) {
-            $arr =  User::getList(2);
+            $arr =  User::getList($role_type);
             foreach ($arr as $value){
                 $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
             }

@@ -37,7 +37,7 @@ class AdminModemController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName();
+        $this->arrManager = User::getOptionUserFullName(2);
         $this->arrDevice = DeviceToken::getOptionDevice();
 
         $this->arrStatus = array(
@@ -63,7 +63,19 @@ class AdminModemController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
+
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
+            $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+        }else{
+            $dataSearch['station_account'] = $this->user_id;
+            $arr = array(
+                $this->user_id=>$this->user['user_full_name'].' - '.$this->user['user_email']
+            );
+            $optionUser = FunctionLib::getOption($arr,$this->user_id);
+        }
+
+//        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
 
         $limit = CGlobal::number_limit_show;
         $total = 0;
@@ -72,7 +84,7 @@ class AdminModemController extends BaseAdminController
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+//        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         return view('admin.AdminModem.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
