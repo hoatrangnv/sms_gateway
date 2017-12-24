@@ -68,6 +68,11 @@
 	"web_sms_template_list":"SMS template list",
 	"txt_mss_confirm_delete":"Delete this data ?",
 	"is_required":" is required",
+	"csv_download_upload": "Excel Download & Upload",
+	"csv_upload": "Upload Excel",
+	"csv_download": "Excel Download",
+	"lg_txt_member_modal_csv_upload01": "Currently, download the displayed list as a Excel file.<br>It becomes the format for uploading.",
+	"lg_txt_member_modal_csv_upload03": "Upload the Excel. Is it OK?",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",

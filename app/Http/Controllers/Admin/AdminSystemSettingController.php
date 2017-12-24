@@ -384,4 +384,8 @@ class AdminSystemSettingController extends BaseAdminController
         }
         return true;
     }
+
+    public function importString(){
+        FunctionLib::debug($_FILES);
+    }
 }
