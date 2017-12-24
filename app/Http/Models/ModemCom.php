@@ -98,7 +98,7 @@ class ModemCom extends BaseModel
 
         try{
             $query = ModemCom::query()
-                ->select($table_modem_com.'.modem_com_name',$table_modem_com.'.carrier_name',$table_modem_com.'.mei_com',$table_modem_com.'.success_number',$table_modem_com.'.error_number',$table_modem_com.'.updated_date',$table_modem_com.'.content',$table_modem_com.'.is_active',$table_web_user.'.user_name',$table_modem.'.modem_name',$table_modem.'.status_content')
+                ->select($table_modem_com.'.modem_com_name',$table_modem_com.'.carrier_name',$table_modem_com.'.mei_com',$table_modem_com.'.success_number',$table_modem_com.'.error_number',$table_modem_com.'.updated_date',$table_modem_com.'.content',$table_modem_com.'.is_active',$table_web_user.'.user_name',$table_web_user.'.user_full_name',$table_modem.'.modem_name',$table_modem.'.status_content')
                 ->join($table_web_user,$table_modem_com.'.user_id','=',$table_web_user.'.user_id')
                 ->join($table_modem,$table_modem_com.'.modem_id','=',$table_modem.'.modem_id');
             if (isset($dataSearch['station_account']) && $dataSearch['station_account'] != '') {

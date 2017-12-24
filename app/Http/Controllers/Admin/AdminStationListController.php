@@ -35,7 +35,7 @@ class AdminStationListController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName();
+        $this->arrManager = User::getOptionUserFullName(2);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
@@ -59,17 +59,26 @@ class AdminStationListController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
+
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
+            $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+        }else{
+            $dataSearch['station_account'] = $this->user_id;
+            $arr = array(
+                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_full_name']
+            );
+            $optionUser = FunctionLib::getOption($arr,$this->user_id);
+        }
         $total = 0;
         $data = ModemCom::searchByCondition($dataSearch,$total);
-
         $data_by_modem = array();
         foreach ($data as $k => $v){
             $data_by_modem[$v['modem_name']]['list'][] = $v;
-            $data_by_modem[$v['modem_name']]['user_name_view'] = $v['user_name'];
+            $data_by_modem[$v['modem_name']]['user_name_view'] = $v['user_name'].' - '.$v['user_full_name'];
             $data_by_modem[$v['modem_name']]['status_content'] = $v['status_content'];
         }
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminStationList.view',array_merge([
