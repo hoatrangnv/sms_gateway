@@ -95,7 +95,7 @@
                                 <td class="text-center middle">
                                     @if($item['user_created'])
                                         {{ date("d-m-Y",$item['user_created']) }}
-                                        @if(isset($arrStatus[Define::STATUS_BLOCK]))<br>{{$arrStatus[Define::STATUS_BLOCK]}}@endif
+                                        @if(isset($arrStatus[$item['user_status']]) && $item['user_status'] == Define::STATUS_BLOCK)<br>{{$arrStatus[Define::STATUS_BLOCK]}}@endif
                                     @endif
                                 </td>
                                 <td class="text-center middle" align="center">
