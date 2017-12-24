@@ -307,6 +307,7 @@
                 }
             })
                 .done(function (data) {
+                    debugger
                     if (data != "") {
                         $("#overlay").fadeOut(function () {
                             $("#csv_file").val("");

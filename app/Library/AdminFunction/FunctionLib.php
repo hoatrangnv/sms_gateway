@@ -1138,25 +1138,24 @@ html;
                 echo $java;
                 exit;
             }
+//            self::Del_File($_SERVER['DOCUMENT_ROOT']."/app/upload/excel/".$_SESSION['formData']['csv']);
 
         } else {
-            unset($_SESSION['formData'][$obj_name]);
+            unset($_SESSION[Define::NANE_FORM][$obj_name]);
         }
 
-        unset($_SESSION['formData'][$obj_old_file]);
-        unset($_SESSION['formData']["MAX_FILE_SIZE"]);
+        unset($_SESSION[Define::NANE_FORM][$obj_old_file]);
+        unset($_SESSION[Define::NANE_FORM]["MAX_FILE_SIZE"]);
 
         if ($obj_size != '')
-            unset($_SESSION['formData'][$obj_size]);
+            unset($_SESSION[Define::NANE_FORM][$obj_size]);
     }
 
-    function Del_File($del_file_path)
+    public static function Del_File($del_file_path)
     {
-
+        self::debug($del_file_path);
         if (is_file($del_file_path) == true) {
-
             unlink($del_file_path);
-
         }
 
         return;

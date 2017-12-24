@@ -133,6 +133,10 @@ class Define{
     const SMS_STATUS_SUCCESS = 1;
     const SMS_STATUS_PROCESSING = 0;
     const SMS_STATUS_FAIL = 3;
+
+    const DIR_UPLOAD_EXCEL ='/upload/excel/';
+    const NANE_FORM ='formData';
+
     static $arrSmsStatus = array(
         Define::SMS_STATUS_PROCESSING => 'Processing',
         Define::SMS_STATUS_SUCCESS => 'Successful',
