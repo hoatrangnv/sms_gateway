@@ -72,7 +72,8 @@
 	"csv_download_upload": "Tải về và tải lên file Excel",
 	"csv_upload": "Tải lên file Excel",
 	"csv_download": "Tải về file Excel",
-	"lg_txt_member_modal_csv_upload01": "Tải về bằng file Excel trong danh sách hiển thị. </br> Đây sẽ là định dạng khi được tải lên.",
+	"lg_txt_member_modal_csv_upload01": "Tải về bằng file Excel trong danh sách hiển thị.",
+	"lg_txt_member_modal_csv_upload02": " Đây sẽ là định dạng khi được tải lên.",
 	"lg_txt_member_modal_csv_upload03": "Bạn có muốn tải lên file Excel không?",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",

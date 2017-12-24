@@ -1,7 +1,3 @@
-{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">--}}
-{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">--}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -115,14 +111,14 @@
         </div>
     </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $(".date-picker").datepicker({
+                format: "yyyy-mm-dd",
+                language: "vi",
+                autoclose: true,
+                keyboardNavigation: true
+            })
+        });
+    </script>
 @stop
-<script>
-    $(document).ready(function () {
-        $(".date-picker").datepicker({
-            format: "yyyy-mm-dd",
-            language: "vi",
-            autoclose: true,
-            keyboardNavigation: true
-        })
-    });
-</script>
