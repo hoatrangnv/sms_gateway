@@ -49,6 +49,7 @@ class AdminDeviceTokenController extends BaseAdminController
             'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
             'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
+            'user_role_type'=> $this->role_type,
         ];
     }
 
@@ -59,7 +60,14 @@ class AdminDeviceTokenController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+//        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['user_id'] = (int)Request::get('user_id');
+        }else{
+            $dataSearch['user_id'] = $this->user_id;
+        }
+
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
