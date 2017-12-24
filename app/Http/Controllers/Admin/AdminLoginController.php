@@ -17,7 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\User;
 use App\Http\Models\GroupUserPermission;
 
-use App\Library\CGlobal;
+use App\Library\AdminFunction\CGlobal;
 
 class AdminLoginController extends Controller{
 
@@ -52,9 +52,9 @@ class AdminLoginController extends Controller{
                     //User::getInfor();
                     //FunctionLib::debug($user);
                     if ($user !== NULL) {
-                        if ($user->user_status == 0) {
+                        if ($user->user_status == CGlobal::status_hide ||$user->user_status == CGlobal::status_block ) {
                             $error = 'Tài khoản bị khóa!';
-                        } elseif ($user->user_status == 1) {
+                        } elseif ($user->user_status == CGlobal::status_show || $user->user_view == CGlobal::status_hide) {
                             if ($user->user_password == User::encode_password($password)) {
                                 $permission_code = array();
                                 $group = explode(',', $user->user_group);

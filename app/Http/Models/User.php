@@ -127,7 +127,7 @@ class User extends BaseModel{
                 $query->where('role_type', $data['role_type']);
             }
             $size = $query->count();
-            $data = $query->orderBy('user_id', 'desc')->take($limit)->skip($offset)->get();
+            $data = $query->orderBy('user_status', 'desc')->orderBy('user_last_login', 'desc')->orderBy('user_id', 'desc')->take($limit)->skip($offset)->get();
 
             return $data;
 
