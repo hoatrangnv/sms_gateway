@@ -8,7 +8,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li class="active">Danh sách tài khoản</li>
+            <li class="active">Quản lý người dùng</li>
         </ul><!-- /.breadcrumb -->
     </div>
 
@@ -34,12 +34,16 @@
                         </div>
                         <div class="form-group col-lg-3">
                             <label for="user_group"><i>Nhóm quyền</i></label>
-                            <select name="user_group" id="user_group" class="form-control input-sm" tabindex="12" data-placeholder="Chọn nhóm quyền">
+                            <select name="role_type" id="role_type" class="form-control input-sm" tabindex="12" data-placeholder="Chọn nhóm quyền">
+                                <option value="0">--- Chọn nhóm quyền ---</option>
+                                {!! $optionRoleType !!}
+                            </select>
+                            {{--<select name="user_group" id="user_group" class="form-control input-sm" tabindex="12" data-placeholder="Chọn nhóm quyền">
                                 <option value="0">--- Chọn nhóm quyền ---</option>
                                 @foreach($arrGroupUser as $k => $v)
                                     <option value="{{$k}}" @if($dataSearch['user_group'] == $k) selected="selected" @endif>{{$v['group_user_name']}}</option>
                                 @endforeach
-                            </select>
+                            </select>--}}
                         </div>
                     </div>
                     <div class="panel-footer text-right">
@@ -98,7 +102,7 @@
                                         <a href="{{URL::route('admin.user_edit',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                     @endif
                                     @if($is_root || $permission_change_pass)
-                                        <a href="{{URL::route('admin.user_change',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Đổi mật khẩu"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                                        <a href="{{URL::route('admin.user_change',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Reset mật khẩu"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                     @endif
                                     @if($is_boss || $permission_remove)
                                         <a href="javascript:void(0)" class="sys_delete_user" data-content="Xóa tài khoản" data-placement="bottom" data-trigger="hover" data-rel="popover" data-url="user/remove/" data-id="{{FunctionLib::inputId($item['user_id'])}}">

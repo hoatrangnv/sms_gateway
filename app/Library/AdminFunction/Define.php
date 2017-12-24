@@ -49,7 +49,9 @@ class Define{
     const TABLE_SMS_SENDTO = 'web_sms_sendTo';
     const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
     const TABLE_USER_SETTING = 'web_user_setting';
+    const TABLE_SMS_PACKET = 'web_sms_packet';
     const TABLE_ROLE_MENU = 'web_role_menu';
+    const TABLE_SMS_TEMPLATE = 'web_sms_template';
 
     /***************************************************************************************************************
     //Memcache
@@ -81,6 +83,8 @@ class Define{
     const CACHE_OPTION_DEVICE = 'cache_option_device';
 
     const CACHE_INFO_CARRIER = 'cache_info_carrier';
+
+    const CACHE_INFO_MODEM = 'cache_info_modem';
 
     /***************************************************************************************************************
     //Define
@@ -125,13 +129,17 @@ class Define{
 
     //trang thái các tin nhắn
     //Pending, Success, Fail
-    const SMS_STATUS_PENDING = 0;
+    const SMS_STATUS_REJECT = -1;
     const SMS_STATUS_SUCCESS = 1;
-    const SMS_STATUS_PROCESSING = 2;
-    const SMS_STATUS_FAIL = -1;
+    const SMS_STATUS_PROCESSING = 0;
+    const SMS_STATUS_FAIL = 3;
+
+    const DIR_UPLOAD_EXCEL ='/upload/excel/';
+    const NANE_FORM ='formData';
+
     static $arrSmsStatus = array(
-        Define::SMS_STATUS_PENDING => 'Pending',
-        Define::SMS_STATUS_SUCCESS => 'Successful',
         Define::SMS_STATUS_PROCESSING => 'Processing',
+        Define::SMS_STATUS_SUCCESS => 'Successful',
+        Define::SMS_STATUS_REJECT => 'Reject',
         Define::SMS_STATUS_FAIL => 'Fail');
 }

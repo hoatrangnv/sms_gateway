@@ -13,14 +13,6 @@
     </div>
 
     <div class="page-content">
-        {{--<div class="page-header">--}}
-        {{--<h1>--}}
-        {{--<small>--}}
-        {{--Danh sách khách hàng--}}
-        {{--</small>--}}
-        {{--</h1>--}}
-        {{--</div><!-- /.page-header -->--}}
-
         <div class="row">
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
@@ -70,16 +62,13 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <div class="form-group col-sm-12 text-right">
+                <div class="form-group col-sm-12 text-left">
                     {!! csrf_field() !!}
                     <button  class="btn btn-primary">Đổi mật khẩu</button>
                 </div>
                 </form>
-                <!-- PAGE CONTENT ENDS -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-    </div><!-- /.page-content -->
+    </div>
 </div>
 @stop

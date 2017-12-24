@@ -1,5 +1,5 @@
 /**
- * Created by Tuan on 10/07/2015.
+ * Created by QuynhTM on 10/07/2015.
  */
 $(document).ready(function () {
     $(".sys_delete_user").on('click',function(){
@@ -12,7 +12,7 @@ $(document).ready(function () {
                 $.ajax({
                     dataType: 'json',
                     type: 'POST',
-                    url: WEB_ROOT + '/admin/'+url+id,
+                    url: WEB_ROOT + '/manager/'+url+id,
                     data: {
                         '_token':_token,
                     },
@@ -35,3 +35,142 @@ $(document).ready(function () {
         });
     });
 })
+
+var SmsAdmin = {
+    /**
+     *********************************************************************************************************************
+     * Function cho SMS
+     * *******************************************************************************************************************
+     */
+    changeUserWaittingProcessSms: function(sms_log_id,total_sms) {
+        var user_manager_id = $('#user_manager_id_'+sms_log_id).val();
+        var _token = $('input[name="_token"]').val();
+        if(user_manager_id > 0 && total_sms > 0 && sms_log_id > 0){
+            $('#img_loading_'+sms_log_id).show();
+            $.ajax({
+                type: "POST",
+                url: WEB_ROOT + '/manager/waittingSms/changeUserWaittingProcessSms',
+                data: {sms_log_id : sms_log_id, total_sms : total_sms, user_manager_id : user_manager_id, _token : _token},
+                dataType: 'json',
+                success: function(res) {
+                    $('#img_loading_'+sms_log_id).hide();
+                    if(res.isIntOk == 1){
+                        window.location.reload();
+                    }else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        }else {
+            alert('Bạn chưa tài khoản nào!')
+        }
+    },
+
+    getSettingContentAttach: function() {
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/waittingSms/getSettingContentAttach',
+            data: {},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#concatenation_strings').val(res.msg);
+                }
+            }
+        });
+    },
+    getContentGraftedSms: function(sms_sendTo_id) {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/waittingSms/getContentGraftedSms',
+            data: {sms_sendTo_id:sms_sendTo_id, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('show');
+                    $('#content_grafted').val(res.content_grafted);
+                    $('#sms_sendTo_id_popup').val(res.sms_sendTo_id);
+                }
+            }
+        });
+    },
+    submitContentGraftedSms: function() {
+        var _token = $('input[name="_token"]').val();
+        var content_grafted = $('#content_grafted').val();
+        var sms_sendTo_id = $('#sms_sendTo_id_popup').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/waittingSms/submitContentGraftedSms',
+            data: {sms_sendTo_id:sms_sendTo_id, content_grafted:content_grafted, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    },
+
+    /***********************************************************************************************************************
+     * WaittingSendSms
+     * @param sms_log_id
+     * @param total_sms
+     * *********************************************************************************************************************
+     */
+    changeModemWaittingSendSms: function(sms_log_id,total_sms) {
+        var list_modem = $('#list_modem_'+sms_log_id).val();
+        var _token = $('input[name="_token"]').val();
+        if(list_modem > 0 && total_sms > 0 && sms_log_id > 0){
+            $('#img_loading_'+sms_log_id).show();
+            $.ajax({
+                type: "POST",
+                url: WEB_ROOT + '/manager/waittingSms/changeModemWaittingSendSms',
+                data: {sms_log_id : sms_log_id, total_sms : total_sms, list_modem : list_modem, _token : _token},
+                dataType: 'json',
+                success: function(res) {
+                    $('#img_loading_'+sms_log_id).hide();
+                    if(res.isIntOk == 1){
+                        window.location.reload();
+                    }else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        }else {
+            alert('Bạn chưa chọn Modem nào!')
+        }
+    },
+    refuseModem: function(sms_log_id) {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "POST",
+            url: WEB_ROOT + '/manager/waittingSms/refuseModem',
+            data: {sms_log_id:sms_log_id, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    alert(res.msg);
+                    window.location.reload();
+                }
+            }
+        });
+    },
+
+    uploadFileExcelPhoneSend: function() {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/sendSms/uploadFileExcelPhone',
+            data:new FormData($("#upload_form")[0]),
+            dataType:'json',
+            async:false,
+            processData: false,
+            contentType: false,
+            success:function(response){
+                console.log(response);
+            },
+        });
+    },
+}

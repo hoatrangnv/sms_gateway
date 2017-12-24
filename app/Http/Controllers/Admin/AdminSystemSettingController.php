@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Worksheet_PageSetup;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Fill;
+use PHPExcel_Style_Border;
+use PHPExcel_Cell;
+
 class AdminSystemSettingController extends BaseAdminController
 {
     private $permission_view = 'systemSetting_view';
@@ -383,5 +391,29 @@ class AdminSystemSettingController extends BaseAdminController
             }
         }
         return true;
+    }
+
+    public function importString(){
+        FunctionLib::file_upload($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL,"","csv","","","");
+        $objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]["csv"]);
+        $rc_data = array();
+
+        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+            $highestRow         = $worksheet->getHighestRow(); // e.g. 10
+            $highestColumn      = $worksheet->getHighestColumn(); // e.g 'F'
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+            for ($row = 1; $row <= $highestRow; ++ $row) {
+                for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+                    $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                    $value = $cell->getValue();
+                    $rc_data[] = $value;
+                }
+
+            }
+        }
+        //xóa file sau khi lấy dữ liệu thành công
+        FunctionLib::Del_File($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]['csv']);
+        $result = implode(',',$rc_data);
+        echo $result;
     }
 }

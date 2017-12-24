@@ -21,6 +21,10 @@
     <div class="page-content">
         <!-- PAGE CONTENT BEGINS -->
         {{Form::open(array('method' => 'POST','role'=>'form','files' => true))}}
+        <input type="hidden" id="" name="count_sms_number_hd"  class="form-control input-sm" value="@if(isset($data['count_sms_number'])){{$data['count_sms_number']}}@endif">
+        <input type="hidden" id="" name="sms_error_max_hd"  class="form-control input-sm" value="@if(isset($data['sms_error_max'])){{$data['sms_error_max']}}@endif">
+        <input type="hidden" id="" name="time_delay_from_hd"  class="form-control input-sm" value="@if(isset($data['time_delay_from'])){{$data['time_delay_from']}}@endif">
+        <input type="hidden" id="" name="time_delay_to_hd"  class="form-control input-sm" value="@if(isset($data['time_delay_to'])){{$data['time_delay_to']}}@endif">
         @if(isset($error) && !empty($error))
             <div class="alert alert-danger" role="alert">
                 @foreach($error as $itmError)

@@ -1,10 +1,4 @@
 <?php
-/*
-* @Created by: HSS
-* @Author    : nguyenduypt86@gmail.com
-* @Date      : 08/2016
-* @Version   : 1.0
-*/
 
 Route::get('logout', array('as' => 'admin.logout','uses' => Admin.'\AdminLoginController@logout'));
 Route::get('dashboard', array('as' => 'admin.dashboard','uses' => Admin.'\AdminDashBoardController@dashboard'));
@@ -56,6 +50,7 @@ Route::post('systemSetting/view/{id?}', array('as' => 'admin.systemSettingView',
 Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
 Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));
 Route::post('systemSetting/deleteSystemSetting', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax\
+Route::post('systemSetting/importString', array('as' => 'admin.importStringSystemSetting','uses' => Admin.'\AdminSystemSettingController@importString'));//ajax\
 
 /*Cài đặt nhà mạng */
 Route::get('carrierSetting/view',array('as' => 'admin.carrierSettingView','uses' => Admin.'\AdminCarrierSettingController@view'));
@@ -78,14 +73,20 @@ Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Adm
 /*send SMS*/
 Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
 Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
+Route::get('sendSms/uploadFileExcelPhone', array('as' => 'admin.uploadFileExcelPhone','uses' => Admin.'\AdminSendSmsController@uploadFileExcelPhone'));
 
 /*thông sms chờ xử lý*/
 Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));
 Route::match(['GET','POST'], 'waittingSms/viewSend',array('as' => 'admin.waittingSendSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@viewSend'));
 Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
 Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
-Route::get('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getDetailSms'));
-Route::post('waittingSms/editSms/{id?}', array('as' => 'admin.smsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postDetailSms'));
+Route::post('waittingSms/changeUserWaittingProcessSms', array('as' => 'admin.changeUserWaittingProcessSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeUserWaittingProcessSms'));//ajax
+Route::get('waittingSms/getSettingContentAttach', array('as' => 'admin.getSettingContentAttach','uses' => Admin.'\AdminWaittingProcessSmsController@getSettingContentAttach'));//ajax
+Route::get('waittingSms/getContentGraftedSms', array('as' => 'admin.getContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@getContentGraftedSms'));//ajax
+Route::get('waittingSms/submitContentGraftedSms', array('as' => 'admin.submitContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@submitContentGraftedSms'));//ajax
+//waittingSendSMS
+Route::post('waittingSms/changeModemWaittingSendSms', array('as' => 'admin.changeModemWaittingSendSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeModemWaittingSendSms'));//ajax
+Route::post('waittingSms/refuseModem', array('as' => 'admin.refuseModem','uses' => Admin.'\AdminWaittingProcessSmsController@refuseModem'));//ajax
 
 /*Document API Client*/
 Route::get('dashboard/clientAPIView', array('as' => 'admin.clientAPIView','uses' => Admin.'\AdminSystemSettingController@getApiClient'));
@@ -131,3 +132,8 @@ Route::get('smsHoursReportChart/view',array('as' => 'admin.smsHoursReportChart',
 
 /*SMS graphSuccessful Report Chart*/
 Route::get('graphSuccessful/view',array('as' => 'admin.graphSuccessful','uses' => Admin.'\AdminSMSGraphReportChartController@view'));
+
+/*SMS History*/
+Route::get('smsTeplate/view',array('as' => 'admin.smsTemplate','uses' => Admin.'\AdminSMSTemplateController@view'));
+Route::post('smsTeplate/addTemplate',array('as' => 'admin.addTemplate','uses' => Admin.'\AdminSMSTemplateController@addTemplate'));
+Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));

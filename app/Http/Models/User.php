@@ -97,8 +97,7 @@ class User extends BaseModel{
             $query = User::where('user_id', '>', 0);
 
             if (isset($data['user_view']) && $data['user_view'] == 1) {
-                $query->where('user_view', 1);
-                $query->orWhere('user_view', 0);
+                $query->whereIn('user_view', array(0,1));
             }else{
                 $query->where('user_view', 1);
             }
@@ -108,6 +107,9 @@ class User extends BaseModel{
             }
             if (isset($data['user_name']) && $data['user_name'] != '') {
                 $query->where('user_name', 'LIKE', '%' . $data['user_name'] . '%');
+            }
+            if (isset($data['user_phone']) && $data['user_phone'] != '') {
+                $query->where('user_phone', 'LIKE', '%' . $data['user_phone'] . '%');
             }
             if (isset($data['user_email']) && $data['user_email'] != '') {
                 $query->where('user_email', 'LIKE', '%' . $data['user_email'] . '%');
@@ -120,6 +122,9 @@ class User extends BaseModel{
             }
             if (isset($data['user_group']) && $data['user_group'] > 0) {
                 $query->whereRaw('FIND_IN_SET(' . $data['user_group'] . ',' . 'user_group)');
+            }
+            if (isset($data['role_type']) && $data['role_type'] > 0) {
+                $query->where('role_type', $data['role_type']);
             }
             $size = $query->count();
             $data = $query->orderBy('user_id', 'desc')->take($limit)->skip($offset)->get();
@@ -212,7 +217,7 @@ class User extends BaseModel{
     }
 
     public static function getList() {
-        $user = User::where('user_status', '>', 0)->get();
+        $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
         return $user ? $user : array();
     }
 

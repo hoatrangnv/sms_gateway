@@ -1,10 +1,5 @@
 <?php
-/*
-* @Created by: HSS
-* @Author	 : nguyenduypt86@gmail.com
-* @Date 	 : 08/2016
-* @Version	 : 1.0
-*/
+
 namespace App\Http\Controllers;
 
 class BaseSiteController extends Controller{

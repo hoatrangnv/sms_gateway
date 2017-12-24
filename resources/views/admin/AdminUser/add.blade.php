@@ -35,7 +35,15 @@
                             <input type="text" placeholder="Tên đăng nhập" id="user_name" name="user_name"  class="form-control input-sm" value="@if(isset($data['user_name'])){{$data['user_name']}}@endif">
                         </div>
                     </div>
+                    @if($id == 0)
                     <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Mật khẩu<span class="red"> (* Mặc định: Sms@!2017) </span></label>
+                            <input type="password"  id="user_password" name="user_password" class="form-control input-sm" value="Sms@!2017">
+                        </div>
+                    </div>
+                    @endif
+                    <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label">Tên nhân viên<span class="red"> (*) </span></label>
                             <input type="text" placeholder="Tên nhân viên" id="user_full_name" name="user_full_name"  class="form-control input-sm" value="@if(isset($data['user_full_name'])){{$data['user_full_name']}}@endif">
