@@ -35,7 +35,11 @@
                                 &nbsp;&nbsp;&nbsp;<input name=”choose_type”  type="radio" value=2 class="radio2"/>Chọn mặc đinh từ cài đặt
                             </label>
                             <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings)){{$concatenation_strings}}@endif</textarea>
-                            <label for="name" class="control-label" style="font-size: 9px">Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy</label>
+                            <label for="name" class="control-label" style="font-size: 9px">{{FunctionLib::viewLanguage('notice_1')}}</label>
+                            <br>
+                            <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#concatenation_strings" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
+                                <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
+                            </a>
                         </div>
                     </div>
                     <div class="col-sm-12">
