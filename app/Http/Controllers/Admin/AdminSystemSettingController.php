@@ -18,6 +18,7 @@ use PHPExcel_Worksheet_PageSetup;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Fill;
 use PHPExcel_Style_Border;
+use PHPExcel_Cell;
 
 class AdminSystemSettingController extends BaseAdminController
 {
@@ -396,6 +397,21 @@ class AdminSystemSettingController extends BaseAdminController
         FunctionLib::file_upload($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL,"","csv","","","");
         $objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]["csv"]);
         $rc_data = array();
-        FunctionLib::debug($objPHPExcel);
+
+        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+            $highestRow         = $worksheet->getHighestRow(); // e.g. 10
+            $highestColumn      = $worksheet->getHighestColumn(); // e.g 'F'
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+            for ($row = 1; $row <= $highestRow; ++ $row) {
+                for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+                    $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                    $value = $cell->getValue();
+                    $rc_data[] = $value;
+                }
+
+            }
+        }
+        $result = implode(',',$rc_data);
+        echo $result;
     }
 }
