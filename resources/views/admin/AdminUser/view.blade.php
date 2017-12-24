@@ -1,4 +1,5 @@
 <?php use App\Library\AdminFunction\FunctionLib; ?>
+<?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
 @section('content')
 <div class="main-content-inner">
@@ -75,7 +76,7 @@
                         </thead>
                         <tbody>
                         @foreach ($data as $key => $item)
-                            <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
+                            <tr @if($item['user_status'] == \App\Library\AdminFunction\Define::STATUS_BLOCK)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>
                                     <div class="green"><b>Tài khoản : </b>{{ $item['user_name'] }}</div>
@@ -88,10 +89,13 @@
                                     @if(trim($item['number_code']) != '')<div><b>Giấy phép KD : </b>{{ $item['number_code'] }}</div>@endif
                                     @if(trim($item['address_register']) != '')<div><b>Địa chỉ KD : </b>{{ $item['address_register'] }}</div>@endif
                                 </td>
-                                <td class="text-center middle">{{$item['role_name']}}</td>
+                                <td class="text-center middle">
+                                    {{$item['role_name']}}
+                                </td>
                                 <td class="text-center middle">
                                     @if($item['user_created'])
                                         {{ date("d-m-Y",$item['user_created']) }}
+                                        @if(isset($arrStatus[Define::STATUS_BLOCK]))<br>{{$arrStatus[Define::STATUS_BLOCK]}}@endif
                                     @endif
                                 </td>
                                 <td class="text-center middle" align="center">
