@@ -103,11 +103,10 @@
                                         @if($item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_PROCESSING && $item['user_manager_id'] == 0
                                         || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['user_manager_id'] > 0)
                                             <a href="javascript:void(0);" onclick="SmsAdmin.changeUserWaittingProcessSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>
+                                            <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                         @endif
                                     @endif
-                                    @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                        &nbsp;&nbsp;&nbsp;<a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
-                                    @endif
+                                        {{$item['status']}}
                                 </td>
                             </tr>
                         @endforeach

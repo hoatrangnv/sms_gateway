@@ -312,17 +312,18 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $search['to_date'] = Request::get('to_date', '');
         $search['status'] = array(Define::SMS_STATUS_PROCESSING, Define::SMS_STATUS_REJECT);
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
-            $search['user_customer_id'] = (int)Request::get('user_customer_id', -1);
+            $search['user_manager_id'] = (int)Request::get('user_customer_id', -1);
         } else {
             $search['user_manager_id'] = $this->user_id;
         }
+
         //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
         $data = SmsLog::searchByCondition($search, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3, $pageNo, $total, $limit, $search) : '';
 
         $this->getDataDefault();
         $optionCarrier = FunctionLib::getOption(array(-1 => '') + $this->arrCarrier, $search['carrier_id']);
-        $optionListUser = FunctionLib::getOption(array(-1 => '') + $this->infoListUser, $search['user_customer_id']);
+        $optionListUser = FunctionLib::getOption(array(-1 => '') + $this->infoListUser, isset($search['user_manager_id']));
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.viewSend', array_merge([
@@ -392,12 +393,6 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
                     SmsPacket::createItem($dataPacket);
 
-                    //web_user_setting
-                    $dataUpdateUser['count_sms_number'] = $total_sms + $infoUser->count_sms_number;//???????
-                    DB::table(Define::TABLE_USER_SETTING)
-                        ->where('user_id', $user_manager_id)
-                        ->update($dataUpdateUser);
-
                     $data['isIntOk'] = 1;
                 } else {
                     $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';
@@ -421,6 +416,16 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             $dataUpdate['status'] = Define::SMS_STATUS_REJECT;
             $dataUpdate['status_name'] = Define::$arrSmsStatus[Define::SMS_STATUS_REJECT];
             if (SmsLog::updateItem($sms_log_id, $dataUpdate)) {
+                $infoSmsLog = SmsLog::find($sms_log_id);
+                $user_manager_id = $infoSmsLog->user_manager_id;
+                $infoUser = UserSetting::getUserSettingByUserId($user_manager_id);
+
+                //web_user_setting
+                $dataUpdateUser['count_sms_number'] = $infoUser->count_sms_number - $infoSmsLog->total_sms;
+                DB::table(Define::TABLE_USER_SETTING)
+                    ->where('user_id', $user_manager_id)
+                    ->update($dataUpdateUser);
+
                 $data['isIntOk'] = 1;
                 $data['msg'] = 'Cập nhật thành công';
             }

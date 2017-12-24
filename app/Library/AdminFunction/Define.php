@@ -129,7 +129,7 @@ class Define{
 
     //trang thái các tin nhắn
     //Pending, Success, Fail
-    const SMS_STATUS_REJECT = 2;
+    const SMS_STATUS_REJECT = -1;
     const SMS_STATUS_SUCCESS = 1;
     const SMS_STATUS_PROCESSING = 0;
     const SMS_STATUS_FAIL = 3;

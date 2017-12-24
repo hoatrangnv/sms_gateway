@@ -105,6 +105,9 @@ class SmsLog extends BaseModel
             if (isset($dataSearch['user_customer_id']) && $dataSearch['user_customer_id'] != -1) {
                 $query->where('user_customer_id', '=', $dataSearch['user_customer_id']);
             }
+            if (isset($dataSearch['user_manager_id']) && $dataSearch['user_manager_id'] > 0) {
+                $query->where('user_manager_id', '=', $dataSearch['user_manager_id']);
+            }
             if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
                 $query->where('time_check_connect', 'LIKE', '%' . $dataSearch['time_check_connect'] . '%');
             }
@@ -121,7 +124,8 @@ class SmsLog extends BaseModel
             }
 
             $total = $query->count();
-            $query->orderBy('user_manager_id', 'asc')->orderBy('sms_log_id', 'desc');
+            $query->orderBy('status', 'asc')
+                ->orderBy('list_modem', 'asc')->orderBy('user_manager_id', 'asc');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',', trim($dataSearch['field_get'])) : array();
