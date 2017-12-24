@@ -30,10 +30,11 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label alert-danger">{{FunctionLib::viewLanguage('perform_concatenate_strings_or_edit_each_sms')}}</label>
-                            <label for="name" class="control-label">
-                                <input name=”choose_type” type="radio" value=1 checked  class="radio2"/>{{FunctionLib::viewLanguage('concatenation_strings')}}
-                                &nbsp;&nbsp;&nbsp;<input name=”choose_type”  type="radio" value=2 class="radio2"/>Chọn mặc đinh từ cài đặt
-                            </label>
+                            <br>
+                            <input name=”choose_type”  type="radio" value=2 checked class="radio2"/> Chọn mặc đinh từ cài đặt
+                            <br>
+                            <input name=”choose_type” type="radio" value=1 class="radio2"/> {{FunctionLib::viewLanguage('concatenation_strings')}}
+
                             <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings)){{$concatenation_strings}}@endif</textarea>
                             <label for="name" class="control-label" style="font-size: 9px">{{FunctionLib::viewLanguage('notice_1')}}</label>
                             <br>
@@ -50,10 +51,11 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="form-group col-sm-12 text-left marginTop10">
-                        <a class="btn btn-warning" href="javascript:void(0);" onclick="window.history.back();"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                        <a class="btn btn-warning" href="@if($type_page == 1){{URL::route('admin.waittingSmsView')}}@else {{URL::route('admin.waittingSendSmsView')}} @endif"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                         <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('Thực hiện ghép')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
+                    <input type="hidden" id="type_page" name="type_page" value="{{$type_page}}"/>
 
                 </div>
                 <!--Danh sách các tin nhắn-->
