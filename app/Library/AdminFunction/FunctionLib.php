@@ -1056,4 +1056,109 @@ class FunctionLib {
             }
         }
     }
+
+    public static function file_upload($dir, $image_size, $obj_name, $obj_old_file, $obj_size, $s_size, $return_name_file = false)
+    {
+        global $end_java_script;
+        global $file_upload_error;
+        $errcount = 0;
+
+        if ($_FILES[$obj_name]["name"] != "") {
+
+            /*アップロードファイルの取得*/
+            $file = $_FILES[$obj_name]["name"];
+            $file_type = mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            //拡張子を小文字に統一
+            $file_type = strtolower($file_type);
+
+            /*ファイル名を変更する*/
+            for ($no = 1; $no <= 100; $no++) {
+
+                if (!is_file($dir . time() . "_" . $no . "." . $file_type)) {
+                    $new_file_name = time() . "_" . $no . "." . $file_type;
+                    break;
+                }
+            }
+
+            //保存先設定
+            $file_path = $dir . $new_file_name;
+
+            /*下記の関数でファイルをアップロード*/
+            if (move_uploaded_file($_FILES[$obj_name]["tmp_name"], $file_path)) {
+
+                //ファイルが画像の場合はサイズを変更して保存
+                if ($file_type == "jpg" || $file_type == "jpeg" || $file_type == "gif" || $file_type == "png" || $file_type == "bmp") {
+
+                    /*保存先設定＆作成*/
+                    if ($image_size != '') {
+
+                        //サムネイルを作成
+                        if ($s_size != "") {
+                            if (!file_exists($dir . "s/")) {
+                                umask(0);
+                                mkdir($dir . "s/", 0777);
+                            }
+                            $file_s_path = $dir . "s/" . $new_file_name;
+                            $resize = file_resize_width($file_path, $file_s_path, $s_size, $file_type);
+                        }
+                        $resize = file_resize_width($file_path, $file_path, $image_size, $file_type);
+                        if ($file_type == "bmp" && $resize == true)
+                            $new_file_name = str_replace(".bmp", ".jpg", $new_file_name);
+                    }
+                }
+
+            } else {
+                $errcount = $_FILES[$obj_name]["error"];
+                /*
+                0:不明なエラー
+                1:php.iniに設定された制限サイズをオーバー
+                2:フォームで設定された制限サイズをオーバー
+                3:一部分のみアップロード
+                4:不明なエラー
+                */
+            }
+
+            if ($errcount == 0) {
+                //quynhtm add
+                if ($return_name_file === true) {
+                    return $new_file_name;
+                }
+                $_SESSION['formData'][$obj_name] = $new_file_name;
+
+            } else {
+                $error_msg = $file_upload_error[$errcount];
+                $java = <<<html
+
+                <script type="text/javascript">
+                    alert('Error ({$errcount}): {$error_msg}');
+                    history.back();
+                {$end_java_script}
+html;
+                echo $java;
+                exit;
+            }
+
+        } else {
+            unset($_SESSION['formData'][$obj_name]);
+        }
+
+        unset($_SESSION['formData'][$obj_old_file]);
+        unset($_SESSION['formData']["MAX_FILE_SIZE"]);
+
+        if ($obj_size != '')
+            unset($_SESSION['formData'][$obj_size]);
+    }
+
+    function Del_File($del_file_path)
+    {
+
+        if (is_file($del_file_path) == true) {
+
+            unlink($del_file_path);
+
+        }
+
+        return;
+    }
 }

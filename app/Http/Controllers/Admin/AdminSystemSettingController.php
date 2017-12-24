@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Worksheet_PageSetup;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Fill;
+use PHPExcel_Style_Border;
+
 class AdminSystemSettingController extends BaseAdminController
 {
     private $permission_view = 'systemSetting_view';
@@ -386,6 +393,11 @@ class AdminSystemSettingController extends BaseAdminController
     }
 
     public function importString(){
-        FunctionLib::debug($_FILES);
+//        require_once($_SERVER['DOCUMENT_ROOT'] . "/app/Library/ClassPhpExcel/PHPExcel.php");
+        FunctionLib::file_upload($_SERVER['DOCUMENT_ROOT']."/app/Http/Controllers/Admin/","","csv","","","");
+        $objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/app/Http/Controllers/Admin/".$_SESSION['formData']["csv"]);
+        $rc_data = array();
+
+        FunctionLib::debug($objPHPExcel);
     }
 }
