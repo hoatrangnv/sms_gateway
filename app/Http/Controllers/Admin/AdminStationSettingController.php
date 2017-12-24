@@ -111,8 +111,9 @@ class AdminStationSettingController extends BaseAdminController
             else{
                 $data['created_date']=$data['updated_date'];
                 //them moi
+//                FunctionLib::debug($data);
                 if(UserSetting::createItem($data)) {
-                    return Redirect::route('admin.carrierSettingView');
+                    return Redirect::route('admin.stationSettingView');
                 }
             }
         }
