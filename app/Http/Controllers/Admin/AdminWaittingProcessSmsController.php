@@ -314,7 +314,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
             $search['user_customer_id'] = (int)Request::get('user_customer_id', -1);
         } else {
-            $search['user_customer_id'] = $this->user_id;
+            $search['user_manager_id'] = $this->user_id;
         }
         //$search['field_get'] = 'menu_name,menu_id,parent_id';//cac truong can lay
         $data = SmsLog::searchByCondition($search, $limit, $offset, $total);

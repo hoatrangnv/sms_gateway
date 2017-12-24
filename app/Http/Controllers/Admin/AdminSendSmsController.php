@@ -34,6 +34,11 @@ class AdminSendSmsController extends BaseAdminController
         parent::__construct();
         $this->arrMenuParent = MenuSystem::getAllParentMenu();
         CGlobal::$pageAdminTitle = 'Send SMS';
+        FunctionLib::link_js(array(
+            'lib/highcharts/highcharts.js',
+            'lib/highcharts/highcharts-3d.js',
+            'lib/highcharts/exporting.js',
+        ));
     }
 
     public function getDataDefault(){
@@ -234,6 +239,12 @@ class AdminSendSmsController extends BaseAdminController
             'error'=>$this->error,
             'arrStatus'=>$this->arrStatus,
         ],$this->viewPermission));
+    }
+
+    //ajax
+    public function uploadFileExcelPhone(){
+        $file_excel_phone = Request::file('file_excel_phone');
+        FunctionLib::debug($file_excel_phone);
     }
 
 
