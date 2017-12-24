@@ -216,17 +216,21 @@ class User extends BaseModel{
         return $user ? $user : array();
     }
 
-    public static function getList() {
-        $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
+    public static function getList($role_type=0) {
+        if ($role_type==0){
+            $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
+        }else{
+            $user = User::where('user_status', '>', 0)->where('role_type','=',$role_type)->orderBy('user_id', 'desc')->get();
+        }
         return $user ? $user : array();
     }
 
     public  static function getOptionUserFullName(){
         $data = Cache::get(Define::CACHE_OPTION_USER);
         if (sizeof($data) == 0) {
-            $arr =  User::getList();
+            $arr =  User::getList(2);
             foreach ($arr as $value){
-                $data[$value->user_id] = $value->user_full_name;
+                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
             }
             if(!empty($data)){
                 Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
