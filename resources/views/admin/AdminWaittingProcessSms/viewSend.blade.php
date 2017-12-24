@@ -66,9 +66,11 @@
                                     <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
                                     <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
                                     <th width="30%" class="text-center">
-                                        {{FunctionLib::viewLanguage('choose_processing_web_modem')}}
+                                        {{FunctionLib::viewLanguage('choose_processing_modem')}}
                                     </th>
-                                    <th width="15%"></th>
+                                    <th width="15%">
+                                        {{FunctionLib::viewLanguage('action')}}
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -94,10 +96,9 @@
                                                 || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['list_modem'] != '')
                                                     <a href="javascript:void(0);" onclick="SmsAdmin.changeModemWaittingSendSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                                     <a href="javascript:void(0);" onclick="SmsAdmin.refuseModem({{$item['sms_log_id']}})" title="Từ chối: Trả lại gói tin cho supper admin"><i class="fa fa-undo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-                                                    <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                                    <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id']),'type_page'=>2))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                                 @endif
                                             @endif
-                                            {{$item['status']}}
                                         </td>
                                     </tr>
                                 @endforeach

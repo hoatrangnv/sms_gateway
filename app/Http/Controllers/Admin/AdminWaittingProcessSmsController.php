@@ -122,7 +122,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
      * @param $ids
      * @return
      */
-    public function getItem($ids)
+    public function getItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
@@ -136,16 +136,23 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $this->getDataDefault();
         $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
 
+        //get chuỗi setup
+        $userId = ($type_page == 2) ? $this->user_id : 0;
+        $systemSetting = SystemSetting::getSystemSetting($userId);
+        $concatenation_strings = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
+
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.editSms', array_merge([
             'data' => $data,
             'id' => $sms_log_id,
+            'type_page' => $type_page,
+            'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
         ], $this->viewPermission));
     }
 
-    public function postItem($ids)
+    public function postItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
@@ -168,6 +175,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataUpdate['content_grafted'] = $string_send;
                     SmsSendTo::updateItem($sms_log->sms_sendTo_id, $dataUpdate);
                 }
+                return Redirect::route('admin.waittingSmsEdit', array('id' => $ids, 'type_page' => $type_page));
             }
         }
 
@@ -184,6 +192,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'data' => $data,
             'error' => $this->error,
             'id' => $sms_log_id,
+            'type_page' => $type_page,
             'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
@@ -212,6 +221,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     //web_sms_log
                     $dataUpdate['user_manager_id'] = $user_manager_id;
                     $dataUpdate['status'] = Define::SMS_STATUS_PROCESSING;
+                    $dataUpdate['status_name'] = Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING];
                     SmsLog::updateItem($sms_log_id, $dataUpdate);
 
                     //web_sms_sendTo
@@ -242,7 +252,9 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
-        $systemSetting = SystemSetting::getSystemSetting();
+        $type_page = (int)Request::get('type_page', 1);
+        $userId = ($type_page == 2) ? $this->user_id : 0;
+        $systemSetting = SystemSetting::getSystemSetting($userId);
         if (!empty($systemSetting)) {
             $data['isIntOk'] = 1;
             $data['msg'] = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';

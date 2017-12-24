@@ -67,10 +67,11 @@ var SmsAdmin = {
     },
 
     getSettingContentAttach: function() {
+        var type_page = $('#type_page').val();
         $.ajax({
             type: "GET",
             url: WEB_ROOT + '/manager/waittingSms/getSettingContentAttach',
-            data: {},
+            data: {type_page:type_page},
             dataType: 'json',
             success: function(res) {
                 if(res.isIntOk == 1){
