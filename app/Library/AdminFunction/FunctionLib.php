@@ -1065,14 +1065,11 @@ class FunctionLib {
 
         if ($_FILES[$obj_name]["name"] != "") {
 
-            /*アップロードファイルの取得*/
             $file = $_FILES[$obj_name]["name"];
             $file_type = mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            //拡張子を小文字に統一
             $file_type = strtolower($file_type);
 
-            /*ファイル名を変更する*/
             for ($no = 1; $no <= 100; $no++) {
 
                 if (!is_file($dir . time() . "_" . $no . "." . $file_type)) {
@@ -1081,19 +1078,11 @@ class FunctionLib {
                 }
             }
 
-            //保存先設定
             $file_path = $dir . $new_file_name;
-
-            /*下記の関数でファイルをアップロード*/
             if (move_uploaded_file($_FILES[$obj_name]["tmp_name"], $file_path)) {
-
-                //ファイルが画像の場合はサイズを変更して保存
                 if ($file_type == "jpg" || $file_type == "jpeg" || $file_type == "gif" || $file_type == "png" || $file_type == "bmp") {
 
-                    /*保存先設定＆作成*/
                     if ($image_size != '') {
-
-                        //サムネイルを作成
                         if ($s_size != "") {
                             if (!file_exists($dir . "s/")) {
                                 umask(0);
@@ -1110,17 +1099,9 @@ class FunctionLib {
 
             } else {
                 $errcount = $_FILES[$obj_name]["error"];
-                /*
-                0:不明なエラー
-                1:php.iniに設定された制限サイズをオーバー
-                2:フォームで設定された制限サイズをオーバー
-                3:一部分のみアップロード
-                4:不明なエラー
-                */
             }
 
             if ($errcount == 0) {
-                //quynhtm add
                 if ($return_name_file === true) {
                     return $new_file_name;
                 }
