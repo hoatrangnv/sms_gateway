@@ -1138,7 +1138,6 @@ html;
                 echo $java;
                 exit;
             }
-//            self::Del_File($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]['csv']);
 
         } else {
             unset($_SESSION[Define::NANE_FORM][$obj_name]);

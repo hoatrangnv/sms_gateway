@@ -411,6 +411,7 @@ class AdminSystemSettingController extends BaseAdminController
 
             }
         }
+        FunctionLib::Del_File($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]['csv']);
         $result = implode(',',$rc_data);
         echo $result;
     }
