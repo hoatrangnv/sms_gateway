@@ -79,9 +79,10 @@
                             <tr @if($item['user_status'] == \App\Library\AdminFunction\Define::STATUS_BLOCK)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>
-                                    <div class="green"><b>Tài khoản : </b>{{ $item['user_name'] }}</div>
-                                    <div><b>Họ tên : </b>{{ $item['user_full_name'] }}</div>
-                                    <div><b>Email : </b>{{ $item['user_email'] }}</div>
+                                    <div><b>U: </b><b class="green">{{ $item['user_name'] }}</b></div>
+                                    @if($item['user_last_login'] > 0)<div class="green">{{ date("d-m-Y H:i",$item['user_last_login']) }}</div>@endif
+                                    <div><b>N: </b>{{ $item['user_full_name'] }}</div>
+                                    <div><b>E: </b>{{ $item['user_email'] }}</div>
                                 </td>
                                 <td>
                                     @if(trim($item['user_phone']) != '')<div><b>Phone : </b>{{ $item['user_phone'] }}</div>@endif
