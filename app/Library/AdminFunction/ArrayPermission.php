@@ -93,6 +93,12 @@ class ArrayPermission{
         'sendSmsHistory_create' => array('name_permit'=>'Tạo sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
         'sendSmsHistory_edit' => array('name_permit'=>'Sửa sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
 
+        'sendSmsTemplate_full' => array('name_permit'=>'Full sendSmsTemplate','group_permit'=>'Quyền sendSmsTemplate'),
+        'sendSmsTemplate_view' => array('name_permit'=>'Xem sendSmsTemplate','group_permit'=>'Quyền sendSmsTemplate'),
+        'sendSmsTemplate_delete' => array('name_permit'=>'Xóa sendSmsTemplate','group_permit'=>'Quyền sendSmsTemplate'),
+        'sendSmsTemplate_create' => array('name_permit'=>'Tạo sendSmsTemplate','group_permit'=>'Quyền sendSmsTemplate'),
+        'sendSmsTemplate_edit' => array('name_permit'=>'Sửa sendSmsTemplate','group_permit'=>'Quyền sendSmsTemplate'),
+
         'sendSms_full' => array('name_permit'=>'Full sendSms','group_permit'=>'Quyền sendSms'),
         'sendSms_delete' => array('name_permit'=>'Xóa sendSms','group_permit'=>'Quyền sendSms'),
         'sendSms_create' => array('name_permit'=>'Tạo sendSms','group_permit'=>'Quyền sendSms'),

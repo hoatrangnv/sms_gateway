@@ -19,11 +19,11 @@ use View;
 
 class AdminSMSTemplateController extends BaseAdminController
 {
-    private $permission_view = 'sendSmsHistory_view';
-    private $permission_full = 'sendSmsHistory_full';
-    private $permission_delete = 'sendSmsHistory_delete';
-    private $permission_create = 'sendSmsHistory_create';
-    private $permission_edit = 'sendSmsHistory_edit';
+    private $permission_view = 'sendSmsTemplate_view';
+    private $permission_full = 'sendSmsTemplate_full';
+    private $permission_delete = 'sendSmsTemplate_delete';
+    private $permission_create = 'sendSmsTemplate_create';
+    private $permission_edit = 'sendSmsTemplate_edit';
 
     private $arrMenuParent = array();
     private $arrStatus = array();
