@@ -69,6 +69,11 @@
 	"web_sms_template_list":"Danh sách tin nhắn mẫu",
 	"txt_mss_confirm_delete":"Bạn có muốn xóa dữ liêu này không ?",
 	"is_required":" là bắt buộc",
+	"csv_download_upload": "Tải về và tải lên file Excel",
+	"csv_upload": "Tải lên file Excel",
+	"csv_download": "Tải về file Excel",
+	"lg_txt_member_modal_csv_upload01": "Tải về bằng file Excel trong danh sách hiển thị. </br> Đây sẽ là định dạng khi được tải lên.",
+	"lg_txt_member_modal_csv_upload03": "Bạn có muốn tải lên file Excel không?",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",

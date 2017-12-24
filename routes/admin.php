@@ -56,6 +56,7 @@ Route::post('systemSetting/view/{id?}', array('as' => 'admin.systemSettingView',
 Route::get('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@getItem'));
 Route::post('systemSetting/edit/{id?}', array('as' => 'admin.systemSettingEdit','uses' => Admin.'\AdminSystemSettingController@postItem'));
 Route::post('systemSetting/deleteSystemSetting', array('as' => 'admin.deleteSystemSetting','uses' => Admin.'\AdminSystemSettingController@deleteSystemSetting'));//ajax\
+Route::post('systemSetting/importString', array('as' => 'admin.importStringSystemSetting','uses' => Admin.'\AdminSystemSettingController@importString'));//ajax\
 
 /*Cài đặt nhà mạng */
 Route::get('carrierSetting/view',array('as' => 'admin.carrierSettingView','uses' => Admin.'\AdminCarrierSettingController@view'));

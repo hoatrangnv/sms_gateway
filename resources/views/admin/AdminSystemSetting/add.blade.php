@@ -1,6 +1,7 @@
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
+@include ('admin.CommonTemplate.modal_excel')
 @section('content')
 <div class="main-content-inner">
     <div class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
@@ -41,7 +42,10 @@
         <div class="form-group">
             <label for="concatenation_strings" class="control-label col-sm-2"></label>
             <div class="col-sm-10">
-                <button  class="btn btn-success"><i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}</button>
+                <a href="#" class="btn btn-success btn-sm mg-t20" data-toggle="modal" data-target="#modal-csv-upload">
+                    <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
+                </a>
+                {{--<button  class="btn btn-success"><i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}</button>--}}
                 <span style="float: right; font-style: italic; margin-top: 5px">{{FunctionLib::viewLanguage('notice_1')}}</span>
             </div>
         </div>
