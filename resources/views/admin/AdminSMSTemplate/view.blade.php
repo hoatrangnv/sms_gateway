@@ -1,9 +1,3 @@
-{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">--}}
-{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">--}}
-{{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>--}}
-{{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>--}}
-<script src="{{URL::asset('assets/admin/js/jquery.min.js')}}"></script>
-<script src="{{URL::asset('assets/admin/js/admin.js')}}"></script>
 <?php use App\Library\AdminFunction\FunctionLib; ?>
 <?php use App\Library\AdminFunction\Define; ?>
 @extends('admin.AdminLayouts.index')
@@ -102,104 +96,104 @@
         </div>
     </div>
 </div>
-@stop
-<script>
+    <script>
 
-    function reset() {
-        $("#name_template").val("");
-        $("#content").val("");
-        $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
-        $("#num_character").html(0)
-    }
-    function delete_item(id) {
-        var a = confirm(lng['txt_mss_confirm_delete']);
-        if (a){
-            $.ajax({
-                type: 'get',
-                url: '/manager/smsTeplate/deleteTemplate',
-                data: {
-                    'id':id
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    if ((data.errors)) {
-                        alert(data.errors)
-                    }else {
-                        $("#element").html(data.view)
-                        reset();
-                    }
-                },
-            });
+        function reset() {
+            $("#name_template").val("");
+            $("#content").val("");
+            $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
+            $("#num_character").html(0)
         }
-    }
-    function add_sms_template() {
-        var is_error = false;
-        var msg = {};
-
-        $("form#form :input").each(function(){
-            var input = $(this); // This is the jquery object of the input, do what you will
-            if ($(this).hasClass("input-required") && $(this).val() == "") {
-                msg[$(this).attr("name")] = "※" + $(this).attr("title") + lng['is_required'];
-                is_error = true;
+        function delete_item(id) {
+            var a = confirm(lng['txt_mss_confirm_delete']);
+            if (a){
+                $.ajax({
+                    type: 'get',
+                    url: '/manager/smsTeplate/deleteTemplate',
+                    data: {
+                        'id':id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        if ((data.errors)) {
+                            alert(data.errors)
+                        }else {
+                            $("#element").html(data.view)
+                            reset();
+                        }
+                    },
+                });
             }
-        });
-
-        if (is_error == true) {
-            var error_msg = "";
-            $.each(msg, function (key, value) {
-                error_msg = error_msg + value + "\n";
-            });
-//            error_msg += (str_is_sms !="")?str_is_sms:"";
-            alert(error_msg);
-            return false;
-        }else {
-            $("#submit").attr("disabled","true");
-            var name_template = $("#name_template").val()
-            var content = $("#content").val()
-            var id = $("#id").val()
-            $.ajax({
-                type: 'post',
-            url: '/manager/smsTeplate/addTemplate',
-                data: {
-                    'name_template':name_template,
-                    'content':content,
-                    'id':id
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#submit').removeAttr("disabled")
-                    if ((data.errors)) {
-                        alert(data.errors)
-                    }else {
-                        $("#element").html(data.view)
-                        reset();
-                    }
-                },
-            });
         }
-    }
-    function count_character(event) {
-        var length = $(event).val().length;
-        $("#num_character").html(length)
-    }
-    function edit_sms_template(id,name,content) {
-        $("#name_template").val(name);
-        $("#content").val(content);
-        $("#id").val(id);
-    }
-    $(document).ready(function(){
-        $(".date-picker").datepicker({
-            format: "yyyy-mm-dd",
-            language: "vi",
-            autoclose: true,
-            keyboardNavigation:true
-        })});
+        function add_sms_template() {
+            var is_error = false;
+            var msg = {};
 
-</script>
+            $("form#form :input").each(function(){
+                var input = $(this); // This is the jquery object of the input, do what you will
+                if ($(this).hasClass("input-required") && $(this).val() == "") {
+                    msg[$(this).attr("name")] = "※" + $(this).attr("title") + lng['is_required'];
+                    is_error = true;
+                }
+            });
+
+            if (is_error == true) {
+                var error_msg = "";
+                $.each(msg, function (key, value) {
+                    error_msg = error_msg + value + "\n";
+                });
+//            error_msg += (str_is_sms !="")?str_is_sms:"";
+                alert(error_msg);
+                return false;
+            }else {
+                $("#submit").attr("disabled","true");
+                var name_template = $("#name_template").val()
+                var content = $("#content").val()
+                var id = $("#id").val()
+                $.ajax({
+                    type: 'post',
+                    url: '/manager/smsTeplate/addTemplate',
+                    data: {
+                        'name_template':name_template,
+                        'content':content,
+                        'id':id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#submit').removeAttr("disabled")
+                        if ((data.errors)) {
+                            alert(data.errors)
+                        }else {
+                            $("#element").html(data.view)
+                            reset();
+                        }
+                    },
+                });
+            }
+        }
+        function count_character(event) {
+            var length = $(event).val().length;
+            $("#num_character").html(length)
+        }
+        function edit_sms_template(id,name,content) {
+            $("#name_template").val(name);
+            $("#content").val(content);
+            $("#id").val(id);
+        }
+        $(document).ready(function(){
+            $(".date-picker").datepicker({
+                format: "yyyy-mm-dd",
+                language: "vi",
+                autoclose: true,
+                keyboardNavigation:true
+            })});
+
+    </script>
+@stop
 <style>
     a:hover {
         cursor:pointer;
