@@ -46,10 +46,10 @@
                         <thead class="thin-border-bottom">
                         <tr class="">
                             <th width="2%" class="text-center">TT</th>
-                            <th width="10%">Role name</th>
-                            <th width="30%">View menu id</th>
-                            <th width="20%">List quyền</th>
-                            <th width="10%">Status</th>
+                            <th width="10%" class="text-center">Role name</th>
+                            <th width="30%" class="text-center">View menu id</th>
+                            <th width="20%" class="text-center">List quyền</th>
+                            <th width="10%" class="text-center">Status</th>
                             <th width="8%" class="text-center">Action</th>
                         </tr>
                         </thead>

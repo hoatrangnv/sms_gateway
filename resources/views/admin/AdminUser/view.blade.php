@@ -99,13 +99,13 @@
                                     @endif
                                 </td>
                                 <td class="text-center middle" align="center">
-                                    @if($is_root || $permission_edit)
+                                    @if(($is_root || $permission_edit) && $item['user_status'] != \App\Library\AdminFunction\Define::STATUS_BLOCK)
                                         <a href="#" onclick="Admin.getInfoSettingUser('{{FunctionLib::inputId($item['user_id'])}}')" title="Setting item"><i class="fa fa-cog fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                                     @endif
                                     @if($is_root || $permission_edit)
                                         <a href="{{URL::route('admin.user_edit',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                     @endif
-                                    @if($is_root || $permission_change_pass)
+                                    @if(($is_root || $permission_change_pass) && $item['user_status'] != \App\Library\AdminFunction\Define::STATUS_BLOCK)
                                         <a href="{{URL::route('admin.user_change',array('id' => FunctionLib::inputId($item['user_id'])))}}" title="Reset mật khẩu"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                                     @endif
                                     @if($is_boss || $permission_remove)
