@@ -1138,7 +1138,7 @@ html;
                 echo $java;
                 exit;
             }
-//            self::Del_File($_SERVER['DOCUMENT_ROOT']."/app/upload/excel/".$_SESSION['formData']['csv']);
+//            self::Del_File($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]['csv']);
 
         } else {
             unset($_SESSION[Define::NANE_FORM][$obj_name]);
@@ -1153,7 +1153,6 @@ html;
 
     public static function Del_File($del_file_path)
     {
-        self::debug($del_file_path);
         if (is_file($del_file_path) == true) {
             unlink($del_file_path);
         }

@@ -393,11 +393,9 @@ class AdminSystemSettingController extends BaseAdminController
     }
 
     public function importString(){
-//        require_once($_SERVER['DOCUMENT_ROOT'] . "/app/Library/ClassPhpExcel/PHPExcel.php");
         FunctionLib::file_upload($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL,"","csv","","","");
         $objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT'].Define::DIR_UPLOAD_EXCEL.$_SESSION[Define::NANE_FORM]["csv"]);
         $rc_data = array();
 
-        FunctionLib::debug($objPHPExcel);
     }
 }
