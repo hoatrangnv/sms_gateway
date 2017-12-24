@@ -64,21 +64,21 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="6%" class="text-center">TT</th>
+                            <th width="4%" class="text-center">TT</th>
                             @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                             <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
                             @endif
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
-                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
-                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
-                            <th width="30%" class="text-center">
+                            <th width="13%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
+                            <th width="13%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
+                            <th width="25%" class="text-center">
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                     {{FunctionLib::viewLanguage('choose_processing_station')}}
                                 @else
-                                    {{FunctionLib::viewLanguage('choose_processing_web_modem')}}
+                                    {{FunctionLib::viewLanguage('choose_processing_modem')}}
                                 @endif
                             </th>
-                            <th width="9%"></th>
+                            <th width="9%" class="text-center">{{FunctionLib::viewLanguage('action')}}</th>
                         </tr>
                         </thead>
                         <tbody>

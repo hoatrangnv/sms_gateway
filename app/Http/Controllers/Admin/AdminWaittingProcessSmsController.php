@@ -246,7 +246,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         return Response::json($data);
     }
 
-    //ajax
+    //ajax get noi dung text setting
     public function getSettingContentAttach()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => 'Error update');
@@ -263,7 +263,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         return Response::json($data);
     }
 
-    //ajax
+    //ajax get nội dung gửi SMS
     public function getContentGraftedSms()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
@@ -407,6 +407,12 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
                     SmsPacket::createItem($dataPacket);
 
+                    //web_sms_sendto
+                    $dataUpdateSmsSendTo['modem_id'] = $modem_id;
+                    DB::table(Define::TABLE_SMS_SENDTO)
+                        ->where('sms_log_id', $sms_log_id)
+                        ->update($dataUpdateSmsSendTo);
+
                     $data['isIntOk'] = 1;
                 } else {
                     $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';
@@ -414,6 +420,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             } else {
                 $data['msg'] = 'Không có thông tin trạm được gán';
             }
+        }else {
+            $data['msg'] = 'Modem ko phải của KH này';
         }
         return Response::json($data);
     }

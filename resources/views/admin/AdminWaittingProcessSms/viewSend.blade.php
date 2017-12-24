@@ -63,12 +63,12 @@
                                         <th width="22%">{{FunctionLib::viewLanguage('station_account')}}</th>
                                     @endif
                                     <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
-                                    <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
-                                    <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
-                                    <th width="30%" class="text-center">
+                                    <th width="13%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
+                                    <th width="13%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
+                                    <th width="20%" class="text-center">
                                         {{FunctionLib::viewLanguage('choose_processing_modem')}}
                                     </th>
-                                    <th width="15%">
+                                    <th width="15%" class="text-center">
                                         {{FunctionLib::viewLanguage('action')}}
                                     </th>
                                 </tr>
