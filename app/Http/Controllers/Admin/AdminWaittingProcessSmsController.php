@@ -50,7 +50,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getDataDefault()
     {
         $this->infoListUser = User::getListUserNameFullName();
-        $this->infoListModem = Modem::getListModemName();
+        $user_id = ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN)?0:$this->user_id;
+        $this->infoListModem = Modem::getListModemName($user_id);
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
         $this->arrDuplicateString = array(
             1 => FunctionLib::controLanguage('the_first_of_sms'),
@@ -322,6 +323,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $search['carrier_id'] = (int)Request::get('carrier_id', -1);
         $search['from_date'] = Request::get('from_date', '');
         $search['to_date'] = Request::get('to_date', '');
+        $search['manager_id'] = 1;
         $search['status'] = array(Define::SMS_STATUS_PROCESSING, Define::SMS_STATUS_REJECT);
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
             $search['user_manager_id'] = (int)Request::get('user_customer_id', -1);
