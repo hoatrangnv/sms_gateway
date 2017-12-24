@@ -70,7 +70,9 @@
         <div class="form-group">
             <label for="concatenation_strings" class="control-label col-sm-2"></label>
             <div class="col-sm-10">
-                <button  class="btn btn-success"><i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}</button>
+                <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#concatenation_strings" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
+                    <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
+                </a>
                 <span style="float: right; font-style: italic; margin-top: 5px">{{FunctionLib::viewLanguage('notice_1')}}</span>
             </div>
         </div>
