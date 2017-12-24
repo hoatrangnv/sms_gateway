@@ -247,11 +247,12 @@
                 <form method="post" id="form-csv-upload" class="form-inline" enctype="multipart/form-data">
                     <div class="alert alert-info mg-b30 center">
                         {{FunctionLib::viewLanguage('lg_txt_member_modal_csv_upload01')}}
-                        <div class="mg-t30">
-                            <a href="#" class="btn btn-lg btn-primary">
-                                <i class="fa fa-cloud-download"></i>{{FunctionLib::viewLanguage('csv_download')}}
-                            </a>
-                        </div>
+                        {{FunctionLib::viewLanguage('lg_txt_member_modal_csv_upload02')}}
+                        {{--<div class="mg-t30">--}}
+                            {{--<a href="#" class="btn btn-lg btn-primary">--}}
+                                {{--<i class="fa fa-cloud-download"></i>{{FunctionLib::viewLanguage('csv_download')}}--}}
+                            {{--</a>--}}
+                        {{--</div>--}}
                     </div>
 
                     <div class="alert alert-warning center">
@@ -307,7 +308,7 @@
                 }
             })
                 .done(function (data) {
-                    debugger
+//                    debugger
                     if (data != "") {
                         $("#overlay").fadeOut(function () {
                             $("#csv_file").val("");

@@ -71,7 +71,8 @@
 	"csv_download_upload": "Excel Download & Upload",
 	"csv_upload": "Upload Excel",
 	"csv_download": "Excel Download",
-	"lg_txt_member_modal_csv_upload01": "Currently, download the displayed list as a Excel file.<br>It becomes the format for uploading.",
+	"lg_txt_member_modal_csv_upload01": "Currently, download the displayed list as a Excel file.",
+	"lg_txt_member_modal_csv_upload02": "It becomes the format for uploading.",
 	"lg_txt_member_modal_csv_upload03": "Upload the Excel. Is it OK?",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
