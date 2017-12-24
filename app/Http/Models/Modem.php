@@ -150,14 +150,15 @@ ORDER BY m.modem_id DESC');
      * @return mixed
      */
     public  static function getListModemName(){
-        $data = Cache::get(Define::CACHE_INFO_MODEM);
+        //$data = Cache::get(Define::CACHE_INFO_MODEM);
+        $data = array();
         if (sizeof($data) == 0) {
             $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)->orderBy('modem_id', 'desc')->get(array('modem_id','modem_name'));
             foreach ($arr as $value){
                 $data[$value->modem_id] = $value->modem_name;
             }
             if(!empty($data)){
-                Cache::put(Define::CACHE_INFO_MODEM, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+                //Cache::put(Define::CACHE_INFO_MODEM, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;

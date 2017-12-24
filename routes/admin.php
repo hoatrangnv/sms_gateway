@@ -72,6 +72,7 @@ Route::post('modem/deleteModem', array('as' => 'admin.deleteModem','uses' => Adm
 /*send SMS*/
 Route::get('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@getSendSms'));
 Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
+Route::get('sendSms/uploadFileExcelPhone', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSendSmsController@postSendSms'));
 
 /*thông sms chờ xử lý*/
 Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));

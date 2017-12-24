@@ -157,4 +157,20 @@ var SmsAdmin = {
             }
         });
     },
+
+    uploadFileExcelPhoneSend: function() {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/sendSms/uploadFileExcelPhone',
+            data:new FormData($("#upload_form")[0]),
+            dataType:'json',
+            async:false,
+            processData: false,
+            contentType: false,
+            success:function(response){
+                console.log(response);
+            },
+        });
+    },
 }
