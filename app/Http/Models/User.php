@@ -52,6 +52,7 @@ class User extends BaseModel{
 
     public static function updateLogin($user = array()){
         if($user){
+            date_default_timezone_set('Asia/Ho_Chi_Minh').
             $user->user_last_login = time();
             $user->user_last_ip = request()->ip();
             $user->save();
