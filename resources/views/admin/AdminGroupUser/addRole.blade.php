@@ -9,7 +9,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">Home</a>
             </li>
-            <li><a href="{{URL::route('admin.menuView')}}"> Danh sách phân quyền theo role</a></li>
+            <li><a href="{{URL::route('admin.viewRole')}}"> Danh sách phân quyền theo role</a></li>
             <li class="active">@if($id > 0)Cập nhật @else Tạo mới @endif</li>
         </ul><!-- /.breadcrumb -->
     </div>
@@ -96,7 +96,7 @@
                 <div class="clearfix"></div>
                 {!! csrf_field() !!}
                 <div class="form-group col-sm-12 text-left">
-                    <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
+                    <a class="btn btn-warning" href="{{URL::route('admin.viewRole')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                     <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                 </div>
                 {{ Form::close() }}
