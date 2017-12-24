@@ -238,6 +238,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <input type="hidden" name="url-ajax" id="url-ajax">
+            <input type="hidden" name="element" id="element">
             <div class="modal-header">
                 <button type="button" class="close bt_close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title"
@@ -277,13 +278,16 @@
 <script>
     function showModal(event) {
         var url = event.getAttribute('ajax_url');
+        var element = event.getAttribute('element');
         $("#url-ajax").val(url);
+        $("#element").val(element);
     }
 
     function upload_csv() {
         if (confirm(lng['lg_txt_member_modal_csv_upload03'])) {
             var form_data = new FormData($("#form-csv-upload").get()[0]);
             var url = $("#url-ajax").val();
+            var element = $("#element").val();
 
             $.ajax({
                 url: WEB_ROOT+url,
@@ -310,14 +314,17 @@
                 .done(function (data) {
 //                    debugger
                     if (data != "") {
+                        $(element).html(data)
+                        $("#modal-csv-upload").hide()
                         $("#overlay").fadeOut(function () {
                             $("#csv_file").val("");
-                            alert(data);
+//                            alert(data);
                         });
-                    } else {
-                        location.reload();
-                        alert("Import successful");
                     }
+//                    else {
+//                        location.reload();
+//                        alert("Import successful");
+//                    }
 
 
                 })
