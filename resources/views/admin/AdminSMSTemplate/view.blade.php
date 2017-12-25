@@ -10,7 +10,8 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="{{URL::route('admin.dashboard')}}">{{FunctionLib::viewLanguage('home')}}</a>
             </li>
-            <li class="active">{{FunctionLib::viewLanguage('sent_sms_history')}}</li>
+            <li class="active">{{FunctionLib::viewLanguage('sms_management')}}</li>
+            <li class="active">{{FunctionLib::viewLanguage('sms_template')}}</li>
         </ul><!-- /.breadcrumb -->
     </div>
 

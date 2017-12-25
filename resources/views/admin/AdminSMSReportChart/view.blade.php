@@ -9,8 +9,8 @@
                     <i class="ace-icon fa fa-home home-icon"></i>
                     <a href="{{URL::route('admin.dashboard')}}">{{FunctionLib::viewLanguage('home')}}</a>
                 </li>
-                <li class="active">{{FunctionLib::viewLanguage('station_management')}}</li>
-                <li class="active">{{FunctionLib::viewLanguage('station_list')}}</li>
+                <li class="active">{{FunctionLib::viewLanguage('sms_management')}}</li>
+                <li class="active">{{FunctionLib::viewLanguage('send_sms_chart')}}</li>
             </ul><!-- /.breadcrumb -->
         </div>
 
