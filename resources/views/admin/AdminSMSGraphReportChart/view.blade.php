@@ -136,13 +136,13 @@
 //            var checkin = $('.date-picker1212').datepicker({ });
 
             $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
+                numberOfMonths: 1,
                 onSelect: function (selected) {
                     $("#txtToDate").datepicker("option", "minDate", selected)
                 }
             });
             $("#txtToDate").datepicker({
-                numberOfMonths: 2,
+                numberOfMonths: 1,
                 onSelect: function (selected) {
                     $("#txtFromDate").datepicker("option", "maxDate", selected)
                 }

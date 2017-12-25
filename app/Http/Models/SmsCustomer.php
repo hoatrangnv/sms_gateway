@@ -108,6 +108,14 @@ class SmsCustomer extends BaseModel
                 $query->where('status','=', $dataSearch['status']);
             }
 
+            if (isset($dataSearch['from_day']) && $dataSearch['from_day'] != '') {
+                $query->where('created_date','>=', date('Y-m-d H:i',strtotime($dataSearch['from_day'])));
+            }
+
+            if (isset($dataSearch['to_day']) && $dataSearch['to_day'] != '') {
+                $query->where('created_date','<=', date('Y-m-d H:i',strtotime($dataSearch['to_day'])));
+            }
+
             $total = $query->count();
             $query->orderBy('sms_customer_id', 'desc');
 
