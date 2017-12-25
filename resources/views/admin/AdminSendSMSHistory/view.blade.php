@@ -71,7 +71,7 @@
                         @foreach ($data as $key => $item)
                             <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                <td>{{ $item['user_customer_id'] }}</td>
+                                <td>{{ $item['user_full_name'] }}</td>
                                 <td>{{ $item['sms_deadline'] }}</td>
                                 <td>{{ $item['correct_number'] + $item['incorrect_number'] }}</td>
                                 <td>{{ $item['correct_number']}}</td>

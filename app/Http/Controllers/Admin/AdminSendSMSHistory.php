@@ -72,7 +72,18 @@ class AdminSendSMSHistory extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+
+        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+            $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
+        }else{
+            $dataSearch['user_id'] = $this->user_id;
+            $arr = array(
+                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_full_name']
+            );
+            $optionUser = FunctionLib::getOption($arr,$this->user_id);
+        }
+
         $dataSearch['status'] = addslashes(Request::get('status',''));
         $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
         $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
@@ -85,7 +96,7 @@ class AdminSendSMSHistory extends BaseAdminController
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
+//        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
 
         return view('admin.AdminSendSMSHistory.view',array_merge([

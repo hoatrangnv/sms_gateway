@@ -90,9 +90,16 @@ class SmsCustomer extends BaseModel
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
-//        FunctionLib::debug($dataSearch);
+        $table_sms_customer = Define::TABLE_SMS_CUSTOMER;
+        $table_user = Define::TABLE_USER;
         try{
-            $query = SmsCustomer::where('sms_customer_id','>',0);
+
+            $query = SmsCustomer::query()
+                ->select($table_sms_customer.'.*',$table_user.'.user_full_name')
+                ->join($table_user,$table_sms_customer.'.user_customer_id','=',$table_user.'.user_id');
+
+//            $query = SmsCustomer::where('sms_customer_id','>',0);
+            $query->where('sms_customer_id','>', 0);
 
             if (isset($dataSearch['user_id']) && $dataSearch['user_id'] != '') {
                 $query->where('user_customer_id','=', $dataSearch['user_id']);
