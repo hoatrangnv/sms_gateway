@@ -177,6 +177,17 @@ class AdminSMSReportChartController extends BaseAdminController
         $optionCarrier = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('all', $this->languageSite) . '') + $arrCarrier, (isset($dataSearch['carrier_id']) ? $dataSearch['carrier_id'] : 0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+//        FunctionLib::debug($arrData);
+
+        foreach ($arrData as $k => $value){
+            foreach ($value as $k_car => $item_car){
+                if ($k_car>1){
+                    $value[$k_car] = $value[$k_car-1] + $item_car;
+                }
+            }
+            $arrData[$k] = $value;
+        }
+//                    FunctionLib::debug($arrData);
         return view('admin.AdminSMSReportChart.view', array_merge([
             'data' => $data,
             'arrDay' => $arrDay,
