@@ -91,7 +91,27 @@ class AdminSendSMSHistory extends BaseAdminController
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
-        $data = SmsCustomer::searchByCondition($dataSearch, $limit, $offset, $total);
+//        $data = SmsCustomer::searchByCondition($dataSearch, $limit, $offset, $total);
+
+        $sql = "SELECT u.user_full_name,wsc.sms_deadline,(wsc.correct_number + wsc.incorrect_number) as total_sms,wsc.incorrect_number,wsc.cost,wsc.status,wsc.status_name,wsc.sms_customer_id,SUM(IFNULL(send_successful,0)) total_success from web_sms_customer wsc
+INNER JOIN web_sms_log wsl ON wsc.sms_customer_id = wsl.sms_customer_id 
+inner join web_user u on wsc.user_customer_id = u.user_id ";
+
+        if ($dataSearch['user_id'] !="" && $dataSearch['user_id'] >0){
+            $sql.=" WHERE wsc.user_customer_id=".$dataSearch['user_id'];
+        }
+
+        if ($dataSearch['status'] !=""){
+            $sql.=" AND wsc.status=".$dataSearch['status'];
+        }
+
+        $sql.=" GROUP BY wsc.sms_customer_id";
+        $data = SmsCustomer::executesSQL($sql);
+        $arr = array();
+        foreach ($data as $k => $v){
+            $arr[] = (array) $v;
+        }
+//        FunctionLib::debug($data);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
@@ -100,7 +120,7 @@ class AdminSendSMSHistory extends BaseAdminController
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
 
         return view('admin.AdminSendSMSHistory.view',array_merge([
-            'data'=>$data,
+            'data'=>$arr,
             'search'=>$dataSearch,
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,

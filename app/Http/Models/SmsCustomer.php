@@ -133,6 +133,10 @@ class SmsCustomer extends BaseModel
         }
     }
 
+    public static function executesSQL($str_sql = ''){
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+    }
+
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);

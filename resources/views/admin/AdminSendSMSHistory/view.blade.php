@@ -70,15 +70,15 @@
                         </thead>
                         <tbody>
                         @foreach ($data as $key => $item)
-                            <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
+                            <tr class="middle">
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>{{ $item['user_full_name'] }}</td>
                                 <td>{{ $item['sms_deadline'] }}</td>
-                                <td>{{ $item['correct_number'] + $item['incorrect_number'] }}</td>
-                                <td>{{ $item['correct_number']}}</td>
+                                <td>{{ $item['total_sms'] }}</td>
+                                <td>{{ $item['total_success']}}</td>
                                 <td>{{ $item['incorrect_number'] }}</td>
                                 <td>{{ $item['cost'] }}</td>
-                                <td>{{ $arrStatus[$item['status']]}}</td>
+                                <td @if($item['status'] == 1) class="green bg-success middle center" @else class="red bg-danger middle center" @endif>{{ $item['status_name']}}</td>
                                 <td class="center">
                                     <a href="{{URL::route('admin.smsHistoryDetailsView',array('id_customer_sms' => FunctionLib::inputId($item['sms_customer_id'])))}}" title="Sửa item">
                                         <i class="fa fa-asterisk" aria-hidden="true"></i>
