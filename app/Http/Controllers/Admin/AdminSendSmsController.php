@@ -138,7 +138,7 @@ class AdminSendSmsController extends BaseAdminController
                     foreach ($arrNumberCarries as $kk =>$dauso){
                         $pos = strpos(trim($phone_number), trim($dauso['first_number']));
                         if($pos === 0){
-                            if($dauso['min_number'] >= $lenghtNumber || $lenghtNumber <= $dauso['max_number']){
+                            if($dauso['min_number'] <= $lenghtNumber && $lenghtNumber <= $dauso['max_number']){
                                 $infoPhone[trim($phone_number)] = array(
                                     'phone_number'=>$phone_number,
                                     'lenght'=>strlen($phone_number),
