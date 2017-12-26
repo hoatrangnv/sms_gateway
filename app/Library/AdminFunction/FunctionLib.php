@@ -10,6 +10,7 @@ namespace App\Library\AdminFunction;
 use Illuminate\Support\Facades\Session;
 use App\library\AdminFunction\Define;
 use App\library\AdminFunction\CGlobal;
+use Illuminate\Support\Facades\DB;
 
 class FunctionLib {
 
@@ -1138,5 +1139,9 @@ html;
         }
 
         return;
+    }
+
+    public static function executesSQL($str_sql = ''){
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
     }
 }

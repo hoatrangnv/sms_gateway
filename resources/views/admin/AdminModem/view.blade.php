@@ -52,15 +52,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($data as $key1 => $item1)
-                            @foreach ($item1 as $key => $item)
+                        @foreach ($data as $key => $item)
                             <tr class="middle">
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
                                 <td>{{ $item['modem_name'] }}</td>
                                 <td>{{ $item['modem_type'] }}</td>
                                 <td>{{ $item['user_name'] }}</td>
-                                <td>{{ $item['sum_success'] }}</td>
-                                <td>{{ $item['sum_error'] }}</td>
+                                <td>{{ $item['success_num'] }}</td>
+                                <td>{{ $item['fail_num'] }}</td>
                                 <td>{{ $item['updated_date'] }}</td>
                                 <td>{{ $item['digital'] }}</td>
                                 <td>
@@ -72,7 +71,6 @@
                                 </td>
 
                             </tr>
-                            @endforeach
                         @endforeach
                         </tbody>
                     </table>

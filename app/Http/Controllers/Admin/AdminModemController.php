@@ -74,19 +74,32 @@ class AdminModemController extends BaseAdminController
             );
             $optionUser = FunctionLib::getOption($arr,$this->user_id);
         }
-
-//        $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
+        $sql_where = "";
+        if ($dataSearch['station_account'] !=""){
+            $sql_where = " WHERE m.user_id=".$dataSearch['station_account'];
+        }
 
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
-        $data = Modem::searchByCondition($dataSearch, $limit, $offset, $total);
+
+        $sql = "SELECT m.modem_id,m.modem_name,m.modem_type,u.user_name,m.digital,m.updated_date,m.is_active,SUM(IFNULL(mc.success_number,0)) success_num,SUM(IFNULL(mc.error_number,0)) fail_num 
+FROM web_modem m 
+LEFT JOIN web_modem_com mc ON m.modem_id = mc.modem_id
+INNER JOIN web_user u ON m.user_id = u.user_id 
+{$sql_where} 
+GROUP BY m.modem_id";
+
+        $data = FunctionLib::executesSQL($sql);
+        $arr = array();
+        foreach ($data as $k => $v){
+            $arr[] = (array) $v;
+        }
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-//        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
         return view('admin.AdminModem.view',array_merge([
-            'data'=>$data,
+            'data'=>$arr,
             'search'=>$dataSearch,
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
