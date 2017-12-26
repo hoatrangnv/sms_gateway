@@ -228,15 +228,20 @@ class User extends BaseModel{
     }
 
     public  static function getOptionUserFullName($role_type=0){
-        $data = Cache::get(Define::CACHE_OPTION_USER);
-        if (sizeof($data) == 0) {
-            $arr =  User::getList($role_type);
-            foreach ($arr as $value){
-                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
-            }
-            if(!empty($data)){
-                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
-            }
+//        $data = Cache::get(Define::CACHE_OPTION_USER);
+//        if (sizeof($data) == 0) {
+//            $arr =  User::getList($role_type);
+//            foreach ($arr as $value){
+//                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
+//            }
+//            if(!empty($data)){
+//                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+//            }
+//        }
+
+        $arr =  User::getList($role_type);
+        foreach ($arr as $value){
+            $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
         }
         return $data;
     }

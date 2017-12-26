@@ -73,6 +73,7 @@ class AdminSendSMSHistory extends BaseAdminController
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
 
+//        FunctionLib::debug($this->arrUser);
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
             $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
             $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
@@ -105,7 +106,14 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
             $sql.=" AND wsc.status=".$dataSearch['status'];
         }
 
+        if ($dataSearch['from_day'] !="" && $dataSearch['to_day'] != ""){
+            $from = date('Y-m-d',strtotime($dataSearch['from_day']));
+            $to = date('Y-m-d',strtotime($dataSearch['to_day']));
+            $sql.=" AND UNIX_TIMESTAMP(wsc.created_date) >= UNIX_TIMESTAMP('".$from."') AND UNIX_TIMESTAMP(wsc.created_date) <= UNIX_TIMESTAMP('".$to."') ";
+        }
+
         $sql.=" GROUP BY wsc.sms_customer_id";
+//        FunctionLib::debug($sql);
         $data = SmsCustomer::executesSQL($sql);
         $arr = array();
         foreach ($data as $k => $v){
@@ -118,7 +126,6 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
         $this->viewPermission = $this->getPermissionPage();
 //        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
-
         return view('admin.AdminSendSMSHistory.view',array_merge([
             'data'=>$arr,
             'search'=>$dataSearch,
@@ -128,6 +135,8 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
             'optionStatus'=>$optionStatus,
             'arrStatus'=>$this->arrStatus,
             'optionUser'=>$optionUser,
+            'from_day'=>date('m/d/Y',strtotime(date('Y-m-d',time()).'- 6 month')),
+            'to_day'=>date('m/d/Y',time()),
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
@@ -161,7 +170,6 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
         $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
         $incorrect_number_list = isset($data[0])?$data[0]['incorrect_number_list']:"";
-
         return view('admin.AdminSendSMSHistory.viewdetails',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,

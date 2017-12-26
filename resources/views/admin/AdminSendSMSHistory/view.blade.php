@@ -34,11 +34,11 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="from_day"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
-                                <input type="text" class="form-control input-sm" id="txtFromDate" name="from_day" @if(isset($search['from_day']))value="{{$search['from_day']}}"@endif>
+                                <input type="text" class="form-control input-sm" id="txtFromDate" name="from_day" @if(isset($search['from_day']) && $search['from_day'] != "")value="{{$search['from_day']}}" @else value="{{$from_day}}" @endif>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="to_day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                <input type="text" class="form-control input-sm" name="to_day" id="txtToDate" autocomplete="off"  @if(isset($search['to_day']))value="{{$search['to_day']}}"@endif>
+                                <input type="text" class="form-control input-sm" name="to_day" id="txtToDate" autocomplete="off"  @if(isset($search['to_day']) && $search['to_day'] !="")value="{{$search['to_day']}}" @else value="{{$to_day}}" @endif>
                             </div>
 
                         </div>
