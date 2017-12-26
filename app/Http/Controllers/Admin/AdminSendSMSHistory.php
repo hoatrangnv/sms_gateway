@@ -46,8 +46,8 @@ class AdminSendSMSHistory extends BaseAdminController
 
         $this->arrStatus = array(
             ''=>FunctionLib::controLanguage('all',$this->languageSite),
-            0=>'Processing',
-            1=>'Successful'
+            '0'=>'Processing',
+            '1'=>'Successful'
         );
 
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
@@ -95,8 +95,8 @@ class AdminSendSMSHistory extends BaseAdminController
 //        $data = SmsCustomer::searchByCondition($dataSearch, $limit, $offset, $total);
 
         $sql = "SELECT u.user_full_name,wsc.sms_deadline,(wsc.correct_number + wsc.incorrect_number) as total_sms,wsc.incorrect_number,wsc.cost,wsc.status,wsc.status_name,wsc.sms_customer_id,SUM(IFNULL(send_successful,0)) total_success from web_sms_customer wsc
-INNER JOIN web_sms_log wsl ON wsc.sms_customer_id = wsl.sms_customer_id 
-inner join web_user u on wsc.user_customer_id = u.user_id ";
+LEFT JOIN web_sms_log wsl ON wsc.sms_customer_id = wsl.sms_customer_id 
+INNER JOIN web_user u on wsc.user_customer_id = u.user_id ";
 
         if ($dataSearch['user_id'] !="" && $dataSearch['user_id'] >0){
             $sql.=" WHERE wsc.user_customer_id=".$dataSearch['user_id'];
@@ -119,7 +119,7 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
         foreach ($data as $k => $v){
             $arr[] = (array) $v;
         }
-//        FunctionLib::debug($data);
+//        FunctionLib::debug($arr);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
@@ -142,32 +142,39 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
     }
 
     public function viewDetails() {
-        $id_cs = isset($_GET['id_customer_sms']) && FunctionLib::outputId($_GET['id_customer_sms'])>0 ?FunctionLib::outputId($_GET['id_customer_sms']):0;
+        $id_cs = isset($_GET['id_cs']) && $_GET['id_cs']>0 ?$_GET['id_cs']:0;
         //Check phan quyen.
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
+        $page_no = (int) Request::get('page_no',1);
+        $limit = CGlobal::number_limit_show;
+        $total = 0;
+        $offset = ($page_no - 1) * $limit;
 
+//        FunctionLib::debug($id_cs);
         if ($id_cs <=0){
             return Redirect::route('admin.smsHistoryView');
         }
         $dataSearch['id_cs'] = $id_cs;
-        $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
         $dataSearch['status'] = addslashes(Request::get('status',''));
         $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
         $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
 
-        $limit = CGlobal::number_limit_show;
-        $total = 0;
-        $offset = ($page_no - 1) * $limit;
+        if ($dataSearch['from_day'] !=""){
+            $dataSearch['from_day'] = date('Y-m-d',strtotime($dataSearch['from_day']));
+        }
+        if ($dataSearch['to_day'] !=""){
+            $dataSearch['to_day'] = date('Y-m-d',strtotime($dataSearch['to_day']));
+        }
         $data = SmsSendTo::joinByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
+        $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('choose_carrier',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
         $incorrect_number_list = isset($data[0])?$data[0]['incorrect_number_list']:"";
         return view('admin.AdminSendSMSHistory.viewdetails',array_merge([
@@ -181,6 +188,8 @@ inner join web_user u on wsc.user_customer_id = u.user_id ";
             'optionCarrier'=>$optionCarrier,
             'incorrect_number_list'=>$incorrect_number_list,
             'id_cs'=>$id_cs,
+            'from_day'=>date('m/d/Y',strtotime(date('Y-m-d',time()).'- 6 month')),
+            'to_day'=>date('m/d/Y',time()),
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }

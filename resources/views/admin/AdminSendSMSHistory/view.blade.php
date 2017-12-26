@@ -80,7 +80,7 @@
                                 <td>{{ $item['cost'] }}</td>
                                 <td @if($item['status'] == 1) class="green bg-success middle center" @else class="red bg-danger middle center" @endif>{{ $item['status_name']}}</td>
                                 <td class="center">
-                                    <a href="{{URL::route('admin.smsHistoryDetailsView',array('id_customer_sms' => FunctionLib::inputId($item['sms_customer_id'])))}}" title="Sửa item">
+                                    <a href="{{URL::route('admin.smsHistoryDetailsView',array('id_cs' => $item['sms_customer_id']))}}" title="Sửa item">
                                         <i class="fa fa-asterisk" aria-hidden="true"></i>
                                     </a>
                                 </td>
