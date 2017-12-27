@@ -24,7 +24,7 @@
                             <div class="panel-body">
                                 @if($user_role_type)
                                     <div class="col-sm-2">
-                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
+                                        <label for="station_account">{{FunctionLib::viewLanguage('customer_account ')}}</label>
                                         <select name="station_account" id="station_account"
                                                 class="form-control input-sm">
                                             {!! $optionUser !!}
@@ -73,7 +73,7 @@
                         </div>
                         <div id=""
                              style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto">
-                            <p>{{FunctionLib::viewLanguage('total').' '.$total_num_pie}}</p>
+                            <p>{{FunctionLib::viewLanguage('total').' '.$total_num_pie.' - '.$total_cost_pie.' VND'}} </p>
                         </div>
                     @endif
                 </div>
@@ -144,7 +144,7 @@
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/>' +
-                    ' Cost: <b>{point.nam:.1f}</b>'
+                    ' Cost: <b>{point.total_cost:.1f}</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -164,6 +164,7 @@
                         showInLegend: true
                     }
                 },
+                description:'nam dep trai',
                 series: [{
                     name: 'Brands',
                     colorByPoint: true,
@@ -176,7 +177,7 @@
                             y:" . $v['percent'] . ",
                             sliced: " . $v['sliced'] . ",
                             selected: " . $v['selected'] . ",
-                            nam: " . $v['percent'] . ",
+                            total_cost: " . $v['total_cost'] . ",
                             },
                             ";
                         }

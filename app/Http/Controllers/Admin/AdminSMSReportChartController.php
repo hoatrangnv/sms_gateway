@@ -60,8 +60,7 @@ class AdminSMSReportChartController extends BaseAdminController
     }
 
     public function view()
-    {
-        //Check phan quyen.
+    {//Check phan quyen.
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_view, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
@@ -125,50 +124,75 @@ class AdminSMSReportChartController extends BaseAdminController
         }
 
         $arrData = array();
+        $arrData_pie = array();
         foreach ($data as $k => $v) {
             foreach ($arrDay as $v1) {
                 if ($v['day'] == $v1) {
                     $arrData[$v['carrier_name']][$v1] = $v['num_mess'];
+                    $arrData_pie[$v['carrier_name']][$v1]['num'] = $v['num_mess'];
+                    $arrData_pie[$v['carrier_name']][$v1]['cost'] = $v['total_cost'];
                 }
             }
         }
+//        FunctionLib::debug($arrData);
         foreach ($arrDay as $d1) {
             foreach ($arrData as $k => $v) {
                 if (!array_key_exists($d1, $v)) {
                     $arrData[$k][$d1] = 0;
+                    $arrData_pie[$k][$d1]['num'] = 0;
+                    $arrData_pie[$k][$d1]['cost'] = 0;
                 }
             }
         }
         $arrPieChart = array();
+
+        foreach ($arrData_pie as $k => $v) {
+            ksort($v);
+            $arrData_pie[$k] = $v;
+            $total_num = 0;
+            $total_cost = 0;
+            foreach ($v as $item) {
+                $total_num += $item['num'];
+                $total_cost += $item['cost'];
+            }
+            $arrPieChart[$k]['num'] = $total_num;
+            $arrPieChart[$k]['cost'] = $total_cost;
+        }
         foreach ($arrData as $k => $v) {
             ksort($v);
             $arrData[$k] = $v;
-            $total_num = 0;
-            foreach ($v as $item) {
-                $total_num += $item;
-            }
-            $arrPieChart[$k] = $total_num;
         }
         $arrPieChart1 = array();
         $total_num_pie = 0;
+        $total_cost_pie = 0;
         foreach ($arrPieChart as $k => $v) {
-            $total_num_pie += $v;
-            if (max($arrPieChart) == $v) {
-                $arrPieChart1[] = array(
-                    "name" => $k,
-                    "percent" => $v,
-                    "sliced" => "true",
-                    "selected" => "true"
-                );
-            } else {
-                $arrPieChart1[] = array(
-                    "name" => $k,
-                    "percent" => $v,
-                    "sliced" => "false",
-                    "selected" => "false"
-                );
-            }
+            $total_num_pie += $v['num'];
+            $total_cost_pie += $v['cost'];
+            $arrPieChart1[] = array(
+                "name" => $k,
+                "percent" => $v['num'],
+                "total_cost" => $v['cost'],
+                "sliced" => "false",
+                "selected" => "false"
+            );
+            /*
+                        if (max($arrPieChart) == $v) {
+                            $arrPieChart1[] = array(
+                                "name" => $k,
+                                "percent" => $v,
+                                "sliced" => "true",
+                                "selected" => "true"
+                            );
+                        } else {
+                            $arrPieChart1[] = array(
+                                "name" => $k,
+                                "percent" => $v,
+                                "sliced" => "false",
+                                "selected" => "false"
+                            );
+                        }*/
         }
+//        FunctionLib::debug($arrPieChart1);
         $dataSearch['station_account'] = addslashes(Request::get('station_account', ''));
         $total = 0;
         $optionUser = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('select_user', $this->languageSite) . '') + $this->arrManager, (isset($dataSearch['station_account']) ? $dataSearch['station_account'] : 0));
@@ -187,7 +211,7 @@ class AdminSMSReportChartController extends BaseAdminController
             }
             $arrData[$k] = $value;
         }
-//                    FunctionLib::debug($arrData);
+//        FunctionLib::debug($arrPieChart1);
         return view('admin.AdminSMSReportChart.view', array_merge([
             'data' => $data,
             'arrDay' => $arrDay,
@@ -200,7 +224,9 @@ class AdminSMSReportChartController extends BaseAdminController
             'optionMonth' => $optionMonth,
             'optionCarrier' => $optionCarrier,
             'total_num_pie' => $total_num_pie,
+            'total_cost_pie' => $total_cost_pie,
             'title_line_chart' => FunctionLib::controLanguage('report', $this->languageSite) . ' ' . $month . '/' . $year,
         ], $this->viewPermission));
     }
+
 }
