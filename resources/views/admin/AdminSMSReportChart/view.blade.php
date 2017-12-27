@@ -24,7 +24,7 @@
                             <div class="panel-body">
                                 @if($user_role_type)
                                     <div class="col-sm-2">
-                                        <label for="station_account">{{FunctionLib::viewLanguage('customer_account ')}}</label>
+                                        <label for="station_account">{{FunctionLib::viewLanguage('customer_account')}}</label>
                                         <select name="station_account" id="station_account"
                                                 class="form-control input-sm">
                                             {!! $optionUser !!}
