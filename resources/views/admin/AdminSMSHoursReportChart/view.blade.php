@@ -51,7 +51,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-3">
-                                    <label for="day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
+                                    <label for="day">{{FunctionLib::viewLanguage('choose_date')}}</label>
                                     <input type="text" class="form-control input-sm date-picker" name="day"
                                            autocomplete="off"
                                            @if(isset($search['day']))value="{{$search['day']}}"@endif>
@@ -85,6 +85,15 @@
         </div>
     </div>
     <script type="text/javascript">
+        $(document).ready(function () {
+            $(".date-picker").datepicker({
+                format: "dd-mm-YYYY",
+                language: "vi",
+                autoclose: true,
+                keyboardNavigation: true
+            })
+            show_opt_user();
+        });
 
         function show_opt_user(){
             debugger
@@ -154,14 +163,6 @@
                     }
                 ]
             });
-        });
-        $(document).ready(function () {
-            $(".date-picker").datepicker({
-                format: "dd-mm-YYYY",
-                language: "vi",
-                autoclose: true,
-                keyboardNavigation: true
-            })
         });
     </script>
 @stop

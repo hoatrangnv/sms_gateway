@@ -115,22 +115,33 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         $data = array();
         if (isset($dataSearch['user_id']) && $dataSearch['user_id']>0 && $dataSearch['user_id']!=""){
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
-            $sql = "
+
+        }
+
+        if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
+            $id_station = join(",",array_keys($this->arrManager_station));
+            $sql_where.=" AND wsr.user_id in (".$id_station.") ";
+        }
+
+        if ($dataSearch['type_report'] == "2" && $dataSearch['user_id'] == ""){
+            $id_customer = join(",",array_keys($this->arrManager_customer));
+            $sql_where.=" AND wsr.user_id in (".$id_customer.") ";
+        }
+
+        $sql = "
         SELECT  SUM(wsr.cost) as total_cost,Sum(wsr.success_number + wsr.fail_number) as total_sms_hour,Sum(wsr.success_number) as total_sms_success,
         (Sum(wsr.success_number)/ Sum(wsr.success_number + wsr.fail_number)) * 100 as success_percent,
         wsr.day,wsr.month,wsr.year,concat((ceil(wsr.hour/{$hours_div})-1)*{$hours_div},'-',((ceil(wsr.hour/{$hours_div})-1)*{$hours_div})+{$hours_div}) as range_time from web_sms_report wsr 
 WHERE {$sql_where} 
 GROUP BY wsr.day,wsr.month,wsr.year,ceil(wsr.hour/{$hours_div})
         ";
-            $data = SmsReport::executesSQL($sql);
-        }
-
+        $data = SmsReport::executesSQL($sql);
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
-        $optionUser_station = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager_station, (isset($dataSearch['station_account1']) && $dataSearch['station_account1'] !=""?$dataSearch['station_account1']:0));
-        $optionUser_customer = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager_customer, (isset($dataSearch['station_account2']) && $dataSearch['station_account2']!=""?$dataSearch['station_account2']:0));
+        $optionUser_station = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_station, (isset($dataSearch['station_account1']) && $dataSearch['station_account1'] !=""?$dataSearch['station_account1']:0));
+        $optionUser_customer = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_customer, (isset($dataSearch['station_account2']) && $dataSearch['station_account2']!=""?$dataSearch['station_account2']:0));
         $optionTypeReort = FunctionLib::getOption($this->arrTypeReport, (isset($dataSearch['type_report'])?$dataSearch['type_report']:"1"));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $optionHours = FunctionLib::getOption($this->hours, (isset($dataSearch['hours']) && $dataSearch['hours']>0?$dataSearch['hours']:8));
