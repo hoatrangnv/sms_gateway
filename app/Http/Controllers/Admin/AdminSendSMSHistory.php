@@ -165,9 +165,11 @@ INNER JOIN web_user u on wsc.user_customer_id = u.user_id ";
 
         if ($dataSearch['from_day'] !=""){
             $dataSearch['from_day'] = date('Y-m-d',strtotime($dataSearch['from_day']));
+            $dataSearch['from_day1'] = date('m/d/Y',strtotime($dataSearch['from_day']));
         }
         if ($dataSearch['to_day'] !=""){
             $dataSearch['to_day'] = date('Y-m-d',strtotime($dataSearch['to_day']));
+            $dataSearch['to_day1'] = date('m/d/Y',strtotime($dataSearch['to_day']));
         }
         $data = SmsSendTo::joinByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';

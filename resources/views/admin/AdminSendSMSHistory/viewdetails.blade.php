@@ -49,13 +49,13 @@
                                     <label for="from_day"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
                                     <input type="text" class="form-control input-sm date-picker" id="txtFromDate"
                                            name="from_day"
-                                           @if(isset($search['from_day']) && $search['from_day'] != "")value="{{$search['from_day']}}" @else value="{{$from_day}}" @endif>
+                                           @if(isset($search['from_day1']) && $search['from_day1'] != "")value="{{$search['from_day1']}}" @else value="{{$from_day}}" @endif>
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="to_day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
                                     <input type="text" class="form-control input-sm date-picker" name="to_day" id="txtToDate"
                                            autocomplete="off"
-                                           @if(isset($search['to_day']) && $search['to_day']!="")value="{{$search['to_day']}}" @else value="{{$to_day}}" @endif>
+                                           @if(isset($search['to_day1']) && $search['to_day1']!="")value="{{$search['to_day1']}}" @else value="{{$to_day}}" @endif>
                                 </div>
                             </div>
                             <div class="panel-footer text-right">
@@ -114,7 +114,7 @@
     <script>
         $(document).ready(function () {
             $(".date-picker").datepicker({
-                format: "yyyy-mm-dd",
+                format: "mm-dd-yyyy",
                 language: "vi",
                 autoclose: true,
                 keyboardNavigation: true
