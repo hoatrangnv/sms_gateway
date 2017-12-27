@@ -96,7 +96,6 @@
         });
 
         function show_opt_user(){
-            debugger
             if($("#type_report").val() == "2"){
                 $("#station_account2").removeClass( 'hide' );
                 $("#station_account1").addClass( 'hide' );
