@@ -26,10 +26,21 @@
                             <div class="panel-body">
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                     <div class="col-sm-2">
-                                        <label for="station_account">{{FunctionLib::viewLanguage('station_account')}}</label>
-                                        <select name="station_account" id="station_account"
+                                        <label for="type_report">{{FunctionLib::viewLanguage('report_type')}}</label>
+                                        <select onchange="show_opt_user()" name="type_report" id="type_report"
                                                 class="form-control input-sm">
-                                            {!! $optionUser !!}
+                                            {!! $optionTypeReort !!}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label for="station_account">{{FunctionLib::viewLanguage('user_name')}}</label>
+                                        <select name="station_account1" id="station_account1"
+                                                class="form-control input-sm">
+                                            {!! $optionUser_station !!}
+                                        </select>
+                                        <select name="station_account2" id="station_account2"
+                                                class="form-control input-sm hide">
+                                            {!! $optionUser_customer !!}
                                         </select>
                                     </div>
                                 @endif
@@ -74,6 +85,18 @@
         </div>
     </div>
     <script type="text/javascript">
+
+        function show_opt_user(){
+            debugger
+            if($("#type_report").val() == "2"){
+                $("#station_account2").removeClass( 'hide' );
+                $("#station_account1").addClass( 'hide' );
+            }else{
+                $("#station_account1").removeClass( 'hide' );
+                $("#station_account2").addClass( 'hide' );
+            }
+        }
+
         $(function () {
 
             $('#container').highcharts({
