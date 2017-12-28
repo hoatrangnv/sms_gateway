@@ -133,7 +133,12 @@ Route::get('smsHoursReportChart/view',array('as' => 'admin.smsHoursReportChart',
 /*SMS graphSuccessful Report Chart*/
 Route::get('graphSuccessful/view',array('as' => 'admin.graphSuccessful','uses' => Admin.'\AdminSMSGraphReportChartController@view'));
 
-/*SMS History*/
+/*SMS Template*/
 Route::get('smsTeplate/view',array('as' => 'admin.smsTemplate','uses' => Admin.'\AdminSMSTemplateController@view'));
 Route::post('smsTeplate/addTemplate',array('as' => 'admin.addTemplate','uses' => Admin.'\AdminSMSTemplateController@addTemplate'));
 Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));
+
+/*SMS App register*/
+Route::get('registerApp/view',array('as' => 'admin.registerAppView','uses' => Admin.'\AdminAppRegisterController@view'));
+Route::post('registerApp/addApp',array('as' => 'admin.registerAppAdd','uses' => Admin.'\AdminAppRegisterController@addApp'));
+//Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));

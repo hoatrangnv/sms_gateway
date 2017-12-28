@@ -52,6 +52,7 @@ class Define{
     const TABLE_SMS_PACKET = 'web_sms_packet';
     const TABLE_ROLE_MENU = 'web_role_menu';
     const TABLE_SMS_TEMPLATE = 'web_sms_template';
+    const TABLE_API_APP = 'api_app';
 
     /***************************************************************************************************************
     //Memcache
