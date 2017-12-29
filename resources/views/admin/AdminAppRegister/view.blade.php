@@ -88,8 +88,8 @@
                             <label for="description">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</label>
                             <textarea name="description" style="resize: none" title="{{FunctionLib::viewLanguage('description')}}" class="form-control input-required" rows="5" id="description"></textarea>
                         </div>
-                        <a class="btn btn-success" id="submit" onclick="add_app()">Submit</a>
-                        <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
+                        <a class="btn btn-success" id="submit" onclick="add_app()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</a>
+                        <a class="btn btn-default" id="cancel" onclick="reset()"><i class="fa fa-undo" aria-hidden="true"></i> Reset</a>
                     </form>
                 </div> <!-- /widget-content -->
             </div>

@@ -87,8 +87,8 @@
                             <textarea onkeyup="count_character(this)" name="content" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="content"></textarea>
                         </div>
                         <span style="float: right" class="right">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_length')}}:<strong id="num_character" >0</strong></span>
-                        <a class="btn btn-success" id="submit" onclick="add_sms_template()">Submit</a>
-                        <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
+                        <a class="btn btn-success" id="submit" onclick="add_sms_template()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</a>
+                        <a class="btn btn-default" id="cancel" onclick="reset()"><i class="fa fa-undo" aria-hidden="true"></i> Reset</a>
                     </form>
                 </div> <!-- /widget-content -->
             </div>
