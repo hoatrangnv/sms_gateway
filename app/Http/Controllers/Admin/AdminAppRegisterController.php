@@ -6,7 +6,7 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\SmsCustomer;
 use App\Http\Models\SmsSendTo;
 use App\Http\Models\User;
-use App\Http\Models\SmsTemplate;
+use App\Http\Models\ApiApp;
 use App\Http\Models\CarrierSetting;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use View;
 
-class AdminSMSTemplateController extends BaseAdminController
+class AdminAppRegisterController extends BaseAdminController
 {
     private $permission_view = 'sendSmsTemplate_view';
     private $permission_full = 'sendSmsTemplate_full';
@@ -78,7 +78,7 @@ class AdminSMSTemplateController extends BaseAdminController
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
-        $data = SmsTemplate::searchByCondition($dataSearch, $limit, $offset, $total);
+        $data = ApiApp::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
@@ -86,7 +86,7 @@ class AdminSMSTemplateController extends BaseAdminController
         $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
 
-        return view('admin.AdminSMSTemplate.view',array_merge([
+        return view('admin.AdminAppRegister.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
             'size'=>$total,
@@ -160,30 +160,31 @@ class AdminSMSTemplateController extends BaseAdminController
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
-    public function addTemplate(){
-
-        $name_template = isset($_POST['name_template'])?$_POST['name_template']:"";
-        $content = isset($_POST['content'])?$_POST['content']:"";
+    public function addApp(){
+        $app_name = isset($_POST['app_name'])?$_POST['app_name']:"";
+        $description = isset($_POST['description'])?$_POST['description']:"";
+        $ip_server = isset($_POST['ip_server'])?$_POST['ip_server']:"";
         $update_at = date("Y-m-d H:i",time());
-        $customer_id = $this->user_id;
 
         $id = isset($_POST['id'])?FunctionLib::outputId($_POST['id']):0;
 
         $data = array(
-            "template_name"=>$name_template,
-            "content"=>$content,
-            "updated_date"=>$update_at,
-            "created_date"=>$update_at,
-            "customer_id"=>$customer_id,
+            "app_name"=>$app_name,
+            "description"=>$description,
+            "ip_server"=>$ip_server,
+            "user_id"=>md5($this->user_id),
+            "client_id"=>md5($this->user_id),
+            "client_secret"=>bin2hex(openssl_random_pseudo_bytes(32)),
+            "created_at"=>$update_at,
         );
 
         if ($id!=0 || $id!="0"){
             unset($data['created_date']);
-            SmsTemplate::updateItem($id,$data);
+            ApiApp::updateItem($id,$data);
         }else{
-            SmsTemplate::createItem($data);
+            ApiApp::createItem($data);
         }
-        $data_full = SmsTemplate::getAll();
+        $data_full = ApiApp::getAll();
         $data_view = [
             'view' => View::make('admin.AdminSMSTemplate.list')
                 ->with('data', $data_full)
@@ -196,9 +197,9 @@ class AdminSMSTemplateController extends BaseAdminController
     public function deleteTemplate(){
         $id = isset($_GET['id'])?FunctionLib::outputId($_GET['id']):0;
         if ($id>0){
-            SmsTemplate::deleteItem($id);
+            ApiApp::deleteItem($id);
         }
-        $data_full = SmsTemplate::getAll();
+        $data_full = ApiApp::getAll();
         $data_view = [
             'view' => View::make('admin.AdminSMSTemplate.list')
                 ->with('data', $data_full)

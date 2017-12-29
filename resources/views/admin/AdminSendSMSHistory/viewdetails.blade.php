@@ -29,7 +29,7 @@
                     <!-- PAGE CONTENT BEGINS -->
                     <div class="panel panel-info">
                         <form method="get" action="{{URL::route('admin.smsHistoryDetailsView')}}" role="form">
-                            <input type="hidden" name="id_customer_sms" value="{{FunctionLib::inputId($id_cs)}}">
+                            <input type="hidden" name="id_cs" value="{{$id_cs}}">
                             <div class="panel-body">
                                 <div class="form-group col-lg-3">
                                     <label for="carrier_id"><i>{{FunctionLib::viewLanguage('carrier')}}</i></label>
@@ -47,15 +47,15 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="from_day"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker" id="from_day"
+                                    <input type="text" class="form-control input-sm date-picker" id="txtFromDate"
                                            name="from_day"
-                                           @if(isset($dataSearch['from_day']))value="{{$dataSearch['from_day']}}"@endif>
+                                           @if(isset($search['from_day1']) && $search['from_day1'] != "")value="{{$search['from_day1']}}" @else value="{{$from_day}}" @endif>
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="to_day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                    <input type="text" class="form-control input-sm date-picker" name="to_day"
+                                    <input type="text" class="form-control input-sm date-picker" name="to_day" id="txtToDate"
                                            autocomplete="off"
-                                           @if(isset($dataSearch['to_day']))value="{{$dataSearch['to_day']}}"@endif>
+                                           @if(isset($search['to_day1']) && $search['to_day1']!="")value="{{$search['to_day1']}}" @else value="{{$to_day}}" @endif>
                                 </div>
                             </div>
                             <div class="panel-footer text-right">
@@ -94,7 +94,7 @@
                                 <td class="center">{{ $item['phone_receive']}}</td>
                                 <td>{{ $item['content']}}</td>
                                 <td class="center">{{ $item['cost'] }}</td>
-                                <td>{{ $arrStatus[$item['status']]}}</td>
+                                <td @if($item['status'] == 1) class="green bg-success middle center" @else class="red bg-danger middle center" @endif>{{ $arrStatus[$item['status']]}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -114,11 +114,24 @@
     <script>
         $(document).ready(function () {
             $(".date-picker").datepicker({
-                format: "yyyy-mm-dd",
+                format: "mm-dd-yyyy",
                 language: "vi",
                 autoclose: true,
                 keyboardNavigation: true
             })
+        });
+
+        $("#txtFromDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#txtToDate").datepicker("option", "minDate", selected)
+            }
+        });
+        $("#txtToDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#txtFromDate").datepicker("option", "maxDate", selected)
+            }
         });
     </script>
 @stop

@@ -78,8 +78,8 @@ Route::get('sendSms/uploadFileExcelPhone', array('as' => 'admin.uploadFileExcelP
 /*thông sms chờ xử lý*/
 Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));
 Route::match(['GET','POST'], 'waittingSms/viewSend',array('as' => 'admin.waittingSendSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@viewSend'));
-Route::get('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
-Route::post('waittingSms/edit/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
+Route::get('waittingSms/edit/{type_page?}/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@getItem'));
+Route::post('waittingSms/edit/{type_page?}/{id?}', array('as' => 'admin.waittingSmsEdit','uses' => Admin.'\AdminWaittingProcessSmsController@postItem'));
 Route::post('waittingSms/changeUserWaittingProcessSms', array('as' => 'admin.changeUserWaittingProcessSms','uses' => Admin.'\AdminWaittingProcessSmsController@changeUserWaittingProcessSms'));//ajax
 Route::get('waittingSms/getSettingContentAttach', array('as' => 'admin.getSettingContentAttach','uses' => Admin.'\AdminWaittingProcessSmsController@getSettingContentAttach'));//ajax
 Route::get('waittingSms/getContentGraftedSms', array('as' => 'admin.getContentGraftedSms','uses' => Admin.'\AdminWaittingProcessSmsController@getContentGraftedSms'));//ajax
@@ -133,7 +133,12 @@ Route::get('smsHoursReportChart/view',array('as' => 'admin.smsHoursReportChart',
 /*SMS graphSuccessful Report Chart*/
 Route::get('graphSuccessful/view',array('as' => 'admin.graphSuccessful','uses' => Admin.'\AdminSMSGraphReportChartController@view'));
 
-/*SMS History*/
+/*SMS Template*/
 Route::get('smsTeplate/view',array('as' => 'admin.smsTemplate','uses' => Admin.'\AdminSMSTemplateController@view'));
 Route::post('smsTeplate/addTemplate',array('as' => 'admin.addTemplate','uses' => Admin.'\AdminSMSTemplateController@addTemplate'));
 Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));
+
+/*SMS App register*/
+Route::get('registerApp/view',array('as' => 'admin.registerAppView','uses' => Admin.'\AdminAppRegisterController@view'));
+Route::post('registerApp/addApp',array('as' => 'admin.registerAppAdd','uses' => Admin.'\AdminAppRegisterController@addApp'));
+//Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));

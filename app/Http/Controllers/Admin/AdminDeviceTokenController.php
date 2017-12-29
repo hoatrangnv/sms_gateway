@@ -35,7 +35,7 @@ class AdminDeviceTokenController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName();
+        $this->arrManager = User::getOptionUserFullName(2);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
@@ -49,6 +49,7 @@ class AdminDeviceTokenController extends BaseAdminController
             'permission_create'=>in_array($this->permission_create, $this->permission) ? 1 : 0,
             'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
+            'user_role_type'=> $this->role_type,
         ];
     }
 
@@ -58,14 +59,22 @@ class AdminDeviceTokenController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $page_no = (int) Request::get('page_no',1);
-        $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+
+        if($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['user_id'] = (int)Request::get('user_id');
+            $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
+        }else{
+            $dataSearch['user_id'] = $this->user_id;
+            $arr = array(
+                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_full_name']
+            );
+            $optionUser = FunctionLib::getOption($arr,$this->user_id);
+        }
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
         $data = DeviceToken::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrManager, (isset($dataSearch['user_id'])?$dataSearch['user_id']:0));
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();

@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 //namespace App\Library\AdminFunction;
 
+use App\Library\AdminFunction\FunctionLib;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -51,6 +52,7 @@ class User extends BaseModel{
 
     public static function updateLogin($user = array()){
         if($user){
+            date_default_timezone_set('Asia/Ho_Chi_Minh').
             $user->user_last_login = time();
             $user->user_last_ip = request()->ip();
             $user->save();
@@ -127,7 +129,7 @@ class User extends BaseModel{
                 $query->where('role_type', $data['role_type']);
             }
             $size = $query->count();
-            $data = $query->orderBy('user_id', 'desc')->take($limit)->skip($offset)->get();
+            $data = $query->orderBy('user_status', 'desc')->orderBy('user_last_login', 'desc')->orderBy('user_id', 'desc')->take($limit)->skip($offset)->get();
 
             return $data;
 
@@ -216,21 +218,30 @@ class User extends BaseModel{
         return $user ? $user : array();
     }
 
-    public static function getList() {
-        $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
+    public static function getList($role_type=0) {
+        if ($role_type==0){
+            $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
+        }else{
+            $user = User::where('user_status', '>', 0)->where('role_type','=',$role_type)->orderBy('user_id', 'desc')->get();
+        }
         return $user ? $user : array();
     }
 
-    public  static function getOptionUserFullName(){
-        $data = Cache::get(Define::CACHE_OPTION_USER);
-        if (sizeof($data) == 0) {
-            $arr =  User::getList();
-            foreach ($arr as $value){
-                $data[$value->user_id] = $value->user_full_name;
-            }
-            if(!empty($data)){
-                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
-            }
+    public  static function getOptionUserFullName($role_type=0){
+//        $data = Cache::get(Define::CACHE_OPTION_USER);
+//        if (sizeof($data) == 0) {
+//            $arr =  User::getList($role_type);
+//            foreach ($arr as $value){
+//                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
+//            }
+//            if(!empty($data)){
+//                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+//            }
+//        }
+
+        $arr =  User::getList($role_type);
+        foreach ($arr as $value){
+            $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
         }
         return $data;
     }

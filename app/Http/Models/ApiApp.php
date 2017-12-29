@@ -3,26 +3,27 @@
 namespace App\Http\Models;
 
 use App\Library\AdminFunction\FunctionLib;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
+use App\library\AdminFunction\Memcache;
+use Illuminate\Support\Facades\Cache;
 
-class ModemCom extends BaseModel
+class ApiApp extends BaseModel
 {
-    protected $table = Define::TABLE_MODEM_COM;
-    protected $primaryKey = 'modem_com_id';
+    protected $table = Define::TABLE_API_APP;
+    protected $primaryKey = 'app_id';
     public $timestamps = false;
 
-    protected $fillable = array('modem_com_name', 'user_id', 'modem_id', 'carrier_id', 'carrier_name',
-        'mei_com', 'content','sms_max_com_day','success_number','error_number','is_active','created_date','updated_date');
+    protected $fillable = array('app_name','client_id', 'client_secret', 'user_id', 'created_at', 'description', 'ip_server');
 
     public static function createItem($data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new ModemCom();
+            $checkData = new ApiApp();
             $fieldInput = $checkData->checkField($data);
-            $item = new ModemCom();
+            $item = new ApiApp();
             if (is_array($fieldInput) && count($fieldInput) > 0) {
                 foreach ($fieldInput as $k => $v) {
                     $item->$k = $v;
@@ -31,8 +32,8 @@ class ModemCom extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->modem_com_id,$item);
-            return $item->modem_com_id;
+            self::removeCache($item->app_id,$item);
+            return $item->app_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
             throw new PDOException();
@@ -42,15 +43,15 @@ class ModemCom extends BaseModel
     public static function updateItem($id,$data){
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $checkData = new ModemCom();
+            $checkData = new ApiApp();
             $fieldInput = $checkData->checkField($data);
-            $item = ModemCom::find($id);
+            $item = ApiApp::find($id);
             foreach ($fieldInput as $k => $v) {
                 $item->$k = $v;
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->modem_com_id,$item);
+            self::removeCache($item->app_id,$item);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -76,12 +77,12 @@ class ModemCom extends BaseModel
         if($id <= 0) return false;
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $item = ModemCom::find($id);
+            $item = ApiApp::find($id);
             if($item){
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->modem_com_id,$item);
+            self::removeCache($item->app_id,$item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -90,31 +91,37 @@ class ModemCom extends BaseModel
         }
     }
 
-    public static function searchByCondition($dataSearch = array(),&$total){
-
-        $table_modem_com = Define::TABLE_MODEM_COM;
-        $table_web_user = Define::TABLE_USER;
-        $table_modem = Define::TABLE_MODEM;
-
+    public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
+//        FunctionLib::debug($dataSearch);
         try{
-            $query = ModemCom::query()
-                ->select($table_modem_com.'.modem_com_name',$table_modem_com.'.carrier_name',$table_modem_com.'.mei_com',$table_modem_com.'.success_number',$table_modem_com.'.error_number',$table_modem_com.'.updated_date',$table_modem_com.'.content',$table_modem_com.'.is_active',$table_web_user.'.user_name',$table_web_user.'.user_full_name',$table_modem.'.modem_name',$table_modem.'.status_content')
-                ->join($table_web_user,$table_modem_com.'.user_id','=',$table_web_user.'.user_id')
-                ->join($table_modem,$table_modem_com.'.modem_id','=',$table_modem.'.modem_id');
-            if (isset($dataSearch['station_account']) && $dataSearch['station_account'] != '') {
-                $query->where($table_modem_com.'.user_id','=', $dataSearch['station_account']);
+            $query = ApiApp::where('app_id','>',0);
+            if (isset($dataSearch['app_name']) && $dataSearch['app_name'] != '') {
+                $query->where('app_name','LIKE', '%' . $dataSearch['app_name'] . '%');
             }
 
             $total = $query->count();
-            $query->orderBy('modem_com_id', 'desc');
+            $query->orderBy('app_id', 'desc');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
             if(!empty($fields)){
-                $result = $query->get($fields);
+                $result = $query->take($limit)->skip($offset)->get($fields);
             }else{
-                $result = $query->get();
+                $result = $query->take($limit)->skip($offset)->get();
             }
+            
+            return $result;
+
+        }catch (PDOException $e){
+            throw new PDOException();
+        }
+    }
+    public static function getAll(){
+        try{
+            $query = ApiApp::where('app_id','>',0);
+            $query->orderBy('app_id', 'desc');
+            //get field can lay du lieu
+            $result = $query->get();
             return $result;
         }catch (PDOException $e){
             throw new PDOException();
@@ -124,17 +131,17 @@ class ModemCom extends BaseModel
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
+        Cache::forget(Define::CACHE_INFO_CARRIER);
+        Cache::forget(Define::CACHE_OPTION_CARRIER);
     }
 
-    public static function getListModemComActionWithUserId($user_id) {
-        $data = DB::table(Define::TABLE_MODEM_COM)->where('is_active', '=', Define::STATUS_SHOW)->where('user_id', '=', $user_id)->get();
-        return isset($data) ? $data: array();
+    public static function getListAll() {
+        $query = ApiApp::where('app_id','>',0);
+        $query->where('status','=', 1);
+        $list = $query->get();
+        return $list;
     }
 
-    public static function getListModemComActionWithModemId($modem_id) {
-        $data = DB::table(Define::TABLE_MODEM_COM)->where('is_active', '=', Define::STATUS_SHOW)->where('modem_id', '=', $modem_id)->get();
-        return isset($data) ? $data: array();
-    }
+
 }

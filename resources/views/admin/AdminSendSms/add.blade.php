@@ -30,7 +30,11 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="name" class="control-label">{{FunctionLib::viewLanguage('phone_number')}}</label>
-                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm" rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
+                            <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm " rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
+                            <br>
+                            <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#phone_number" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
+                                <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
+                            </a>
                         </div>
                     </div>
                     <div class="col-sm-12">

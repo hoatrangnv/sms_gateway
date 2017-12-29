@@ -105,6 +105,9 @@ class SmsLog extends BaseModel
             if (isset($dataSearch['user_customer_id']) && $dataSearch['user_customer_id'] != -1) {
                 $query->where('user_customer_id', '=', $dataSearch['user_customer_id']);
             }
+            if (isset($dataSearch['manager_id']) && $dataSearch['manager_id'] > 0) {
+                $query->where('user_manager_id', '>', 0);
+            }
             if (isset($dataSearch['user_manager_id']) && $dataSearch['user_manager_id'] > 0) {
                 $query->where('user_manager_id', '=', $dataSearch['user_manager_id']);
             }

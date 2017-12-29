@@ -143,6 +143,15 @@ class SmsSendTo extends BaseModel
             if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id'] != '') {
                 $query->where('carrier_id','=',$dataSearch['carrier_id']);
             }
+
+            if (isset($dataSearch['from_day']) && $dataSearch['from_day'] != '') {
+                $query->whereDate($web_sms_sendTo.'.created_date','>=',$dataSearch['from_day']);
+            }
+
+            if (isset($dataSearch['to_day']) && $dataSearch['to_day'] != '') {
+                $query->whereDate($web_sms_sendTo.'.created_date','<=',$dataSearch['to_day']);
+            }
+
             if (isset($dataSearch['status']) && $dataSearch['status'] != '') {
                 $query->where($web_sms_sendTo.'.status','=',$dataSearch['status']);
             }

@@ -64,21 +64,21 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="6%" class="text-center">TT</th>
+                            <th width="4%" class="text-center">TT</th>
                             @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                             <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
                             @endif
                             <th width="10%" class="text-center">{{FunctionLib::viewLanguage('carrier')}}</th>
-                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
-                            <th width="10%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
-                            <th width="30%" class="text-center">
+                            <th width="13%" class="text-center">{{FunctionLib::viewLanguage('total_number_of_sms')}}</th>
+                            <th width="13%" class="text-center">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
+                            <th width="25%" class="text-center">
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                     {{FunctionLib::viewLanguage('choose_processing_station')}}
                                 @else
-                                    {{FunctionLib::viewLanguage('choose_processing_web_modem')}}
+                                    {{FunctionLib::viewLanguage('choose_processing_modem')}}
                                 @endif
                             </th>
-                            <th width="9%"></th>
+                            <th width="9%" class="text-center">{{FunctionLib::viewLanguage('action')}}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -103,10 +103,9 @@
                                         @if($item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_PROCESSING && $item['user_manager_id'] == 0
                                         || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['user_manager_id'] > 0)
                                             <a href="javascript:void(0);" onclick="SmsAdmin.changeUserWaittingProcessSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>
-                                            <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
+                                            <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId($item['sms_log_id']),'type_page'=>1))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                         @endif
                                     @endif
-                                        {{$item['status']}}
                                 </td>
                             </tr>
                         @endforeach

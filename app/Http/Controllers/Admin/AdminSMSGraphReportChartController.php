@@ -23,7 +23,9 @@ class AdminSMSGraphReportChartController extends BaseAdminController
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
 
-    private $arrManager = array();
+    private $arrManager_station = array();
+    private $arrManager_customer = array();
+    private $arrTypeReport = array();
     private $arrStatus = array();
     private $error = array();
     private $viewPermission = array();//check quyen
@@ -43,10 +45,16 @@ class AdminSMSGraphReportChartController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullNameAndMail();
+//        $this->arrManager = User::getOptionUserFullNameAndMail();
+        $this->arrManager_station = User::getOptionUserFullName(2);
+        $this->arrManager_customer = User::getOptionUserFullName(3);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
+        );
+        $this->arrTypeReport = array(
+            "1"=>FunctionLib::controLanguage('station_account',$this->languageSite),
+            "2"=>FunctionLib::controLanguage('customer_account',$this->languageSite)
         );
     }
 
@@ -64,6 +72,10 @@ class AdminSMSGraphReportChartController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
+        $dataSearch['type_report'] = addslashes(Request::get('type_report',''));
+        $dataSearch['station_account1'] = addslashes(Request::get('station_account1',''));
+        $dataSearch['station_account2'] = addslashes(Request::get('station_account2',''));
+
         $dataSearch['from_date'] = addslashes(Request::get('from_date',''));
         $dataSearch['to_date'] = addslashes(Request::get('to_date',''));
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
@@ -74,7 +86,8 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         }
 
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
-            $dataSearch['user_id'] = addslashes(Request::get('station_account', ''));
+//            $dataSearch['user_id'] = addslashes(Request::get('station_account', ''));
+            $dataSearch['user_id'] = $dataSearch['type_report'] == "1"?(int)Request::get('station_account1'):(int)Request::get('station_account2');
         } else {
             $dataSearch['user_id'] = $this->user_id;
         }
@@ -109,7 +122,19 @@ class AdminSMSGraphReportChartController extends BaseAdminController
         $data = array();
         if (isset($dataSearch['user_id']) && $dataSearch['user_id']>0 && $dataSearch['user_id']!=""){
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
-            $sql = "
+        }
+
+        if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
+            $id_station = join(",",array_keys($this->arrManager_station));
+            $sql_where.=" AND wsr.user_id in (".$id_station.") ";
+        }
+
+        if ($dataSearch['type_report'] == "2" && $dataSearch['user_id'] == ""){
+            $id_customer = join(",",array_keys($this->arrManager_customer));
+            $sql_where.=" AND wsr.user_id in (".$id_customer.") ";
+        }
+
+        $sql = "
         SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as success_per,
         Sum(wsr.success_number+wsr.fail_number) as total_sms_month,Sum(wsr.success_number) as total_success,
         wsr.month,wsr.year from web_sms_report wsr 
@@ -117,14 +142,19 @@ class AdminSMSGraphReportChartController extends BaseAdminController
 WHERE {$sql_where} 
 GROUP BY wsr.month,wsr.year
         ";
-            $data = SmsReport::executesSQL($sql);
-        }
+//        FunctionLib::debug($sql);
+        $data = SmsReport::executesSQL($sql);
 
         foreach ($data as $k => $v){
             $data[$k] = (array)$v;
         }
         $dataSearch['station_account'] = addslashes(Request::get('station_account',''));
-        $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+//        $optionUser = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('select_user',$this->languageSite).'')+$this->arrManager, (isset($dataSearch['station_account'])?$dataSearch['station_account']:0));
+
+        $optionUser_station = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_station, (isset($dataSearch['station_account1']) && $dataSearch['station_account1'] !=""?$dataSearch['station_account1']:0));
+        $optionUser_customer = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_customer, (isset($dataSearch['station_account2']) && $dataSearch['station_account2']!=""?$dataSearch['station_account2']:0));
+        $optionTypeReort = FunctionLib::getOption($this->arrTypeReport, (isset($dataSearch['type_report'])?$dataSearch['type_report']:"1"));
+
         $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
         $this->getDataDefault();
@@ -133,9 +163,10 @@ GROUP BY wsr.month,wsr.year
         return view('admin.AdminSMSGraphReportChart.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
-            'optionUser'=>$optionUser,
-            'optionYear'=>$optionYear,
+            'optionUser_station'=>$optionUser_station,
+            'optionUser_customer'=>$optionUser_customer,
             'optionCarrier'=>$optionCarrier,
+            'optionTypeReort'=>$optionTypeReort,
         ],$this->viewPermission));
     }
 }

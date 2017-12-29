@@ -67,10 +67,11 @@ var SmsAdmin = {
     },
 
     getSettingContentAttach: function() {
+        var type_page = $('#type_page').val();
         $.ajax({
             type: "GET",
             url: WEB_ROOT + '/manager/waittingSms/getSettingContentAttach',
-            data: {},
+            data: {type_page:type_page},
             dataType: 'json',
             success: function(res) {
                 if(res.isIntOk == 1){
@@ -144,18 +145,20 @@ var SmsAdmin = {
     },
     refuseModem: function(sms_log_id) {
         var _token = $('input[name="_token"]').val();
-        $.ajax({
-            type: "POST",
-            url: WEB_ROOT + '/manager/waittingSms/refuseModem',
-            data: {sms_log_id:sms_log_id, _token:_token},
-            dataType: 'json',
-            success: function(res) {
-                if(res.isIntOk == 1){
-                    alert(res.msg);
-                    window.location.reload();
+        if(confirm('Bạn có chắc chắn chuyển đổi')){
+            $.ajax({
+                type: "POST",
+                url: WEB_ROOT + '/manager/waittingSms/refuseModem',
+                data: {sms_log_id:sms_log_id, _token:_token},
+                dataType: 'json',
+                success: function(res) {
+                    if(res.isIntOk == 1){
+                        alert(res.msg);
+                        window.location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     },
 
     uploadFileExcelPhoneSend: function() {

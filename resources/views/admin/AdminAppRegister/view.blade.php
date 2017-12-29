@@ -41,22 +41,22 @@
                             <thead class="thin-border-bottom">
                             <tr class="">
                                 <th class="text-center w10 center">{{FunctionLib::viewLanguage('no')}}</th>
-                                <th class="center w50">{{FunctionLib::viewLanguage('template_name')}}</th>
-                                <th class="center w200">{{FunctionLib::viewLanguage('content')}}</th>
-                                <th class="center w150">{{FunctionLib::viewLanguage('update')}}</th>
+                                <th class="center w50">APP_NAME</th>
+                                <th class="center w200">CLIENT_ID</th>
+                                <th class="center w150">CLIENT_SECRET</th>
                                 <th class="center w100">{{FunctionLib::viewLanguage('action')}}</th>
                             </tr>
                             </thead>
                             <tbody id="list_sms_template">
                             @foreach ($data as $key => $item)
                                 <td class="text-center middle">{{$key+1 }}</td>
-                                <td>{{$item['template_name']}}</td>
-                                <td>{{ $item['content']}}</td>
-                                <td>{{ $item['updated_date'] }}
+                                <td>{{$item['app_name']}}</td>
+                                <td>{{ $item['client_id']}}</td>
+                                <td>{{ $item['client_secret'] }}
                                 </td>
                                 <td class="center">
-                                    <a onclick="edit_sms_template('{{FunctionLib::inputId($item['sms_template_id'])}}','{{$item['template_name']}}','{{$item['content']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
-                                    <a onclick="delete_item('{{FunctionLib::inputId($item['sms_template_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
+                                    <a onclick="edit_sms_template('{{FunctionLib::inputId($item['app_id'])}}','{{$item['description']}}','{{$item['ip_server']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
+                                    <a onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
                                 </td>
                                 </tr>
                             @endforeach
@@ -79,14 +79,18 @@
                     <form id="form" method="post">
                         <input type="hidden" name="id" value="{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}" class="form-control" id="id">
                         <div class="form-group">
-                            <label for="name_template">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}</label>
-                            <input type="" name="name_template" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}" class="form-control input-required" id="name_template">
+                            <label for="app_name">APP_NAME</label>
+                            <input type="" name="app_name" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}" class="form-control input-required" id="app_name">
                         </div>
                         <div class="form-group">
-                            <label for="content">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_content_grafted')}}</label>
-                            <textarea onkeyup="count_character(this)" name="content" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="content"></textarea>
+                            <label for="description">APP_DESCRIPTION</label>
+                            <textarea onkeyup="count_character(this)" name="description" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="description"></textarea>
                         </div>
                         <span style="float: right" class="right">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_length')}}:<strong id="num_character" >0</strong></span>
+                        <div class="form-group">
+                            <label for="ip_server">IP_SERVER</label>
+                            <textarea onkeyup="count_character(this)" name="ip_server" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="ip_server"></textarea>
+                        </div>
                         <a class="btn btn-success" id="submit" onclick="add_sms_template()">Submit</a>
                         <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
                     </form>
@@ -100,8 +104,9 @@
     <script>
 
         function reset() {
-            $("#name_template").val("");
-            $("#content").val("");
+            $("#app_name").val("");
+            $("#description").val("");
+            $("#ip_server").val("");
             $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
             $("#num_character").html(0)
         }
@@ -150,15 +155,17 @@
                 return false;
             }else {
                 $("#submit").attr("disabled","true");
-                var name_template = $("#name_template").val()
-                var content = $("#content").val()
+                var app_name = $("#app_name").val()
+                var description = $("#description").val()
+                var ip_server = $("#ip_server").val()
                 var id = $("#id").val()
                 $.ajax({
                     type: 'post',
-                    url: '/manager/smsTeplate/addTemplate',
+                    url: '/manager/registerApp/addApp',
                     data: {
-                        'name_template':name_template,
-                        'content':content,
+                        'app_name':app_name,
+                        'description':description,
+                        'ip_server':ip_server,
                         'id':id
                     },
                     headers: {

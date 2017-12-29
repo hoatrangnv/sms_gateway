@@ -50,7 +50,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getDataDefault()
     {
         $this->infoListUser = User::getListUserNameFullName();
-        $this->infoListModem = Modem::getListModemName();
+        $user_id = ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN)?0:$this->user_id;
+        $this->infoListModem = Modem::getListModemName($user_id);
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
         $this->arrDuplicateString = array(
             1 => FunctionLib::controLanguage('the_first_of_sms'),
@@ -122,7 +123,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
      * @param $ids
      * @return
      */
-    public function getItem($ids)
+    public function getItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
@@ -136,16 +137,23 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $this->getDataDefault();
         $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
 
+        //get chuỗi setup
+        $userId = ($type_page == 2) ? $this->user_id : 0;
+        $systemSetting = SystemSetting::getSystemSetting($userId);
+        $concatenation_strings = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
+
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.editSms', array_merge([
             'data' => $data,
             'id' => $sms_log_id,
+            'type_page' => $type_page,
+            'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
         ], $this->viewPermission));
     }
 
-    public function postItem($ids)
+    public function postItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
@@ -168,6 +176,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataUpdate['content_grafted'] = $string_send;
                     SmsSendTo::updateItem($sms_log->sms_sendTo_id, $dataUpdate);
                 }
+                return Redirect::route('admin.waittingSmsEdit', array('id' => $ids, 'type_page' => $type_page));
             }
         }
 
@@ -184,6 +193,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'data' => $data,
             'error' => $this->error,
             'id' => $sms_log_id,
+            'type_page' => $type_page,
             'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
@@ -212,6 +222,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     //web_sms_log
                     $dataUpdate['user_manager_id'] = $user_manager_id;
                     $dataUpdate['status'] = Define::SMS_STATUS_PROCESSING;
+                    $dataUpdate['status_name'] = Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING];
                     SmsLog::updateItem($sms_log_id, $dataUpdate);
 
                     //web_sms_sendTo
@@ -235,14 +246,16 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         return Response::json($data);
     }
 
-    //ajax
+    //ajax get noi dung text setting
     public function getSettingContentAttach()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => 'Error update');
         if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
             return Response::json($data);
         }
-        $systemSetting = SystemSetting::getSystemSetting();
+        $type_page = (int)Request::get('type_page', 1);
+        $userId = ($type_page == 2) ? $this->user_id : 0;
+        $systemSetting = SystemSetting::getSystemSetting($userId);
         if (!empty($systemSetting)) {
             $data['isIntOk'] = 1;
             $data['msg'] = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
@@ -250,7 +263,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         return Response::json($data);
     }
 
-    //ajax
+    //ajax get nội dung gửi SMS
     public function getContentGraftedSms()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
@@ -310,6 +323,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         $search['carrier_id'] = (int)Request::get('carrier_id', -1);
         $search['from_date'] = Request::get('from_date', '');
         $search['to_date'] = Request::get('to_date', '');
+        $search['manager_id'] = 1;
         $search['status'] = array(Define::SMS_STATUS_PROCESSING, Define::SMS_STATUS_REJECT);
         if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN) {
             $search['user_manager_id'] = (int)Request::get('user_customer_id', -1);
@@ -393,6 +407,12 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
                     SmsPacket::createItem($dataPacket);
 
+                    //web_sms_sendto
+                    $dataUpdateSmsSendTo['modem_id'] = $modem_id;
+                    DB::table(Define::TABLE_SMS_SENDTO)
+                        ->where('sms_log_id', $sms_log_id)
+                        ->update($dataUpdateSmsSendTo);
+
                     $data['isIntOk'] = 1;
                 } else {
                     $data['msg'] = 'Số lượng Com hoạt động không đủ đáp ứng';
@@ -400,6 +420,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             } else {
                 $data['msg'] = 'Không có thông tin trạm được gán';
             }
+        }else {
+            $data['msg'] = 'Modem ko phải của KH này';
         }
         return Response::json($data);
     }

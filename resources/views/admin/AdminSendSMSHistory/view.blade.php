@@ -34,12 +34,13 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="from_day"><i>{{FunctionLib::viewLanguage('from_day')}}</i></label>
-                                <input type="text" class="form-control input-sm date-picker" id="from_day" name="from_day" @if(isset($search['from_day']))value="{{$search['from_day']}}"@endif>
+                                <input type="text" class="form-control input-sm" id="txtFromDate" name="from_day" @if(isset($search['from_day']) && $search['from_day'] != "")value="{{$search['from_day']}}" @else value="{{$from_day}}" @endif>
                             </div>
                             <div class="form-group col-lg-3">
                                 <label for="to_day"><i>{{FunctionLib::viewLanguage('to_day')}}</i></label>
-                                <input type="text" class="form-control input-sm date-picker" name="to_day" autocomplete="off"  @if(isset($search['to_day']))value="{{$search['to_day']}}"@endif>
+                                <input type="text" class="form-control input-sm" name="to_day" id="txtToDate" autocomplete="off"  @if(isset($search['to_day']) && $search['to_day'] !="")value="{{$search['to_day']}}" @else value="{{$to_day}}" @endif>
                             </div>
+
                         </div>
                         <div class="panel-footer text-right">
                             <span class="">
@@ -69,17 +70,17 @@
                         </thead>
                         <tbody>
                         @foreach ($data as $key => $item)
-                            <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else} class="middle" @endif>
+                            <tr class="middle">
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                <td>{{ $item['user_customer_id'] }}</td>
+                                <td>{{ $item['user_full_name'] }}</td>
                                 <td>{{ $item['sms_deadline'] }}</td>
-                                <td>{{ $item['correct_number'] + $item['incorrect_number'] }}</td>
-                                <td>{{ $item['correct_number']}}</td>
+                                <td>{{ $item['total_sms'] }}</td>
+                                <td>{{ $item['total_success']}}</td>
                                 <td>{{ $item['incorrect_number'] }}</td>
                                 <td>{{ $item['cost'] }}</td>
-                                <td>{{ $arrStatus[$item['status']]}}</td>
+                                <td @if($item['status'] == 1) class="green bg-success middle center" @else class="red bg-danger middle center" @endif>{{ $item['status_name']}}</td>
                                 <td class="center">
-                                    <a href="{{URL::route('admin.smsHistoryDetailsView',array('id_customer_sms' => FunctionLib::inputId($item['sms_customer_id'])))}}" title="Sửa item">
+                                    <a href="{{URL::route('admin.smsHistoryDetailsView',array('id_cs' => $item['sms_customer_id']))}}" title="Sửa item">
                                         <i class="fa fa-asterisk" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -101,11 +102,19 @@
 </div>
 <script>
     $(document).ready(function(){
-        $(".date-picker").datepicker({
-            format: "yyyy-mm-dd",
-            language: "vi",
-            autoclose: true,
-            keyboardNavigation:true
-        })});
+        $("#txtFromDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#txtToDate").datepicker("option", "minDate", selected)
+            }
+        });
+        $("#txtToDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#txtFromDate").datepicker("option", "maxDate", selected)
+            }
+        });
+
+    });
 </script>
 @stop

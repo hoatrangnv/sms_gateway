@@ -46,8 +46,8 @@ class AdminSendSMSHistory extends BaseAdminController
 
         $this->arrStatus = array(
             ''=>FunctionLib::controLanguage('all',$this->languageSite),
-            0=>'Processing',
-            1=>'Successful'
+            '0'=>'Processing',
+            '1'=>'Successful'
         );
 
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
@@ -72,7 +72,19 @@ class AdminSendSMSHistory extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+
+//        FunctionLib::debug($this->arrUser);
+        if ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $dataSearch['user_id'] = addslashes(Request::get('user_id',''));
+            $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
+        }else{
+            $dataSearch['user_id'] = $this->user_id;
+            $arr = array(
+                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_full_name']
+            );
+            $optionUser = FunctionLib::getOption($arr,$this->user_id);
+        }
+
         $dataSearch['status'] = addslashes(Request::get('status',''));
         $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
         $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
@@ -80,16 +92,42 @@ class AdminSendSMSHistory extends BaseAdminController
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
-        $data = SmsCustomer::searchByCondition($dataSearch, $limit, $offset, $total);
+//        $data = SmsCustomer::searchByCondition($dataSearch, $limit, $offset, $total);
+
+        $sql = "SELECT u.user_full_name,wsc.sms_deadline,(wsc.correct_number + wsc.incorrect_number) as total_sms,wsc.incorrect_number,wsc.cost,wsc.status,wsc.status_name,wsc.sms_customer_id,SUM(IFNULL(send_successful,0)) total_success from web_sms_customer wsc
+LEFT JOIN web_sms_log wsl ON wsc.sms_customer_id = wsl.sms_customer_id 
+INNER JOIN web_user u on wsc.user_customer_id = u.user_id ";
+
+        if ($dataSearch['user_id'] !="" && $dataSearch['user_id'] >0){
+            $sql.=" WHERE wsc.user_customer_id=".$dataSearch['user_id'];
+        }
+
+        if ($dataSearch['status'] !=""){
+            $sql.=" AND wsc.status=".$dataSearch['status'];
+        }
+
+        if ($dataSearch['from_day'] !="" && $dataSearch['to_day'] != ""){
+            $from = date('Y-m-d',strtotime($dataSearch['from_day']));
+            $to = date('Y-m-d',strtotime($dataSearch['to_day']));
+            $sql.=" AND UNIX_TIMESTAMP(wsc.created_date) >= UNIX_TIMESTAMP('".$from."') AND UNIX_TIMESTAMP(wsc.created_date) <= UNIX_TIMESTAMP('".$to."') ";
+        }
+
+        $sql.=" GROUP BY wsc.sms_customer_id";
+//        FunctionLib::debug($sql);
+        $data = SmsCustomer::executesSQL($sql);
+        $arr = array();
+        foreach ($data as $k => $v){
+            $arr[] = (array) $v;
+        }
+//        FunctionLib::debug($arr);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
+//        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
-
         return view('admin.AdminSendSMSHistory.view',array_merge([
-            'data'=>$data,
+            'data'=>$arr,
             'search'=>$dataSearch,
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
@@ -97,40 +135,50 @@ class AdminSendSMSHistory extends BaseAdminController
             'optionStatus'=>$optionStatus,
             'arrStatus'=>$this->arrStatus,
             'optionUser'=>$optionUser,
+            'from_day'=>date('m/d/Y',strtotime(date('Y-m-d',time()).'- 6 month')),
+            'to_day'=>date('m/d/Y',time()),
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
 
     public function viewDetails() {
-        $id_cs = isset($_GET['id_customer_sms']) && FunctionLib::outputId($_GET['id_customer_sms'])>0 ?FunctionLib::outputId($_GET['id_customer_sms']):0;
+        $id_cs = isset($_GET['id_cs']) && $_GET['id_cs']>0 ?$_GET['id_cs']:0;
         //Check phan quyen.
         if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
+        $page_no = (int) Request::get('page_no',1);
+        $limit = CGlobal::number_limit_show;
+        $total = 0;
+        $offset = ($page_no - 1) * $limit;
 
+//        FunctionLib::debug($id_cs);
         if ($id_cs <=0){
             return Redirect::route('admin.smsHistoryView');
         }
         $dataSearch['id_cs'] = $id_cs;
-        $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
         $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
         $dataSearch['status'] = addslashes(Request::get('status',''));
         $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
         $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
 
-        $limit = CGlobal::number_limit_show;
-        $total = 0;
-        $offset = ($page_no - 1) * $limit;
+        if ($dataSearch['from_day'] !=""){
+            $dataSearch['from_day'] = date('Y-m-d',strtotime($dataSearch['from_day']));
+            $dataSearch['from_day1'] = date('m/d/Y',strtotime($dataSearch['from_day']));
+        }
+        if ($dataSearch['to_day'] !=""){
+            $dataSearch['to_day'] = date('Y-m-d',strtotime($dataSearch['to_day']));
+            $dataSearch['to_day1'] = date('m/d/Y',strtotime($dataSearch['to_day']));
+        }
         $data = SmsSendTo::joinByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
+        $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('choose_carrier',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
         $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
         $incorrect_number_list = isset($data[0])?$data[0]['incorrect_number_list']:"";
-
         return view('admin.AdminSendSMSHistory.viewdetails',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
@@ -142,6 +190,8 @@ class AdminSendSMSHistory extends BaseAdminController
             'optionCarrier'=>$optionCarrier,
             'incorrect_number_list'=>$incorrect_number_list,
             'id_cs'=>$id_cs,
+            'from_day'=>date('m/d/Y',strtotime(date('Y-m-d',time()).'- 6 month')),
+            'to_day'=>date('m/d/Y',time()),
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }

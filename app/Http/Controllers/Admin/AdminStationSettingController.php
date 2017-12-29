@@ -57,14 +57,16 @@ class AdminStationSettingController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
 
-        $user_id = User::user_id();
-        $data = (array)UserSetting::getUserSettingByUserId('9');
+//        $user_id = User::user_id();
+        $data = (array)UserSetting::getUserSettingByUserId($this->user_id);
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+        $user_id = isset($data['user_setting_id']) && $data['user_setting_id']!="" && $data['user_setting_id'] >=0 ?FunctionLib::inputId($data['user_setting_id']):0;
         return view('admin.AdminStationSetting.index',array_merge([
             'data'=>$data,
-            'id'=>FunctionLib::inputId($data['user_setting_id']),
+            'id'=>$user_id,
+            'admin_id'=>$this->user_id,
             'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
@@ -100,20 +102,20 @@ class AdminStationSettingController extends BaseAdminController
 
 //                $packet = SmsPacket::firstOrNew(array('user_manager_id' => $this->user_id,'status'=>"Open"));
             }
-
             if($id > 0) {
                 //cap nhat
                 if(UserSetting::updateItem($id, $data)) {
                     return Redirect::route('admin.stationSettingView');
                 }
             }
-//            else{
-//                $data['created_date']=$data['updated_date'];
-//                //them moi
-//                if(UserSetting::createItem($data)) {
-//                    return Redirect::route('admin.carrierSettingView');
-//                }
-//            }
+            else{
+                $data['created_date']=$data['updated_date'];
+                //them moi
+//                FunctionLib::debug($data);
+                if(UserSetting::createItem($data)) {
+                    return Redirect::route('admin.stationSettingView');
+                }
+            }
         }
 
         $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
