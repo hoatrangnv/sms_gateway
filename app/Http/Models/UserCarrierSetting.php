@@ -117,11 +117,7 @@ class UserCarrierSetting extends BaseModel
     public static function removeCache($id = 0,$data){
         if($id > 0){
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
     }
     public static function getListAllByUserId($user_id) {
         $list = UserCarrierSetting::where('user_id', '=', $user_id)->get();

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 use App\library\AdminFunction\Define;
+use App\Http\Models\User;
 
 class RoleMenu extends BaseModel
 {
@@ -54,6 +55,7 @@ class RoleMenu extends BaseModel
             }
             $item->update();
             DB::connection()->getPdo()->commit();
+            User::updateUserPermissionWithRole($item);
             self::removeCache($item->role_menu_id,$item);
             return true;
         } catch (PDOException $e) {
@@ -124,8 +126,5 @@ class RoleMenu extends BaseModel
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
-        Cache::forget(Define::CACHE_LIST_MENU_PERMISSION);
-        Cache::forget(Define::CACHE_ALL_PARENT_MENU);
-        Cache::forget(Define::CACHE_TREE_MENU);
     }
 }
