@@ -6,8 +6,11 @@ const Admin = "Admin";
 const Api = "Api";
 
 //namnv api get token
-Route::get('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@welcome'));
 Route::post('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@getToken'));
+Route::get('oauth2/token', function () {
+    return response(json_encode(array("ip"=>$_SERVER['REMOTE_ADDR'],"hello"=>"Welcome to SMSGateways Service")), 200)
+        ->header('Content-Type', 'application/json');
+});
 
 // Used for dev by Quynh
 $isDev = Request::get('is_debug','');
