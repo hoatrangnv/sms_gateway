@@ -55,8 +55,8 @@
                                 <td>{{ $item['updated_date'] }}
                                 </td>
                                 <td class="center">
-                                    <a onclick="edit_sms_template('{{FunctionLib::inputId($item['sms_template_id'])}}','{{$item['template_name']}}','{{$item['content']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
-                                    <a onclick="delete_item('{{FunctionLib::inputId($item['sms_template_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
+                                    <a class="btn btn-primary" onclick="edit_sms_template('{{FunctionLib::inputId($item['sms_template_id'])}}','{{$item['template_name']}}','{{$item['content']}}')"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-danger" onclick="delete_item('{{FunctionLib::inputId($item['sms_template_id'])}}')"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </td>
                                 </tr>
                             @endforeach
