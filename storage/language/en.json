@@ -84,6 +84,8 @@
 	"description":"Description",
 	"add_app":"Add application",
 	"list_app":"Application list",
+	"delete_app":"Delete application",
+	"edit_app":"Edit application",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",

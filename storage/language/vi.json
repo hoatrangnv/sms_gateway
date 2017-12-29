@@ -85,6 +85,8 @@
 	"description":"Chú thích",
 	"add_app":"Thêm ứng dụng",
 	"list_app":"Danh sách ứng dụng",
+	"delete_app":"Xóa ứng dụng",
+	"edit_app":"Sửa ứng dụng",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",

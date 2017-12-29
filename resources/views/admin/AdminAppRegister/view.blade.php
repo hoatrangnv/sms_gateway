@@ -57,8 +57,8 @@
                                 <td>{{ $item['description']}}</td>
                                 </td>
                                 <td class="center">
-                                    <a onclick="edit_app('{{FunctionLib::inputId($item['app_id'])}}','{{$item['app_name']}}','{{$item['description']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
-                                    <a onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
+                                    <a class="btn btn-success tooltips" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('edit_app')}}" onclick="edit_app('{{FunctionLib::inputId($item['app_id'])}}','{{$item['app_name']}}','{{$item['description']}}')"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="btn btn-danger tooltips" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('delete_app')}}" onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                 </td>
                                 </tr>
                             @endforeach
@@ -88,10 +88,6 @@
                             <label for="description">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</label>
                             <textarea name="description" style="resize: none" title="{{FunctionLib::viewLanguage('description')}}" class="form-control input-required" rows="5" id="description"></textarea>
                         </div>
-                        {{--<div class="form-group">--}}
-                            {{--<label for="ip_server">IP_SERVER</label>--}}
-                            {{--<textarea onkeyup="count_character(this)" name="ip_server" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="ip_server"></textarea>--}}
-                        {{--</div>--}}
                         <a class="btn btn-success" id="submit" onclick="add_app()">Submit</a>
                         <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
                     </form>
@@ -175,7 +171,6 @@
         function reset() {
             $("#app_name").val("");
             $("#description").val("");
-//            $("#ip_server").val("");
             $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
         }
 
@@ -227,7 +222,6 @@
                 $("#submit").attr("disabled","true");
                 var app_name = $("#app_name").val()
                 var description = $("#description").val()
-//                var ip_server = $("#ip_server").val()
                 var id = $("#id").val()
                 $.ajax({
                     type: 'post',
@@ -235,7 +229,6 @@
                     data: {
                         'app_name':app_name,
                         'description':description,
-//                        'ip_server':ip_server,
                         'id':id
                     },
                     headers: {

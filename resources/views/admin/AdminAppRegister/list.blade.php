@@ -19,8 +19,8 @@
             </td>
             <td>{{ $item['description'] }}</td>
             <td class="center">
-                <a onclick="edit_app('{{FunctionLib::inputId($item['app_id'])}}','{{$item['app_name']}}','{{$item['description']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
-                <a onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
+                <a class="btn btn-success tooltips" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('edit_app')}}" onclick="edit_app('{{FunctionLib::inputId($item['app_id'])}}','{{$item['app_name']}}','{{$item['description']}}')"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a class="btn btn-danger tooltips" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('delete_app')}}" onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </td>
             </tr>
         @endforeach

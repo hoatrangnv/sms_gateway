@@ -16,7 +16,7 @@ class ApiApp extends BaseModel
     protected $primaryKey = 'app_id';
     public $timestamps = false;
 
-    protected $fillable = array('app_name','client_id', 'client_secret', 'user_id', 'created_at', 'description', 'ip_server','update_at');
+    protected $fillable = array('app_name','client_id', 'client_secret', 'user_id', 'created_at', 'description','update_at');
 
     public static function createItem($data){
         try {
