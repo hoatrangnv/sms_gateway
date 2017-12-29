@@ -78,6 +78,12 @@
 	"sms_template":"SMS template",
 	"billing_graph_of_successful":"Billing graph of successful",
 	"user_name":"User name",
+	"app_details":"App details",
+	"close":"Close",
+	"app_name":"App name",
+	"description":"Description",
+	"add_app":"Add application",
+	"list_app":"Application list",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Edit",

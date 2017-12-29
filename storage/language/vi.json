@@ -79,6 +79,12 @@
 	"lg_txt_member_modal_csv_upload03": "Bạn có muốn tải lên file Excel không?",
 	"billing_graph_of_successful":"Biểu đồ Tỷ lệ thành công",
 	"user_name":"Tên tài khoản",
+	"app_details":"Chi tiết ứng dụng",
+	"close":"Đóng",
+	"app_name":"Tên ứng dụng",
+	"description":"Chú thích",
+	"add_app":"Thêm ứng dụng",
+	"list_app":"Danh sách ứng dụng",
 
     "////": "HIENLT +++++++++++++++++++++++++++++++++++++++",
 	"edit": "Chỉnh sửa",

@@ -74,7 +74,7 @@ class AdminAppRegisterController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $sbmValue = Request::get('submit', 1);
-        $dataSearch['template_name'] = addslashes(Request::get('name_template_s',''));
+        $dataSearch['app_name'] = addslashes(Request::get('app_name_s',''));
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
@@ -160,6 +160,7 @@ class AdminAppRegisterController extends BaseAdminController
 //            'optionRuleString'=>$optionRuleString,
         ],$this->viewPermission));
     }
+
     public function addApp(){
         $app_name = isset($_POST['app_name'])?$_POST['app_name']:"";
         $description = isset($_POST['description'])?$_POST['description']:"";
@@ -173,20 +174,20 @@ class AdminAppRegisterController extends BaseAdminController
             "description"=>$description,
             "ip_server"=>$ip_server,
             "user_id"=>md5($this->user_id),
-            "client_id"=>md5($this->user_id),
-            "client_secret"=>bin2hex(openssl_random_pseudo_bytes(32)),
-            "created_at"=>$update_at,
+            "update_at"=>$update_at,
         );
 
-        if ($id!=0 || $id!="0"){
-            unset($data['created_date']);
+        if ($id!=0 && $id!="0" && $id>0){
             ApiApp::updateItem($id,$data);
         }else{
+            $data['client_id'] = FunctionLib::gen_uuid();
+            $data['client_secret'] = bin2hex(openssl_random_pseudo_bytes(32));
+            $data['created_at'] =$update_at;
             ApiApp::createItem($data);
         }
         $data_full = ApiApp::getAll();
         $data_view = [
-            'view' => View::make('admin.AdminSMSTemplate.list')
+            'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
                 ->render()
         ];
@@ -194,14 +195,14 @@ class AdminAppRegisterController extends BaseAdminController
         return Response::json($data_view, 200);
     }
 
-    public function deleteTemplate(){
+    public function deleteApp(){
         $id = isset($_GET['id'])?FunctionLib::outputId($_GET['id']):0;
         if ($id>0){
             ApiApp::deleteItem($id);
         }
         $data_full = ApiApp::getAll();
         $data_view = [
-            'view' => View::make('admin.AdminSMSTemplate.list')
+            'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
                 ->render()
         ];

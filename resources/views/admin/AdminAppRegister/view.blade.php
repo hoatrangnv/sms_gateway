@@ -19,12 +19,12 @@
         <div class="col-md-8 panel-content">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4><i class="fa fa-list" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('web_sms_template_list')}}</h4>
+                    <h4><i class="fa fa-list" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('list_app')}}</h4>
                 </div> <!-- /widget-header -->
                 {{ Form::open(array('method' => 'GET', 'role'=>'form')) }}
                 <div style="margin-top: 10px">
                     <div class="col-sm-4" >
-                        <input @if(isset($search['template_name'])) value="{{$search['template_name']}}" @endif placeholder="{{FunctionLib::viewLanguage('sms_template_name')}}" name="name_template_s" class="form-control" id="name_template_s">
+                        <input @if(isset($search['app_name'])) value="{{$search['app_name']}}" @endif placeholder="{{FunctionLib::viewLanguage('app_name')}}" name="app_name_s" class="form-control" id="app_name_s">
                         {{--<select style="height: 34px" name="name_template" id="name_template" class="form-control input-sm">--}}
                             {{--{!! $optionUser !!}--}}
                         {{--</select>--}}
@@ -41,21 +41,23 @@
                             <thead class="thin-border-bottom">
                             <tr class="">
                                 <th class="text-center w10 center">{{FunctionLib::viewLanguage('no')}}</th>
-                                <th class="center w50">APP_NAME</th>
-                                <th class="center w200">CLIENT_ID</th>
-                                <th class="center w150">CLIENT_SECRET</th>
+                                <th class="center w50">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</th>
+                                <th class="center w200">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</th>
                                 <th class="center w100">{{FunctionLib::viewLanguage('action')}}</th>
                             </tr>
                             </thead>
-                            <tbody id="list_sms_template">
+                            <tbody id="list_app">
                             @foreach ($data as $key => $item)
                                 <td class="text-center middle">{{$key+1 }}</td>
-                                <td>{{$item['app_name']}}</td>
-                                <td>{{ $item['client_id']}}</td>
-                                <td>{{ $item['client_secret'] }}
+                                <td>
+                                    <a href="#" class="mg-t20" onclick="showDetails('{{$item['app_name']}}','{{$item['client_id']}}','{{$item['client_secret']}}')" data-toggle="modal" data-target="#modal-app-details">
+                                        {{$item['app_name']}}
+                                    </a>
+                                </td>
+                                <td>{{ $item['description']}}</td>
                                 </td>
                                 <td class="center">
-                                    <a onclick="edit_sms_template('{{FunctionLib::inputId($item['app_id'])}}','{{$item['description']}}','{{$item['ip_server']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
+                                    <a onclick="edit_app('{{FunctionLib::inputId($item['app_id'])}}','{{$item['app_name']}}','{{$item['description']}}')"><i class="fa fa-pencil blue" aria-hidden="true"></i></a>
                                     <a onclick="delete_item('{{FunctionLib::inputId($item['app_id'])}}')"><i class="fa fa-trash red" aria-hidden="true"></i></a>
                                 </td>
                                 </tr>
@@ -73,25 +75,24 @@
         <div class="col-md-4 panel-content">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4><i class="fa fa-plus-square" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_template_sms')}}</h4>
+                    <h4><i class="fa fa-plus-square" aria-hidden="true"></i> {{\App\Library\AdminFunction\FunctionLib::viewLanguage('add_app')}}</h4>
                 </div> <!-- /widget-header -->
                 <div class="panel-body">
                     <form id="form" method="post">
                         <input type="hidden" name="id" value="{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}" class="form-control" id="id">
                         <div class="form-group">
-                            <label for="app_name">APP_NAME</label>
-                            <input type="" name="app_name" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_template_name')}}" class="form-control input-required" id="app_name">
+                            <label for="app_name">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</label>
+                            <input type="" name="app_name" title="{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}" class="form-control input-required" id="app_name">
                         </div>
                         <div class="form-group">
-                            <label for="description">APP_DESCRIPTION</label>
-                            <textarea onkeyup="count_character(this)" name="description" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="description"></textarea>
+                            <label for="description">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</label>
+                            <textarea name="description" style="resize: none" title="{{FunctionLib::viewLanguage('description')}}" class="form-control input-required" rows="5" id="description"></textarea>
                         </div>
-                        <span style="float: right" class="right">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('sms_length')}}:<strong id="num_character" >0</strong></span>
-                        <div class="form-group">
-                            <label for="ip_server">IP_SERVER</label>
-                            <textarea onkeyup="count_character(this)" name="ip_server" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="ip_server"></textarea>
-                        </div>
-                        <a class="btn btn-success" id="submit" onclick="add_sms_template()">Submit</a>
+                        {{--<div class="form-group">--}}
+                            {{--<label for="ip_server">IP_SERVER</label>--}}
+                            {{--<textarea onkeyup="count_character(this)" name="ip_server" style="resize: none" title="{{FunctionLib::viewLanguage('sms_content_grafted')}}" class="form-control input-required" rows="5" id="ip_server"></textarea>--}}
+                        {{--</div>--}}
+                        <a class="btn btn-success" id="submit" onclick="add_app()">Submit</a>
                         <a class="btn btn-default" id="cancel" onclick="reset()">Reset</a>
                     </form>
                 </div> <!-- /widget-content -->
@@ -100,22 +101,90 @@
         <div class="row">
         </div>
     </div>
+
+    <div class="modal fade" id="modal-app-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 720px!important;">
+
+                <div class="modal-header">
+                    <button type="button" class="close bt_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"
+                        id="myModalLabel">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_details')}}</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <strong>{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</strong>
+                            </label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <strong id="name_app"></strong>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <strong>Endpoint</strong>
+                            </label>
+                            <div class="col-sm-10">
+                                <label>
+                                    service.sms.fpt.net
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <strong>ClientID</strong>
+                            </label>
+                            <div class="col-sm-10">
+                                <label id="client_id"></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <strong>Client secret</strong>
+                            </label>
+                            <div class="col-sm-10">
+                                <label id="client_secret"></label>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default bt_close" data-dismiss="modal">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('close')}}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
     <script>
+
+        function showDetails(name,client_id,client_secret) {
+            $("#name_app").html(name)
+            $("#client_id").html(client_id)
+            $("#client_secret").html(client_secret)
+        }
 
         function reset() {
             $("#app_name").val("");
             $("#description").val("");
-            $("#ip_server").val("");
+//            $("#ip_server").val("");
             $("#id").val('{{\App\Library\AdminFunction\FunctionLib::inputId(0)}}');
-            $("#num_character").html(0)
         }
+
         function delete_item(id) {
             var a = confirm(lng['txt_mss_confirm_delete']);
             if (a){
                 $.ajax({
                     type: 'get',
-                    url: '/manager/smsTeplate/deleteTemplate',
+                    url: '/manager/registerApp/deleteApp',
                     data: {
                         'id':id
                     },
@@ -133,7 +202,8 @@
                 });
             }
         }
-        function add_sms_template() {
+
+        function add_app() {
             var is_error = false;
             var msg = {};
 
@@ -157,7 +227,7 @@
                 $("#submit").attr("disabled","true");
                 var app_name = $("#app_name").val()
                 var description = $("#description").val()
-                var ip_server = $("#ip_server").val()
+//                var ip_server = $("#ip_server").val()
                 var id = $("#id").val()
                 $.ajax({
                     type: 'post',
@@ -165,7 +235,7 @@
                     data: {
                         'app_name':app_name,
                         'description':description,
-                        'ip_server':ip_server,
+//                        'ip_server':ip_server,
                         'id':id
                     },
                     headers: {
@@ -183,22 +253,12 @@
                 });
             }
         }
-        function count_character(event) {
-            var length = $(event).val().length;
-            $("#num_character").html(length)
-        }
-        function edit_sms_template(id,name,content) {
-            $("#name_template").val(name);
-            $("#content").val(content);
+
+        function edit_app(id,app_name,description) {
+            $("#app_name").val(app_name);
+            $("#description").val(description);
             $("#id").val(id);
         }
-        $(document).ready(function(){
-            $(".date-picker").datepicker({
-                format: "yyyy-mm-dd",
-                language: "vi",
-                autoclose: true,
-                keyboardNavigation:true
-            })});
 
     </script>
 @stop
