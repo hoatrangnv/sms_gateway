@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\SmsCustomer;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use View;
 
-class AdminAppRegisterController extends BaseAdminController
+class ApiGetToken extends BaseAdminController
 {
     private $permission_view = 'appRegister_view';
     private $permission_full = 'appRegister_full';
@@ -42,30 +42,6 @@ class AdminAppRegisterController extends BaseAdminController
             'permission_delete'=>in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full'=>in_array($this->permission_full, $this->permission) ? 1 : 0,
         ];
-    }
-
-    public function view() {
-        //Check phan quyen.
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
-            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
-        }
-        $page_no = (int) Request::get('page_no',1);
-        $dataSearch['app_name'] = addslashes(Request::get('app_name_s',''));
-        $limit = CGlobal::number_limit_show;
-        $total = 0;
-        $offset = ($page_no - 1) * $limit;
-        $data = ApiApp::searchByCondition($dataSearch, $limit, $offset, $total);
-        $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-
-        $this->viewPermission = $this->getPermissionPage();
-
-        return view('admin.AdminAppRegister.view',array_merge([
-            'data'=>$data,
-            'search'=>$dataSearch,
-            'size'=>$total,
-            'start'=>($page_no - 1) * $limit,
-            'paging'=>$paging,
-        ],$this->viewPermission));
     }
 
     public function addApp(){
@@ -103,17 +79,8 @@ class AdminAppRegisterController extends BaseAdminController
         return Response::json($data_view, 200);
     }
 
-    public function deleteApp(){
-        $id = isset($_GET['id'])?FunctionLib::outputId($_GET['id']):0;
-        if ($id>0){
-            ApiApp::deleteItem($id);
-        }
-        $data_full = ApiApp::getAll();
-        $data_view = [
-            'view' => View::make('admin.AdminAppRegister.list')
-                ->with('data', $data_full)
-                ->render()
-        ];
-        return Response::json($data_view, 200);
+    public function welcome(){
+        $result = json_encode(array("ip"=>$_SERVER['REMOTE_ADDR'],"hello"=>"Welcome to SMSGateways Service"));
+        return $result;
     }
 }

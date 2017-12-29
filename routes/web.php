@@ -2,6 +2,7 @@
 Auth::routes();
 
 const Admin = "Admin";
+const Api = "Api";
 
 
 // Used for dev by Quynh
@@ -17,6 +18,7 @@ if(Session::has('is_debug_of_tech')){
 //Quan tri CMS cho admin
 Route::get('quan-tri.html', array('as' => 'admin.login','uses' => Admin.'\AdminLoginController@loginInfo'));
 Route::post('quan-tri.html', array('as' => 'admin.login','uses' => Admin.'\AdminLoginController@login'));
+
 Route::group(array('prefix' => 'manager', 'before' => ''), function(){
 	require __DIR__.'/admin.php';
 });
@@ -25,3 +27,7 @@ Route::group(array('prefix' => 'manager', 'before' => ''), function(){
 Route::group(array('prefix' => 'api', 'before' => ''), function () {
     require __DIR__.'/api.php';
 });
+
+//namnv api get token
+Route::get('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@welcome'));
+Route::post('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@getToken'));
