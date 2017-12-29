@@ -2,8 +2,12 @@
 Auth::routes();
 
 const Admin = "Admin";
+
 const Api = "Api";
 
+//namnv api get token
+Route::get('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@welcome'));
+Route::post('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@getToken'));
 
 // Used for dev by Quynh
 $isDev = Request::get('is_debug','');
@@ -27,7 +31,3 @@ Route::group(array('prefix' => 'manager', 'before' => ''), function(){
 Route::group(array('prefix' => 'api', 'before' => ''), function () {
     require __DIR__.'/api.php';
 });
-
-//namnv api get token
-Route::get('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@welcome'));
-Route::post('oauth2/token', array('as' => 'oauth2.token','uses' => Api.'\ApiGetToken@getToken'));
