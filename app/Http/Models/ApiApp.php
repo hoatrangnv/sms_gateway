@@ -99,8 +99,8 @@ class ApiApp extends BaseModel
             }
 
             if (isset($dataSearch['client_id']) && $dataSearch['client_id'] != '' && isset($dataSearch['client_secret']) && $dataSearch['client_secret'] != '') {
-                $query->where('client_id','=', "'".$dataSearch['client_id']."'");
-                $query->where('client_secret','=', "'".$dataSearch['client_secret']."'");
+                $query->where('client_id','=', $dataSearch['client_id']);
+                $query->where('client_secret','=', $dataSearch['client_secret']);
             }
 
             $total = $query->count();
