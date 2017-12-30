@@ -143,4 +143,10 @@ class Define{
         Define::SMS_STATUS_SUCCESS => 'Successful',
         Define::SMS_STATUS_REJECT => 'Reject',
         Define::SMS_STATUS_FAIL => 'Fail');
+
+    const APPLICATION_JSON = 'application/json';
+    const SIGN_KEY_API = 'SmsGat3Way@Tp@Mg&1b7s03m';
+    const SIGN_KEY_TOKEN = 'SmsGat3Way@Tok3n@nAmNv&1b7s03m';
+    const HTTP_STATUS_CODE_400 = 400;
+    const HTTP_STATUS_CODE_200 = 200;
 }

@@ -69,7 +69,6 @@ class AdminAppRegisterController extends BaseAdminController
     }
 
     public function addApp(){
-        FunctionLib::debug('xxxx');
         $app_name = isset($_POST['app_name'])?$_POST['app_name']:"";
         $description = isset($_POST['description'])?$_POST['description']:"";
         $ip_server = isset($_POST['ip_server'])?$_POST['ip_server']:"";
@@ -88,8 +87,8 @@ class AdminAppRegisterController extends BaseAdminController
         if ($id!=0 && $id!="0" && $id>0){
             ApiApp::updateItem($id,$data);
         }else{
-            $data['client_id'] = FunctionLib::gen_uuid();
-            $data['client_secret'] = bin2hex(openssl_random_pseudo_bytes(32));
+            $data['client_id'] = FunctionLib::encodeBase64(FunctionLib::gen_uuid());
+            $data['client_secret'] = FunctionLib::encodeBase64(bin2hex(openssl_random_pseudo_bytes(32)));
             $data['created_at'] =$update_at;
             ApiApp::createItem($data);
         }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use App\library\AdminFunction\Define;
 use App\library\AdminFunction\CGlobal;
 use Illuminate\Support\Facades\DB;
+use Psy\TabCompletion\Matcher\FunctionDefaultParametersMatcher;
 
 class FunctionLib {
 
@@ -1180,5 +1181,34 @@ html;
         );
 
         return $uuid;
+    }
+
+    public static function encodeBase64($string){
+        return base64_encode($string.'_'.Define::SIGN_KEY_API);
+    }
+    public static function decodeBase64($strings){
+        $string = "";
+        if(trim($strings) != ''){
+            $resultDecode = base64_decode($strings);
+            $result = explode('_',$resultDecode);
+            if(!empty($result)){
+                $string = isset($result[0])?$result[0] : "";
+            }
+        }
+        return $string;
+    }
+
+    public static function responeJson($data){
+        return response(json_encode($data))
+            ->header('Content-Type', 'application/json');
+    }
+
+    public static function encodeToken($client_id,$client_secret,$partner_id,$ttlMillis = Memcache::CACHE_TIME_TO_LIVE_ONE_DAY){
+        $expMillis = time()+$ttlMillis;
+        $client_id = self::randomString(5).'+'.md5($client_id.Define::SIGN_KEY_TOKEN);
+        $client_secret = self::randomString(5).'+'.md5($client_secret.Define::SIGN_KEY_TOKEN);
+        $partner_id = self::randomString(5).'+'.md5($partner_id.Define::SIGN_KEY_TOKEN);
+        $token = base64_encode($client_id."_".$client_secret."_".$partner_id."_".$expMillis);
+        return $token;
     }
 }

@@ -50,7 +50,7 @@
                             @foreach ($data as $key => $item)
                                 <td class="text-center middle">{{$key+1 }}</td>
                                 <td>
-                                    <a href="#" class="mg-t20" onclick="showDetails('{{$item['app_name']}}','{{$item['client_id']}}','{{$item['client_secret']}}')" data-toggle="modal" data-target="#modal-app-details">
+                                    <a href="#" class="mg-t20" onclick="showDetails('{{$item['app_name']}}','{{FunctionLib::decodeBase64($item['client_id'])}}','{{FunctionLib::decodeBase64($item['client_secret'])}}')" data-toggle="modal" data-target="#modal-app-details">
                                         {{$item['app_name']}}
                                     </a>
                                 </td>
