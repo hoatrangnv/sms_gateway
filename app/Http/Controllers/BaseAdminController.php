@@ -60,7 +60,30 @@ class BaseAdminController extends Controller
                 $this->is_root = true;
             }
             $this->is_root = ($this->is_boss) ? true : $this->is_root;
-            $this->menuSystem = $this->getMenuSystem();
+
+            $arrMenu = array();
+            if ($this->is_boss) {
+                $this->menuSystem = $this->getMenuSystem();
+            } else {
+                $arrMenu = $this->getMenuSystem();
+            }
+            if (!empty($arrMenu)) {
+                foreach ($arrMenu as $menu_id => $menu) {
+                    if ($menu['show_menu'] == CGlobal::status_show) {
+                        if (!empty($menu['sub'])) {
+                            $checkMenu = false;
+                            foreach ($menu['sub'] as $ks => $sub) {
+                                if (!empty($this->user_group_menu) && in_array($sub['menu_id'], $this->user_group_menu)) {
+                                    $checkMenu = true;
+                                }
+                            }
+                            if ($checkMenu) {
+                                $this->menuSystem[$menu_id] = $menu;
+                            }
+                        }
+                    }
+                }
+            }
 
             //FunctionLib::debug($this->user);
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
@@ -77,7 +100,7 @@ class BaseAdminController extends Controller
             }
             $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite') : $this->languageSite;
 
-            //FunctionLib::debug($this->languageSite);
+            //FunctionLib::debug($this->menuSystem);
             View::share('languageSite', $this->languageSite);
             View::share('menu', $this->menuSystem);
             View::share('aryPermissionMenu', $this->user_group_menu);

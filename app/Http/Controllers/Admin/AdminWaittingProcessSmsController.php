@@ -400,8 +400,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['send_successful'] = 0;
                     $dataPacket['send_fail'] = 0;
                     $dataPacket['user_manager_id'] = $user_manager_id;
-                    $dataPacket['modem_id_list'] = $modem_id;
-                    $dataPacket['modem_history'] = '';//??????? Cộng chuỗi ghi nhận modem đã được chọn xử lý gửi gói tin
+                    $dataPacket['modem_id'] = $modem_id;
+                    $dataPacket['modem_history'] = $modem_id;//??????? Cộng chuỗi ghi nhận modem đã được chọn xử lý gửi gói tin
                     $dataPacket['sms_deadline'] = $infoSmsLog->sms_deadline;
                     $dataPacket['created_date'] = FunctionLib::getDateTime();
                     $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
