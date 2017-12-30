@@ -32,28 +32,37 @@ class ApiGetToken extends BaseApiController
     }
 
     public function getToken(){
-        if($_SERVER["CONTENT_TYPE"] == Define::APPLICATION_JSON){
-            $data = file_get_contents("php://input");
-            $data   = json_decode($data,true);
+        $return=array();
+        if (isset($_SERVER['CONTENT_TYPE'])){
+            if($_SERVER["CONTENT_TYPE"] == Define::APPLICATION_JSON){
+                $data = file_get_contents("php://input");
+                $data   = json_decode($data,true);
 
-            $client_id = $data['client_id'];
-            $client_secret = $data['client_secret'];
-            $PartnerID="";
-            $return=array();
-            if ($this->checkClient($client_id,$client_secret,$PartnerID)){
-                $access_token = FunctionLib::encodeToken($client_id,$client_secret,$PartnerID);
-                $return = array(
-                    "status_code"=>Define::HTTP_STATUS_CODE_200,
-                    "access_token"=>$access_token,
-                    "expires_in"=>Memcache::CACHE_TIME_TO_LIVE_ONE_DAY,
-                    "token_type"=>"Bearer",
-                );
-            }else{
-                $return = array(
-                    "status_code"=>Define::HTTP_STATUS_CODE_400,
-                    "error_description"=>"Các thông tin client là không đúng."
+                $client_id = isset($data['client_id'])?$data['client_id']:"";
+                $client_secret = isset($data['client_secret'])?$data['client_secret']:"";
+                $PartnerID="";
+                $return=array();
+                if (trim($client_id!="") && trim($client_secret !="") && $this->checkClient($client_id,$client_secret,$PartnerID)){
+                    $access_token = FunctionLib::encodeToken($client_id,$client_secret,$PartnerID);
+                    $access_token = substr($access_token,0,strlen($access_token)-2);
+                    $return = array(
+                        "status_code"=>Define::HTTP_STATUS_CODE_200,
+                        "access_token"=>$access_token,
+                        "expires_in"=>Memcache::CACHE_TIME_TO_LIVE_ONE_DAY,
+                        "token_type"=>"Bearer",
                     );
+                }else{
+                    $return = array(
+                        "status_code"=>Define::HTTP_STATUS_CODE_400,
+                        "error_description"=>"Các thông tin client là không đúng."
+                    );
+                }
             }
+        }else{
+            $return = array(
+                "status_code"=>Define::HTTP_STATUS_CODE_400,
+                "message"=>'Bad Request'
+            );
         }
 
         return FunctionLib::responeJson($return);

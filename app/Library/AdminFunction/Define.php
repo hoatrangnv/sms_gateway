@@ -149,4 +149,6 @@ class Define{
     const SIGN_KEY_TOKEN = 'SmsGat3Way@Tok3n@nAmNv&1b7s03m';
     const HTTP_STATUS_CODE_400 = 400;
     const HTTP_STATUS_CODE_200 = 200;
+    const HTTP_STATUS_CODE_405 = 405 ;
+    const HTTP_STATUS_CODE_401 = 401  ;
 }

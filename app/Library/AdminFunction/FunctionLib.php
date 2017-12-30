@@ -1204,11 +1204,20 @@ html;
     }
 
     public static function encodeToken($client_id,$client_secret,$partner_id,$ttlMillis = Memcache::CACHE_TIME_TO_LIVE_ONE_DAY){
+        date_default_timezone_set('Asia/Bangkok');
         $expMillis = time()+$ttlMillis;
         $client_id = self::randomString(5).'+'.md5($client_id.Define::SIGN_KEY_TOKEN);
         $client_secret = self::randomString(5).'+'.md5($client_secret.Define::SIGN_KEY_TOKEN);
         $partner_id = self::randomString(5).'+'.md5($partner_id.Define::SIGN_KEY_TOKEN);
         $token = base64_encode($client_id."_".$client_secret."_".$partner_id."_".$expMillis);
         return $token;
+    }
+
+    public static function returnAPI($code,$mess){
+        $r = array(
+            "status_code"=>$code,
+            "message"=>$mess
+        );
+        return $r;
     }
 }

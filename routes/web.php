@@ -11,6 +11,11 @@ Route::get('oauth2/token', function () {
     return response(json_encode(array("ip"=>$_SERVER['REMOTE_ADDR'],"hello"=>"Welcome to SMSGateways Service")), 200)
         ->header('Content-Type', 'application/json');
 });
+Route::post('api/push-sms', array('as' => 'api.pushSms','uses' => Api.'\ApiPushSms@authorization'));
+Route::get('api/push-sms', function () {
+    return response(json_encode(array("status_code"=>\App\Library\AdminFunction\Define::HTTP_STATUS_CODE_405,"message"=>"Method Not Allowed")), 200)
+        ->header('Content-Type', 'application/json');
+});
 
 // Used for dev by Quynh
 $isDev = Request::get('is_debug','');
