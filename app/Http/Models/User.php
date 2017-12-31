@@ -59,6 +59,13 @@ class User extends BaseModel
         return $admin;
     }
 
+    public static function getUserByMd5Id($id)
+    {
+//        $admin = User::find($id);
+        $admin = User::where(DB::raw("md5(user_id)"), $id)->first();
+        return $admin;
+    }
+
     /**
      * @param $password
      * @return string

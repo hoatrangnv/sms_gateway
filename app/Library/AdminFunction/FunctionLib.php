@@ -1033,6 +1033,21 @@ class FunctionLib {
         return false;
     }
 
+    public static function checkNumberPhoneAPI(&$stringFone = ''){
+        if(trim($stringFone) != ''){
+            $stringFone = str_replace(' ', '', $stringFone);
+            $stringFone = str_replace('-', '', $stringFone);
+            $stringFone = str_replace('.', '', $stringFone);
+            $pattern = '/^\d+$/';
+            if (preg_match($pattern, $stringFone)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        return false;
+    }
+
     /**
      * Ghep chuỗi theo type
      * @param $string
