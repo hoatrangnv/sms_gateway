@@ -98,6 +98,20 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
                 <li class="light-blue">
+                    <a class="dropdown-toggle"
+                    @if($role_type == \App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
+                        href="{{URL::route('admin.waittingSmsView')}}"
+                    @endif
+                    @if($role_type == \App\Library\AdminFunction\Define::ROLE_TYPE_ADMIN)
+                        href="{{URL::route('admin.waittingSendSmsView')}}"
+                    @endif
+                    >
+                        <i class="fa fa-bell-o fa-2x marginTop5" aria-hidden="true">
+                            @if($number_notify > 0)<span class="msg_notify">{{$number_notify}}</span>@endif
+                        </i>
+                    </a>
+                </li>
+                <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         @if(isset($languageSite) && $languageSite == Define::VIETNAM_LANGUAGE)
                             <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/icon/vi.png"/>

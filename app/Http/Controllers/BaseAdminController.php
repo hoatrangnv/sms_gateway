@@ -11,6 +11,7 @@ use App\Library\AdminFunction\Define;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Models\User;
 use App\Http\Models\MenuSystem;
+use App\Http\Models\SmsLog;
 use View;
 use App\Library\AdminFunction\FunctionLib;
 use Illuminate\Support\Facades\URL;
@@ -100,7 +101,9 @@ class BaseAdminController extends Controller
             }
             $this->languageSite = (Session::has('languageSite')) ? Session::get('languageSite') : $this->languageSite;
 
-            //FunctionLib::debug($this->menuSystem);
+            //get notify
+            $number_notify = $this->getNotifyUser($this->user_id,$this->role_type);
+            //FunctionLib::debug($number_notify);
             View::share('languageSite', $this->languageSite);
             View::share('menu', $this->menuSystem);
             View::share('aryPermissionMenu', $this->user_group_menu);
@@ -109,8 +112,15 @@ class BaseAdminController extends Controller
             View::share('role_type', $this->role_type);
             View::share('user_id', $this->user_id);
             View::share('user', $this->user);
+            View::share('number_notify', $number_notify);
             return $next($request);
         });
+    }
+
+    public function getNotifyUser($user_id,$role_type)
+    {
+        $numberNotify = SmsLog::getNumberNotifyUser($user_id,$role_type);
+        return $numberNotify;
     }
 
     public function getMenuSystem()

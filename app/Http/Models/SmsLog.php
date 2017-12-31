@@ -144,6 +144,17 @@ class SmsLog extends BaseModel
         }
     }
 
+    public static function getNumberNotifyUser($user_id,$role_type){
+        if($role_type == Define::ROLE_TYPE_SUPER_ADMIN){
+            $data = DB::select(trim('SELECT count(*) as numberTotal FROM '.Define::TABLE_SMS_LOG.' WHERE `status` = '.Define::SMS_STATUS_PROCESSING.' and user_manager_id = 0 OR `status` = '.Define::SMS_STATUS_REJECT.' and user_manager_id <> 0'));
+            return $data[0]->numberTotal;
+        }elseif($role_type == Define::ROLE_TYPE_ADMIN){
+            $data = DB::select(trim('SELECT count(*) as numberTotal FROM '.Define::TABLE_SMS_LOG.' WHERE user_manager_id = '.$user_id.' AND (`status` = '.Define::SMS_STATUS_PROCESSING.' and list_modem = 0 OR `status` = '.Define::SMS_STATUS_REJECT.' and list_modem <> 0)'));
+            return $data[0]->numberTotal;
+        }
+        return 0;
+    }
+
     public static function removeCache($id = 0, $data)
     {
         if ($id > 0) {
