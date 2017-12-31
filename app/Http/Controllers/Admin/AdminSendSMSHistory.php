@@ -52,7 +52,7 @@ class AdminSendSMSHistory extends BaseAdminController
 
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
 
-        $this->arrUser = User::getOptionUserFullName();
+        $this->arrUser = User::getOptionUserFullMail();
     }
 
     public function getPermissionPage(){
@@ -80,7 +80,7 @@ class AdminSendSMSHistory extends BaseAdminController
         }else{
             $dataSearch['user_id'] = $this->user_id;
             $arr = array(
-                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_full_name']
+                $this->user_id=>$this->user['user_name'].' - '.$this->user['user_email']
             );
             $optionUser = FunctionLib::getOption($arr,$this->user_id);
         }
