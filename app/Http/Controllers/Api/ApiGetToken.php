@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseApiController;
-use App\Http\Models\User;
 use App\Http\Models\ApiApp;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\CGlobal;
@@ -18,50 +17,42 @@ use Illuminate\Support\Facades\Response;
 
 class ApiGetToken extends BaseApiController
 {
-    private $permission_view = 'appRegister_view';
-    private $permission_full = 'appRegister_full';
-    private $permission_delete = 'appRegister_delete';
-    private $permission_create = 'appRegister_create';
-    private $permission_edit = 'appRegister_edit';
-
-    private $error = array();
-    private $viewPermission = array();//check quyen
-
     public function __construct(){
         parent::__construct();
     }
 
     public function getToken(){
         $return=array();
-        if (isset($_SERVER['CONTENT_TYPE'])){
-            if($_SERVER["CONTENT_TYPE"] == Define::APPLICATION_JSON){
+        if (isset($_SERVER[Define::CONTENT_TYPE])){
+            if($_SERVER[Define::CONTENT_TYPE] == Define::APPLICATION_JSON){
                 $data = file_get_contents("php://input");
                 $data   = json_decode($data,true);
 
-                $client_id = isset($data['client_id'])?$data['client_id']:"";
-                $client_secret = isset($data['client_secret'])?$data['client_secret']:"";
+                $client_id = isset($data[Define::KEY_CLIENT_ID])?$data[Define::KEY_CLIENT_ID]:"";
+                $client_secret = isset($data[Define::KEY_CLIENT_SECRET])?$data[Define::KEY_CLIENT_SECRET]:"";
                 $PartnerID="";
                 $return=array();
                 if (trim($client_id!="") && trim($client_secret !="") && $this->checkClient($client_id,$client_secret,$PartnerID)){
                     $access_token = FunctionLib::encodeToken($client_id,$client_secret,$PartnerID);
                     $access_token = substr($access_token,0,strlen($access_token)-2);
                     $return = array(
-                        "status_code"=>Define::HTTP_STATUS_CODE_200,
-                        "access_token"=>$access_token,
-                        "expires_in"=>Memcache::CACHE_TIME_TO_LIVE_ONE_DAY,
-                        "token_type"=>"Bearer",
+                        Define::STATUS_CODE=>Define::HTTP_STATUS_CODE_200,
+                        Define::MESSAGE=>Define::HTTP_STATUS_MESSAGE_SUCCESS,
+                        Define::ACCESS_TOKEN=>$access_token,
+                        Define::EXPIRES_IN=>Memcache::CACHE_TIME_TO_LIVE_ONE_DAY,
+                        Define::TOKEN_TYPE=>"Bearer",
                     );
                 }else{
                     $return = array(
-                        "status_code"=>Define::HTTP_STATUS_CODE_400,
-                        "error_description"=>"Các thông tin client là không đúng."
+                        Define::STATUS_CODE=>Define::HTTP_STATUS_CODE_406,
+                        Define::MESSAGE=>Define::HTTP_STATUS_MESSAGE_INVALID_CLIENT
                     );
                 }
             }
         }else{
             $return = array(
-                "status_code"=>Define::HTTP_STATUS_CODE_400,
-                "message"=>'Bad Request'
+                Define::STATUS_CODE=>Define::HTTP_STATUS_CODE_400,
+                Define::MESSAGE=>Define::HTTP_STATUS_MESSAGE_BAD_REQUEST
             );
         }
 
@@ -71,8 +62,8 @@ class ApiGetToken extends BaseApiController
     private function checkClient($client_id,$client_secret,&$PartnerID){
 
         $data_check = array(
-            'client_id'=>FunctionLib::encodeBase64($client_id),
-            'client_secret'=>FunctionLib::encodeBase64($client_secret),
+            Define::KEY_CLIENT_ID=>FunctionLib::encodeBase64($client_id),
+            Define::KEY_CLIENT_SECRET=>FunctionLib::encodeBase64($client_secret),
             'field_get'=>"app_id,user_id"
         );
 

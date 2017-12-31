@@ -1215,11 +1215,11 @@ html;
 
     public static function responeJson($data){
         return response(json_encode($data))
-            ->header('Content-Type', 'application/json');
+            ->header(Define::CONTENT_TYPE_L, Define::APPLICATION_JSON);
     }
 
     public static function encodeToken($client_id,$client_secret,$partner_id,$ttlMillis = Memcache::CACHE_TIME_TO_LIVE_ONE_DAY){
-        date_default_timezone_set('Asia/Bangkok');
+        date_default_timezone_set(Define::GMT_7_TIME_ZONE);
         $expMillis = time()+$ttlMillis;
         $client_id = self::randomString(5).'+'.md5($client_id.Define::SIGN_KEY_TOKEN);
         $client_secret = self::randomString(5).'+'.md5($client_secret.Define::SIGN_KEY_TOKEN);
@@ -1230,8 +1230,8 @@ html;
 
     public static function returnAPI($code,$mess){
         $r = array(
-            "status_code"=>$code,
-            "message"=>$mess
+            Define::STATUS_CODE=>$code,
+            Define::MESSAGE=>$mess
         );
         return $r;
     }

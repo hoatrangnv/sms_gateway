@@ -165,13 +165,13 @@ class ApiPushSms extends BaseApiController
                     SmsSendTo::insertMultiple($dataInsertSmsSendTo);
                     $return = FunctionLib::returnAPI(200, 'Gui thanh cong !');
                 }else{
-                    $return = FunctionLib::returnAPI(503, 'Gui that bai!');
+                    $return = FunctionLib::returnAPI(1016, 'Gui that bai!');
                 }
             }else{
-                $return = FunctionLib::returnAPI(502, 'Chua co thong tin nha mang');
+                $return = FunctionLib::returnAPI(1015, 'Chua co thong tin nha mang');
             }
         }else{
-            $return = FunctionLib::returnAPI(105, 'Số điện thoại và nội dung tin nhắn là bắt buộc');
+            $return = FunctionLib::returnAPI(1014, 'Các tham số truyền vào bị lỗi');
         }
         echo FunctionLib::responeJson($return);
     }
@@ -179,37 +179,36 @@ class ApiPushSms extends BaseApiController
     public function authorization()
     {
         $return = array();
-        if (isset($_SERVER['CONTENT_TYPE'])) {
-            if ($_SERVER["CONTENT_TYPE"] == Define::APPLICATION_JSON) {
+        if (isset($_SERVER[Define::CONTENT_TYPE])) {
+            if ($_SERVER[Define::CONTENT_TYPE] == Define::APPLICATION_JSON) {
                 $data = file_get_contents("php://input");
                 $data = json_decode($data, true);
 
-                $token = isset($data['access_token']) ? $data['access_token'] : "";
-                $phone = isset($data['phone']) ? $data['phone'] : "";
-                $message = isset($data['message']) ? $data['message'] : "";
+                $token = isset($data[Define::ACCESS_TOKEN]) ? $data[Define::ACCESS_TOKEN] : "";
+                $phone = isset($data[Define::PHONE]) ? $data[Define::PHONE] : "";
+                $message = isset($data[Define::MESSAGE]) ? $data[Define::MESSAGE] : "";
                 $dead_line = isset($data['dead_line']) ? $data['dead_line'] : "";
 
                 if (trim($token != "")) {
                     $result = $this->checkToken($token);
-                    if ($result['code'] == Define::HTTP_STATUS_CODE_200) {
+                    if ($result[Define::CODE] == Define::HTTP_STATUS_CODE_200) {
                         $arr = array();
-                        foreach ($result['response'] as $k => $v){
+                        foreach ($result[Define::RESPONSE] as $k => $v){
                             $arr[] = (array) $v;
                         }
                         $user_id = $arr[0]['user_id'];
                         self::pushSms($user_id,$phone,$message,$dead_line);
                     } else {
-                        $return = FunctionLib::returnAPI($result['code'], $result['message']);
+                        $return = FunctionLib::returnAPI($result[Define::CODE], $result[Define::MESSAGE]);
                     }
                 } else {
-                    $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_401, 'Token không hợp lệ');
+                    $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_401, Define::HTTP_STATUS_MESSAGE_UNAUTHORIZED);
                 }
             } else {
-                $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_400, 'Bad Request');
+                $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_400, Define::HTTP_STATUS_MESSAGE_BAD_REQUEST);
             }
         } else {
-            FunctionLib::debug($_SERVER['CONTENT_TYPE']);
-            $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_400, 'Bad Request');
+            $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_400, Define::HTTP_STATUS_MESSAGE_BAD_REQUEST);
         }
 
         return FunctionLib::responeJson($return);
@@ -217,7 +216,7 @@ class ApiPushSms extends BaseApiController
 
     private function checkToken($token)
     {
-        date_default_timezone_set('Asia/Bangkok');
+        date_default_timezone_set(Define::GMT_7_TIME_ZONE);
         $tokenDecode = base64_decode($token);
         $tokenData = explode('_', $tokenDecode);
         $return = array();
@@ -235,46 +234,46 @@ class ApiPushSms extends BaseApiController
                     if ($clientID !=""||$clientSecret !=""||$clientUser !=""){
 
                         $sql = "SELECT user_id,app_id  from api_app 
-                                WHERE md5(CONCAT(SUBSTRING_INDEX(FROM_BASE64(client_id),'_',1),'".Define::SIGN_KEY_TOKEN."')) = '".$clientID."' 
-                                AND md5(CONCAT(SUBSTRING_INDEX(FROM_BASE64(client_secret),'_',1),'".Define::SIGN_KEY_TOKEN."')) = '".$clientSecret."'
+                                WHERE md5(CONCAT(SUBSTRING_INDEX(FROM_BASE64(".Define::KEY_CLIENT_ID."),'_',1),'".Define::SIGN_KEY_TOKEN."')) = '".$clientID."' 
+                                AND md5(CONCAT(SUBSTRING_INDEX(FROM_BASE64(".Define::KEY_CLIENT_SECRET."),'_',1),'".Define::SIGN_KEY_TOKEN."')) = '".$clientSecret."'
                                 ";
 
                         $result = FunctionLib::executesSQL($sql);
 
                         if (!empty($result)){
                             $return = array(
-                                "code" => Define::HTTP_STATUS_CODE_200,
-                                "response" => $result
+                                Define::CODE => Define::HTTP_STATUS_CODE_200,
+                                Define::RESPONSE => $result
                             );
                         }else{
                             $return = array(
-                                "code" => 101,
-                                "message" => "Token không hợp lệ"
+                                Define::CODE => Define::HTTP_STATUS_CODE_401,
+                                Define::MESSAGE => Define::HTTP_STATUS_MESSAGE_UNAUTHORIZED
                             );
                         }
                     }else{
                         $return = array(
-                            "code" => 101,
-                            "message" => "Token không hợp lệ"
+                            Define::CODE => Define::HTTP_STATUS_CODE_401,
+                            Define::MESSAGE => Define::HTTP_STATUS_MESSAGE_UNAUTHORIZED
                         );
                     }
 
                 }else{
                     $return = array(
-                        "code" => 101,
-                        "message" => "Token không hợp lệ"
+                        Define::CODE => Define::HTTP_STATUS_CODE_401,
+                        Define::MESSAGE => Define::HTTP_STATUS_MESSAGE_UNAUTHORIZED
                     );
                 }
             } else {
                 $return = array(
-                    "code" => 100,
-                    "message" => "Token expire"
+                    Define::CODE => Define::HTTP_STATUS_CODE_401,
+                    Define::MESSAGE => Define::HTTP_STATUS_MESSAGE_TOKEN_EXPIRE
                 );
             }
         }else{
             $return = array(
-                "code" => 101,
-                "message" => "Token không hợp lệ"
+                Define::CODE => Define::HTTP_STATUS_CODE_401,
+                Define::MESSAGE => Define::HTTP_STATUS_MESSAGE_UNAUTHORIZED
             );
         }
         return $return;
