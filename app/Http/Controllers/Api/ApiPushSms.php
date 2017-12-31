@@ -83,7 +83,6 @@ class ApiPushSms extends BaseApiController
                         }
                     }
                 }
-//                FunctionLib::debug($infoPhone);
                 //ghep data
                 if(!empty($infoPhone) && !empty($arrMsg)){
                     foreach ($infoPhone as $k=>$phone){
@@ -101,74 +100,75 @@ class ApiPushSms extends BaseApiController
                     }
                 }
 
-            }
-//            FunctionLib::debug($dataSend);
-            if(!empty($dataSend)) {
-                foreach ($phones_list as $k => $v){
-                    if (!array_key_exists($v,$infoPhone)){
-                        $dataPhone_err[$v] = $v;
+                if(!empty($dataSend)) {
+                    foreach ($phones_list as $k => $v){
+                        if (!array_key_exists($v,$infoPhone)){
+                            $dataPhone_err[$v] = $v;
+                        }
                     }
-                }
 //                FunctionLib::debug($dataPhone_err);
-                //get tổng send SMS theo nhà mạng
-                foreach ($dataSend as $kkk=>$valu){
-                    if(isset($dataCarriesInput[$valu['carrier_id']]['tong_sms'])){
-                        $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = $dataCarriesInput[$valu['carrier_id']]['tong_sms']+1;
-                    }else{
-                        $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = 1;
+                    //get tổng send SMS theo nhà mạng
+                    foreach ($dataSend as $kkk=>$valu){
+                        if(isset($dataCarriesInput[$valu['carrier_id']]['tong_sms'])){
+                            $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = $dataCarriesInput[$valu['carrier_id']]['tong_sms']+1;
+                        }else{
+                            $dataCarriesInput[$valu['carrier_id']]['tong_sms'] = 1;
+                        }
                     }
-                }
 
-                //web_sms_customer
-                $dataInsertSmsCustomer = array(
-                    'user_customer_id'=>$user_id,
-                    'status'=>Define::SMS_STATUS_PROCESSING,
-                    'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                    'correct_number'=>count($dataSend),
-                    'incorrect_number'=>count($dataPhone_err),
-                    'incorrect_number_list'=>implode(",",$dataPhone_err),
-                    'sms_deadline'=>$send_sms_deadline,
-                    'created_date'=>FunctionLib::getDateTime(),);
-                $sms_customer_id = SmsCustomer::createItem($dataInsertSmsCustomer);
-
-                //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
-                foreach ($dataCarriesInput as $carrier_id =>&$val_carr){
-                    $dataInsertSmsLog = array(
+                    //web_sms_customer
+                    $dataInsertSmsCustomer = array(
                         'user_customer_id'=>$user_id,
-                        'user_manager_id'=>0,
-                        'sms_customer_id'=>$sms_customer_id,
-                        'carrier_id'=>$val_carr['carrier_id'],
-                        'carrier_name'=>$val_carr['carrier_name'],
-                        'total_sms'=>$val_carr['tong_sms'],
                         'status'=>Define::SMS_STATUS_PROCESSING,
                         'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                        'send_date'=>FunctionLib::getIntDate(),
+                        'correct_number'=>count($dataSend),
+                        'incorrect_number'=>count($dataPhone_err),
+                        'incorrect_number_list'=>implode(",",$dataPhone_err),
                         'sms_deadline'=>$send_sms_deadline,
                         'created_date'=>FunctionLib::getDateTime(),);
-                    $sms_log_id = SmsLog::createItem($dataInsertSmsLog);
-                    $val_carr['sms_log_id'] = $sms_log_id;
-                }
+                    $sms_customer_id = SmsCustomer::createItem($dataInsertSmsCustomer);
 
-                //web_sms_sendTo
-                $dataInsertSmsSendTo = array();
-                foreach ($dataSend as $kk=>$val){
-                    $dataInsertSmsSendTo[] = array(
-                        'sms_log_id'=>isset($dataCarriesInput[$val['carrier_id']]['sms_log_id']) ? $dataCarriesInput[$val['carrier_id']]['sms_log_id']: 0,
-                        'sms_customer_id'=>$sms_customer_id,
-                        'user_customer_id'=>$user_id,
-                        'carrier_id'=>$val['carrier_id'],
-                        'phone_receive'=>$val['phone_number'],
-                        'status'=>Define::SMS_STATUS_PROCESSING,
-                        'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                        'content'=>$val['content'],
-                        'content_grafted'=>$val['content'],
-                        'created_date'=>FunctionLib::getDateTime(),
-                    );
-                }
-                if(!empty($dataInsertSmsSendTo)){
+                    //web_sms_log: bao nhiêu nhà mạng thì co bấy nhiêu bản ghi
+                    foreach ($dataCarriesInput as $carrier_id =>&$val_carr){
+                        $dataInsertSmsLog = array(
+                            'user_customer_id'=>$user_id,
+                            'user_manager_id'=>0,
+                            'sms_customer_id'=>$sms_customer_id,
+                            'carrier_id'=>$val_carr['carrier_id'],
+                            'carrier_name'=>$val_carr['carrier_name'],
+                            'total_sms'=>$val_carr['tong_sms'],
+                            'status'=>Define::SMS_STATUS_PROCESSING,
+                            'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
+                            'send_date'=>FunctionLib::getIntDate(),
+                            'sms_deadline'=>$send_sms_deadline,
+                            'created_date'=>FunctionLib::getDateTime(),);
+                        $sms_log_id = SmsLog::createItem($dataInsertSmsLog);
+                        $val_carr['sms_log_id'] = $sms_log_id;
+                    }
+
+                    //web_sms_sendTo
+                    $dataInsertSmsSendTo = array();
+                    foreach ($dataSend as $kk=>$val){
+                        $dataInsertSmsSendTo[] = array(
+                            'sms_log_id'=>isset($dataCarriesInput[$val['carrier_id']]['sms_log_id']) ? $dataCarriesInput[$val['carrier_id']]['sms_log_id']: 0,
+                            'sms_customer_id'=>$sms_customer_id,
+                            'user_customer_id'=>$user_id,
+                            'carrier_id'=>$val['carrier_id'],
+                            'phone_receive'=>$val['phone_number'],
+                            'status'=>Define::SMS_STATUS_PROCESSING,
+                            'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
+                            'content'=>$val['content'],
+                            'content_grafted'=>$val['content'],
+                            'created_date'=>FunctionLib::getDateTime(),
+                        );
+                    }
                     SmsSendTo::insertMultiple($dataInsertSmsSendTo);
+                    $return = FunctionLib::returnAPI(200, 'Gui thanh cong !');
+                }else{
+                    $return = FunctionLib::returnAPI(503, 'Gui that bai!');
                 }
-                $return = FunctionLib::returnAPI(200, 'Gui thanh cong !');
+            }else{
+                $return = FunctionLib::returnAPI(502, 'Chua co thong tin nha mang');
             }
         }else{
             $return = FunctionLib::returnAPI(105, 'Số điện thoại và nội dung tin nhắn là bắt buộc');
