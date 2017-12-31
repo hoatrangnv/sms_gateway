@@ -18,3 +18,6 @@
 });*/
 
 Route::post('sendSuccess',array('as' => 'api.sendSuccess','uses' => 'Api\ApiSendSuccessController@index'));
+
+Route::get('resetModemCom',array('as' => 'api.resetModemCom','uses' => 'Api\ApiCronjobController@resetModemCom'));
+Route::get('resetUserSetting',array('as' => 'api.resetUserSetting','uses' => 'Api\ApiCronjobController@resetUserSetting'));
