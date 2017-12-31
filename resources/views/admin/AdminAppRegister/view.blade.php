@@ -128,7 +128,7 @@
                             </label>
                             <div class="col-sm-10">
                                 <label>
-                                    service.sms.fpt.net
+                                    http://domain-name/oauth2/token
                                 </label>
                             </div>
                         </div>
