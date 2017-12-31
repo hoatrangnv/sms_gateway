@@ -209,6 +209,7 @@ class AdminSystemSettingController extends BaseAdminController
         return view('admin.AdminApiClient.index',array_merge([
             'data'=>$data,
             'id'=>$id,
+            'user_role_type'=>$this->role_type,
         ],$this->viewPermission));
     }
     public function getApiCustomer(){
@@ -232,6 +233,7 @@ class AdminSystemSettingController extends BaseAdminController
         return view('admin.AdminApiCustomer.index',array_merge([
             'data'=>$data,
             'id'=>$id,
+            'user_role_type'=>$this->role_type,
         ],$this->viewPermission));
     }
     public function getApiClientEdit($ids){
