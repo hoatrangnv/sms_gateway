@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSGraphReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsGraphReport_view';
+    private $permission_full = 'smsGraphReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';

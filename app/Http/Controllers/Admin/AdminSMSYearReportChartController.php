@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSYearReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsYearReport_view';
+    private $permission_full = 'smsYearReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
