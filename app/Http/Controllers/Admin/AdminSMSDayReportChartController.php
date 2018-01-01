@@ -118,6 +118,8 @@ class AdminSMSDayReportChartController extends BaseAdminController
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
         }
 
+        if ($dataSearch['type_report'] == "") $dataSearch['type_report']="1";
+
         if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
             $id_station = join(",",array_keys($this->arrManager_station));
             $sql_where.=" AND wsr.user_id in (".$id_station.") ";
