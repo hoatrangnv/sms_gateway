@@ -102,16 +102,15 @@ class Modem extends BaseModel
             $table_modem_com = Define::TABLE_MODEM_COM;
 //            $query = Modem::query()
 //            ,\DB::raw('SUM(success_number)'),\DB::raw('SUM(error_number)')
-            $query = Modem::select(DB::raw('SUM(success_number) as sum_success,SUM(error_number) as sum_error'),$table_modem.'.modem_id',$table_user.'.user_name','error_number','success_number',$table_modem.'.modem_name',$table_modem.'.modem_type',$table_modem.'.updated_date',$table_modem.'.digital',$table_modem.'.is_active')
+            $query = Modem::select(DB::raw('SUM(success_number) as sum_success,SUM(error_number) as sum_error'), $table_modem . '.modem_id', $table_user . '.user_name', 'error_number', 'success_number', $table_modem . '.modem_name', $table_modem . '.modem_type', $table_modem . '.updated_date', $table_modem . '.digital', $table_modem . '.is_active')
 //                ->select(DB::raw('SUM(success_number) as sum_success,SUM(error_number) as sum_error'))
                 ->join($table_modem_com, $table_modem . '.modem_id', '=', $table_modem_com . '.modem_id')
                 ->join($table_user, $table_modem . '.user_id', '=', $table_user . '.user_id')
                 ->get()
-                ->groupBy($table_modem.'.modem_id')
-//                ->orderBy($table_modem.'modem_id', 'desc');
+                ->groupBy($table_modem . '.modem_id')//                ->orderBy($table_modem.'modem_id', 'desc');
             ;
             if (isset($dataSearch['station_account']) && $dataSearch['station_account'] != '') {
-                $query->where($table_modem.'user_id', '=', $dataSearch['station_account']);
+                $query->where($table_modem . 'user_id', '=', $dataSearch['station_account']);
             }
 
             $total = $query->count();
@@ -124,6 +123,7 @@ class Modem extends BaseModel
             throw new PDOException();
         }
     }
+
     public static function searchByCondition1($dataSearch = array(), &$total)
     {
         $data = DB::statement('SELECT m.modem_id,sum(mc.error_number),sum(mc.success_number),m.modem_name,m.modem_type,m.updated_date,m.digital,m.is_active,u.user_name FROM web_modem m INNER JOIN web_modem_com mc ON mc.modem_id = m.modem_id 
@@ -141,26 +141,28 @@ ORDER BY m.modem_id DESC');
         Cache::forget(Define::CACHE_INFO_MODEM);
     }
 
-    public static function executesSQL($str_sql = ''){
-        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+    public static function executesSQL($str_sql = '')
+    {
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)) : array();
     }
 
     /**
      * Quynhtm
      * @return mixed
      */
-    public  static function getListModemName($user_id){
+    public static function getListModemName($user_id)
+    {
         $data = array();
-        if (sizeof($data) == 0) {
-            if($user_id > 0){
-                $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)
-                    ->where('user_id', '=', $user_id)
-                    ->orderBy('modem_id', 'desc')->get(array('modem_id','modem_name'));
-            }else{
-                $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)
-                    ->orderBy('modem_id', 'desc')->get(array('modem_id','modem_name'));
-            }
-            foreach ($arr as $value){
+        if ($user_id > 0) {
+            $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)
+                ->where('user_id', '=', $user_id)
+                ->orderBy('modem_id', 'desc')->get(array('modem_id', 'modem_name'));
+        } else {
+            $arr = Modem::where('is_active', '=', Define::STATUS_SHOW)
+                ->orderBy('modem_id', 'desc')->get(array('modem_id', 'modem_name'));
+        }
+        if ($arr) {
+            foreach ($arr as $value) {
                 $data[$value->modem_id] = $value->modem_name;
             }
         }
