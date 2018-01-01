@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\Define;
 use Illuminate\Support\Facades\DB;
-use App\Http\Models\ModemCom;
 use App\Http\Models\Modem;
-use App\Http\Models\UserSetting;
 use App\Http\Models\SmsPacket;
 use App\Http\Models\SmsLog;
 
