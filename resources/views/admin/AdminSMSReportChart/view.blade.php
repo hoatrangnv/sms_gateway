@@ -71,10 +71,35 @@
                         <div id="container"
                              style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto">
                         </div>
-                        <div id=""
-                             style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto">
-                            <p>{{FunctionLib::viewLanguage('total').' '.$total_num_pie.' - '.$total_cost_pie.' VND'}} </p>
+                        <div id="" style="min-width: 310px; max-width: 800px;">
+{{--                            <p>{{FunctionLib::viewLanguage('total').' '.$total_num_pie.' - '.$total_cost_pie.' VND'}} </p>--}}
                         </div>
+
+                        <table class="table table-bordered">
+                            <thead class="thin-border-bottom">
+                            <tr class="">
+                                <th class="w10 center" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
+                                <th class="center" width="w50">{{FunctionLib::viewLanguage('carrier_name')}}</th>
+                                <th class="center" width="w100">{{FunctionLib::viewLanguage('total_sms')}}</th>
+                                <th width="w100" class="center">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('cost_vnd')}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($arrPieChart as $key => $item)
+                                <tr class="middle">
+                                    <td class="text-center middle">{{ $key+1 }}</td>
+                                    <td class="center">{{ $item['name'] }}</td>
+                                    <td style="text-align: right">{{ $item['percent'] }}</td>
+                                    <td style="text-align: right">{{ number_format($item['total_cost'],2) }}</td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="2" class="center"><strong>{{\App\Library\AdminFunction\FunctionLib::viewLanguage('total')}}: </strong></td>
+                                <td style="text-align: right">{{$total_num_pie}}</td>
+                                <td style="text-align: right">{{number_format($total_cost_pie,2)}} VNĐ</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     @endif
                 </div>
             </div>
@@ -142,9 +167,10 @@
                 title: {
                     text: '<?php echo $title_line_chart?>'
                 },
+//                exporting: { enabled: false },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/>' +
-                    ' Cost: <b>{point.total_cost:.1f}</b>'
+                    ' Cost: <b>{point.total_cost:,.0f} VNĐ</b>'
                 },
                 plotOptions: {
                     pie: {
