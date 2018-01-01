@@ -35,7 +35,7 @@ class AdminStationListController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName(2);
+        $this->arrManager = User::getOptionUserFullMail(2);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)

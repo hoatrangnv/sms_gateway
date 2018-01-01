@@ -27,6 +27,8 @@ class AdminSystemSettingController extends BaseAdminController
     private $permission_delete = 'systemSetting_delete';
     private $permission_create = 'systemSetting_create';
     private $permission_edit = 'systemSetting_edit';
+    private $permission_client_api_edit = 'permission_client_api_edit';
+    private $permission_customer_api_edit = '$permission_customer_api_edit';
 
     private $arrMenuParent = array();
     private $arrRuleString = array();
@@ -189,7 +191,7 @@ class AdminSystemSettingController extends BaseAdminController
     }
 
     public function getApiClient(){
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_client_api_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $total = 0;
@@ -213,7 +215,7 @@ class AdminSystemSettingController extends BaseAdminController
         ],$this->viewPermission));
     }
     public function getApiCustomer(){
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
+        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_customer_api_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $total = 0;

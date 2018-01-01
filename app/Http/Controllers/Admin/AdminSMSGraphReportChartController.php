@@ -46,8 +46,8 @@ class AdminSMSGraphReportChartController extends BaseAdminController
     public function getDataDefault()
     {
 //        $this->arrManager = User::getOptionUserFullNameAndMail();
-        $this->arrManager_station = User::getOptionUserFullName(2);
-        $this->arrManager_customer = User::getOptionUserFullName(3);
+        $this->arrManager_station = User::getOptionUserFullMail(2);
+        $this->arrManager_customer = User::getOptionUserFullMail(3);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)

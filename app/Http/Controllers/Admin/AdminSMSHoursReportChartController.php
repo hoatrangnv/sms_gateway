@@ -45,8 +45,8 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager_station = User::getOptionUserFullName(2);
-        $this->arrManager_customer = User::getOptionUserFullName(3);
+        $this->arrManager_station = User::getOptionUserFullMail(2);
+        $this->arrManager_customer = User::getOptionUserFullMail(3);
         $this->hours = array(
             1 => 1,
             2 => 2,
