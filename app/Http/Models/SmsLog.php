@@ -15,7 +15,7 @@ class SmsLog extends BaseModel
     public $timestamps = false;
 
     protected $fillable = array('user_customer_id', 'sms_customer_id', 'carrier_id', 'carrier_name', 'user_manager_id',
-        'total_sms', 'send_sussesssful', 'send_fail', 'sms_max', 'status', 'status_name', 'send_date', 'created_date', 'cost', 'sms_deadline', 'list_modem');
+        'total_sms', 'send_successful', 'send_fail', 'sms_max', 'status', 'status_name', 'send_date', 'created_date', 'cost', 'sms_deadline', 'list_modem');
 
     public static function createItem($data)
     {

@@ -14,10 +14,11 @@ class SmsReport extends BaseModel
     protected $primaryKey = 'sms_report_id';
     public $timestamps = false;
 
-    protected $fillable = array('user_customer_id', 'user_manager_id', 'carrier_id', 'success_number', 'fail_number',
-        'hour', 'day','month','year','created_date');
+    protected $fillable = array('user_id', 'role_type', 'cost', 'carrier_id', 'success_number', 'fail_number',
+        'hour', 'day', 'month', 'year', 'created_date');
 
-    public static function createItem($data){
+    public static function createItem($data)
+    {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $checkData = new SmsReport();
@@ -31,7 +32,7 @@ class SmsReport extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_report_id,$item);
+            self::removeCache($item->sms_report_id, $item);
             return $item->sms_report_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -39,7 +40,8 @@ class SmsReport extends BaseModel
         }
     }
 
-    public static function updateItem($id,$data){
+    public static function updateItem($id, $data)
+    {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $checkData = new SmsReport();
@@ -50,7 +52,7 @@ class SmsReport extends BaseModel
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_report_id,$item);
+            self::removeCache($item->sms_report_id, $item);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -59,12 +61,13 @@ class SmsReport extends BaseModel
         }
     }
 
-    public function checkField($dataInput) {
+    public function checkField($dataInput)
+    {
         $fields = $this->fillable;
         $dataDB = array();
-        if(!empty($fields)) {
-            foreach($fields as $field) {
-                if(isset($dataInput[$field])) {
+        if (!empty($fields)) {
+            foreach ($fields as $field) {
+                if (isset($dataInput[$field])) {
                     $dataDB[$field] = $dataInput[$field];
                 }
             }
@@ -72,16 +75,17 @@ class SmsReport extends BaseModel
         return $dataDB;
     }
 
-    public static function deleteItem($id){
-        if($id <= 0) return false;
+    public static function deleteItem($id)
+    {
+        if ($id <= 0) return false;
         try {
             DB::connection()->getPdo()->beginTransaction();
             $item = SmsReport::find($id);
-            if($item){
+            if ($item) {
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_report_id,$item);
+            self::removeCache($item->sms_report_id, $item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -90,40 +94,43 @@ class SmsReport extends BaseModel
         }
     }
 
-    public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
+    public static function searchByCondition($dataSearch = array(), $limit = 0, $offset = 0, &$total)
+    {
 //        FunctionLib::debug($dataSearch);
-        try{
-            $query = SmsReport::where('sms_report_id','>',0);
+        try {
+            $query = SmsReport::where('sms_report_id', '>', 0);
             if (isset($dataSearch['time_check_connect']) && $dataSearch['time_check_connect'] != '') {
-                $query->where('time_check_connect','LIKE', '%' . $dataSearch['time_check_connect'] . '%');
+                $query->where('time_check_connect', 'LIKE', '%' . $dataSearch['time_check_connect'] . '%');
             }
 
             $total = $query->count();
             $query->orderBy('sms_report_id', 'desc');
 
             //get field can lay du lieu
-            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',',trim($dataSearch['field_get'])): array();
-            if(!empty($fields)){
+            $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',', trim($dataSearch['field_get'])) : array();
+            if (!empty($fields)) {
                 $result = $query->take($limit)->skip($offset)->get($fields);
-            }else{
+            } else {
                 $result = $query->take($limit)->skip($offset)->get();
             }
             return $result;
 
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             throw new PDOException();
         }
     }
 
-    public static function removeCache($id = 0,$data){
-        if($id > 0){
+    public static function removeCache($id = 0, $data)
+    {
+        if ($id > 0) {
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
-           // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
+            // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
     }
 
-    public static function executesSQL($str_sql = ''){
+    public static function executesSQL($str_sql = '')
+    {
         //return (trim($str_sql) != '') ? DB::statement(trim($str_sql)): array();
-        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)) : array();
     }
 }
