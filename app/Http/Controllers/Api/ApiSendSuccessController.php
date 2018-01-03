@@ -41,6 +41,7 @@ class ApiSendSuccessController extends BaseApiController
             //lấy thông tin nhà mạng
             $smsLog = SmsLog::find($sms_log_id);
             $carrier_id = ($smsLog) ? $smsLog->carrier_id : 0;
+            $sms_customer_id = ($smsLog) ? $smsLog->sms_customer_id : 0;
 
             if($carrier_id > 0 && $user_manager_id > 0){
                 $userCarrierSetting = DB::table(Define::TABLE_USER_CARRIER_SETTING)
@@ -104,10 +105,12 @@ class ApiSendSuccessController extends BaseApiController
                         SmsLog::updateItem($sms_log_id,$dataSmsLog);
 
                         //web_sms_customer
+                        //update cost lúc nào cũng cập nhật
+                        //tim status = 0 ở bảng SMS_log where sms_customer_id = $sms_customer_id: dùng else thì cập nhật status của Customer
                         $dataSmsCustomer = array(
                             'status'=>Define::SMS_STATUS_SUCCESS,
                             'status_name'=>Define::$arrSmsStatus[Define::SMS_STATUS_SUCCESS],
-                            'cost'=>$cost_report,//sum (cost trong sms_log_id theo user_customer_id)
+                            'cost'=>$cost_report,//sum (cost trong sms_log_id theo sms_customer_id = $sms_customer_id)
                         );
                         DB::table(Define::TABLE_SMS_CUSTOMER)->where('user_customer_id', $user_manager_id)->update($dataSmsCustomer);
 
