@@ -82,6 +82,9 @@ class AdminStationSettingController extends BaseAdminController
         if($this->valid($data) && empty($this->error)) {
             if ($data['count_sms_number_hd'] != $data['count_sms_number'] || $data['sms_error_max_hd'] != $data['sms_error_max'] || $data['time_delay_from_hd'] != $data['time_delay_from'] || $data['time_delay_to_hd'] != $data['time_delay_to']){
 
+                $sql_modem = "select modem_id from ".Define::TABLE_MODEM." WHERE user_id=".$this->user_id;
+                $data_modem = FunctionLib::executesSQL($sql_modem);
+                FunctionLib::debug($data_modem);
                 $packet = SmsPacket::updateOrCreate(
                     [
                         "user_manager_id"=>$this->user_id,

@@ -149,6 +149,9 @@ class Define{
     const CODE = 'code';
     const RESPONSE = 'response';
     const MESSAGE = 'message';
+    const SCOPE = 'scope';
+    const LIST_SMS = 'list_sms';
+    const SMS = 'sms';
     const PHONE = 'phone';
     const ACCESS_TOKEN = 'access_token';
     const EXPIRES_IN = 'expires_in';

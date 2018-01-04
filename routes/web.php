@@ -12,6 +12,7 @@ Route::get('oauth2/token', function () {
         ->header('Content-Type', 'application/json');
 });
 Route::post('api/push-sms', array('as' => 'api.pushSms','uses' => Api.'\ApiPushSms@authorization'));
+Route::post('api/push-list-sms', array('as' => 'api.pushListSms','uses' => Api.'\ApiPushSms@authorization'));
 Route::get('api/push-sms', function () {
     return response(json_encode(array("status_code"=>\App\Library\AdminFunction\Define::HTTP_STATUS_CODE_405,"message"=>"Method Not Allowed")), 200)
         ->header('Content-Type', 'application/json');
