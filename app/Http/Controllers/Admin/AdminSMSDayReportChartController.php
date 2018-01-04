@@ -151,9 +151,9 @@ GROUP BY wsr.day,wsr.month,wsr.year
         $optionUser_customer = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_customer, (isset($dataSearch['station_account2']) && $dataSearch['station_account2']!=""?$dataSearch['station_account2']:0));
         $optionTypeReort = FunctionLib::getOption($this->arrTypeReport, (isset($dataSearch['type_report'])?$dataSearch['type_report']:"1"));
 
-        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
+        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year']) && $dataSearch['year']>0?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
+        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month']) && $dataSearch['month']>0?$dataSearch['month']:(int)$current_month));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSDayReportChart.view',array_merge([

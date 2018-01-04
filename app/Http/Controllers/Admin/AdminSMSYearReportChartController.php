@@ -129,7 +129,7 @@ class AdminSMSYearReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_year,wsr.year from web_sms_report wsr 
+        SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as per_success,Sum(wsr.success_number) as total_success_sms_year,Sum(wsr.success_number+wsr.fail_number) as total_sms_year,wsr.year from web_sms_report wsr 
 WHERE {$sql_where} 
 GROUP BY wsr.year
         ";
@@ -156,6 +156,7 @@ GROUP BY wsr.year
         $optionCarrier = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('all', $this->languageSite) . '') + $arrCarrier, (isset($dataSearch['carrier_id']) ? $dataSearch['carrier_id'] : 0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+//        FunctionLib::debug($data);
         return view('admin.AdminSMSYearReportChart.view', array_merge([
             'data' => $data,
             'search' => $dataSearch,
