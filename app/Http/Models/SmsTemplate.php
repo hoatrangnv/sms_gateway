@@ -98,6 +98,9 @@ class SmsTemplate extends BaseModel
             if (isset($dataSearch['template_name']) && $dataSearch['template_name'] != '') {
                 $query->where('template_name','LIKE', '%' . $dataSearch['template_name'] . '%');
             }
+            if (isset($dataSearch['user_id']) && $dataSearch['user_id'] != '') {
+                $query->where('user_id','=', $dataSearch['user_id']);
+            }
 
             $total = $query->count();
             $query->orderBy('sms_template_id', 'desc');
@@ -116,9 +119,12 @@ class SmsTemplate extends BaseModel
             throw new PDOException();
         }
     }
-    public static function getAll(){
+    public static function getAll($user_id=""){
         try{
             $query = SmsTemplate::where('sms_template_id','>',0);
+            if ($user_id!="") {
+                $query->where('user_id','=', $user_id);
+            }
             $query->orderBy('sms_template_id', 'desc');
             //get field can lay du lieu
             $result = $query->get();

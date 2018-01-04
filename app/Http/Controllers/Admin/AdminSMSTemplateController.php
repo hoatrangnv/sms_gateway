@@ -51,6 +51,7 @@ class AdminSMSTemplateController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $dataSearch['template_name'] = addslashes(Request::get('name_template_s',''));
+        $dataSearch['user_id'] = $this->user_id;
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
@@ -78,6 +79,7 @@ class AdminSMSTemplateController extends BaseAdminController
         $id = isset($_POST['id'])?FunctionLib::outputId($_POST['id']):0;
 
         $data = array(
+            "user_id"=>$this->user_id,
             "template_name"=>$name_template,
             "content"=>$content,
             "updated_date"=>$update_at,
@@ -91,7 +93,7 @@ class AdminSMSTemplateController extends BaseAdminController
         }else{
             SmsTemplate::createItem($data);
         }
-        $data_full = SmsTemplate::getAll();
+        $data_full = SmsTemplate::getAll($this->user_id);
         $data_view = [
             'view' => View::make('admin.AdminSMSTemplate.list')
                 ->with('data', $data_full)
@@ -106,7 +108,7 @@ class AdminSMSTemplateController extends BaseAdminController
         if ($id>0){
             SmsTemplate::deleteItem($id);
         }
-        $data_full = SmsTemplate::getAll();
+        $data_full = SmsTemplate::getAll($this->user_id);
         $data_view = [
             'view' => View::make('admin.AdminSMSTemplate.list')
                 ->with('data', $data_full)
