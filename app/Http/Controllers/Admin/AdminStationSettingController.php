@@ -84,24 +84,26 @@ class AdminStationSettingController extends BaseAdminController
 
                 $sql_modem = "select modem_id from ".Define::TABLE_MODEM." WHERE user_id=".$this->user_id;
                 $data_modem = FunctionLib::executesSQL($sql_modem);
-                FunctionLib::debug($data_modem);
-                $packet = SmsPacket::updateOrCreate(
-                    [
-                        "user_manager_id"=>$this->user_id,
-                        "status"=>0
-                    ],
-                    [
-                        "type"=>"2",
-                        "sms_max"=>$data['count_sms_number'],
-                        "sms_error_max"=>$data['sms_error_max'],
-                        "time_delay_from"=> $data['time_delay_from'],
-                        "time_delay_to"=> $data['time_delay_to'],
-                        "status"=>0,
-                        "user_manager_id"=>$this->user_id,
-                        "created_date"=>date('Y-m-d H:i',time()),
-                        "updated_date"=>date('Y-m-d H:i',time()),
-                    ]
-                );
+                foreach ($data_modem as $k => $v){
+                    $packet = SmsPacket::updateOrCreate(
+                        [
+                            "user_manager_id"=>$this->user_id,
+                            "modem_id"=>$v->modem_id,
+                            "status"=>null
+                        ],
+                        [
+                            "type"=>"2",
+                            "sms_max"=>$data['count_sms_number'],
+                            "sms_error_max"=>$data['sms_error_max'],
+                            "time_delay_from"=> $data['time_delay_from'],
+                            "time_delay_to"=> $data['time_delay_to'],
+                            "status"=>null,
+                            "user_manager_id"=>$this->user_id,
+                            "created_date"=>date('Y-m-d H:i',time()),
+                            "updated_date"=>date('Y-m-d H:i',time()),
+                        ]
+                    );
+                }
 
 //                $packet = SmsPacket::firstOrNew(array('user_manager_id' => $this->user_id,'status'=>"Open"));
             }
