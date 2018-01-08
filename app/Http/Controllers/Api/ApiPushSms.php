@@ -209,95 +209,104 @@ class ApiPushSms extends BaseApiController
             $carrier = CarrierSetting::getInfoCarrier();
 
             $list_send = array();
-            foreach ($sending_list as $k => $v) {
-                $lenghtNumber = strlen($v['phone']);
-                foreach ($carrier as $kc => $vc) {
-                    $arrFrirstNum1 = explode(',', $vc['first_number']);
-                    foreach ($arrFrirstNum1 as $kf => $vf) {
-                        $pos = strpos($v['phone'], trim($vf));
-                        if (FunctionLib::checkNumberPhoneAPI($v['phone']) && $pos === 0 && $vc['min_number'] <= $lenghtNumber && $lenghtNumber <= $vc['max_number']) {
-                            $mess = FunctionLib::splitStringSms($v['message'], $vc['slipt_number']);
-                            foreach ($mess as $km => $vm) {
-                                $list_send[] = array(
-                                    "phone" => $v['phone'],
-                                    "message" => $vm,
-                                    "carrier_id" => $vc['carrier_setting_id'],
-                                    "carrier_name" => $vc['carrier_name'],
-                                );
+            $list_correct = array();
+            $list_incorrect = array();
+
+            //validate number phone
+            if (!empty($carrier)){
+                foreach ($sending_list as $k => $v) {
+//                    if (isset($v['phone']) && isset($v['message']) && trim($v['phone'])!="")
+                    $lenghtNumber = strlen($v['phone']);
+                    foreach ($carrier as $kc => $vc) {
+                        $arrFrirstNum1 = explode(',', $vc['first_number']);
+                        foreach ($arrFrirstNum1 as $kf => $vf) {
+                            $pos = strpos($v['phone'], trim($vf));
+                            if (FunctionLib::checkNumberPhoneAPI($v['phone']) && $pos === 0 && $vc['min_number'] <= $lenghtNumber && $lenghtNumber <= $vc['max_number']) {
+                                $list_correct[$v['phone']] = $v['phone'];
+                                $mess = FunctionLib::splitStringSms($v['message'], $vc['slipt_number']);
+                                foreach ($mess as $km => $vm) {
+                                    $list_send[] = array(
+                                        "phone" => $v['phone'],
+                                        "message" => $vm,
+                                        "carrier_id" => $vc['carrier_setting_id'],
+                                        "carrier_name" => $vc['carrier_name'],
+                                    );
+                                }
                             }
                         }
                     }
                 }
-            }
-
-            foreach ($list_send as $k => $v) {
-                $arrCorrect[$v['phone']] = $v['phone'];
-            }
-            $num_correct = count($arrCorrect);
-            $num_incorrect = count($sending_list) - $num_correct;
-
-            //add customer
-            $dataCustomer = array(
-                'user_customer_id' => $user_id,
-                'status' => Define::SMS_STATUS_PROCESSING,
-                'status_name' => Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                'correct_number' => $num_correct,
-                'incorrect_number' => $num_incorrect,
-//                'incorrect_number_list'=>implode(",",$dataPhone_err),
-                'sms_deadline' => $send_sms_deadline,
-                'created_date' => FunctionLib::getDateTime());
-            $sms_customer_id = SmsCustomer::createItem($dataCustomer);
-
-            //add log & add send to
-            foreach ($list_send as $k => $v) {
-                $arrCarrier[$v['carrier_id']] = array(
-                    'carrier_id' => $v['carrier_id'],
-                    'carrier_name' => $v['carrier_name']
-                );
-            }
-            $dataSendTo = array();
-            foreach ($arrCarrier as $kc => $vc) {
-                $i = 0;
-                foreach ($list_send as $kl => $vl) {
-                    if ($kc == $vl['carrier_id']) {
-                        $i++;
-                    }
+                //get list incorrect
+                foreach ($sending_list as $k => $v) {
+                    if (!in_array($v['phone'],$list_correct)) $list_incorrect[$v['phone']] = $v['phone'];
                 }
-                $arrCarrier[$kc]['total_sms'] = $i;
-                $dataLog = array(
+                $num_correct = count($list_correct);
+                $num_incorrect = count($list_incorrect);
+
+                //add customer
+                $dataCustomer = array(
                     'user_customer_id' => $user_id,
-                    'user_manager_id' => 0,
-                    'sms_customer_id' => $sms_customer_id,
-                    'carrier_id' => $vc['carrier_id'],
-                    'carrier_name' => $vc['carrier_name'],
-                    'total_sms' => $i,
                     'status' => Define::SMS_STATUS_PROCESSING,
                     'status_name' => Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                    'send_date' => FunctionLib::getIntDate(),
+                    'correct_number' => $num_correct,
+                    'incorrect_number' => $num_incorrect,
+                    'incorrect_number_list'=>implode(",",$list_incorrect),
                     'sms_deadline' => $send_sms_deadline,
-                    'created_date' => FunctionLib::getDateTime(),);
-                $log_id = SmsLog::createItem($dataLog);
-                foreach ($list_send as $kl => $vl) {
-                    if ($kc == $vl['carrier_id']) {
-                        $list_send[$kl]['sms_log_id'] = $log_id;
-                        $dataSendTo[] = array(
-                            "sms_customer_id"=>$sms_customer_id,
-                            "sms_log_id"=>$log_id,
-                            "carrier_id"=>$vl['carrier_id'],
-                            "phone_receive"=>$vl['phone'],
-                            "user_customer_id"=>$user_id,
-                            "status"=>Define::SMS_STATUS_PROCESSING,
-                            "status_name"=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
-                            "content"=>$vl['message'],
-                            "content_grafted"=>$vl['message'],
-                            "created_date"=>FunctionLib::getDateTime(),
-                        );
+                    'created_date' => FunctionLib::getDateTime());
+                $sms_customer_id = SmsCustomer::createItem($dataCustomer);
+
+                //add log & add send to
+                foreach ($list_send as $k => $v) {
+                    $arrCarrier[$v['carrier_id']] = array(
+                        'carrier_id' => $v['carrier_id'],
+                        'carrier_name' => $v['carrier_name']
+                    );
+                }
+                $dataSendTo = array();
+                foreach ($arrCarrier as $kc => $vc) {
+                    $i = 0;
+                    foreach ($list_send as $kl => $vl) {
+                        if ($kc == $vl['carrier_id']) {
+                            $i++;
+                        }
+                    }
+                    $arrCarrier[$kc]['total_sms'] = $i;
+                    $dataLog = array(
+                        'user_customer_id' => $user_id,
+                        'user_manager_id' => 0,
+                        'sms_customer_id' => $sms_customer_id,
+                        'carrier_id' => $vc['carrier_id'],
+                        'carrier_name' => $vc['carrier_name'],
+                        'total_sms' => $i,
+                        'status' => Define::SMS_STATUS_PROCESSING,
+                        'status_name' => Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
+                        'send_date' => FunctionLib::getIntDate(),
+                        'sms_deadline' => $send_sms_deadline,
+                        'created_date' => FunctionLib::getDateTime(),);
+                    $log_id = SmsLog::createItem($dataLog);
+                    foreach ($list_send as $kl => $vl) {
+                        if ($kc == $vl['carrier_id']) {
+                            $list_send[$kl]['sms_log_id'] = $log_id;
+                            $dataSendTo[] = array(
+                                "sms_customer_id"=>$sms_customer_id,
+                                "sms_log_id"=>$log_id,
+                                "carrier_id"=>$vl['carrier_id'],
+                                "phone_receive"=>$vl['phone'],
+                                "user_customer_id"=>$user_id,
+                                "status"=>Define::SMS_STATUS_PROCESSING,
+                                "status_name"=>Define::$arrSmsStatus[Define::SMS_STATUS_PROCESSING],
+                                "content"=>$vl['message'],
+                                "content_grafted"=>$vl['message'],
+                                "created_date"=>FunctionLib::getDateTime(),
+                            );
+                        }
                     }
                 }
+                SmsSendTo::insertMultiple($dataSendTo);
+                $return = FunctionLib::returnAPI(200, 'Gui thanh cong !');
+            }else{
+                $return = FunctionLib::returnAPI(1015, 'Chua co thong tin nha mang');
             }
-            SmsSendTo::insertMultiple($dataSendTo);
-
-            $return = FunctionLib::returnAPI(200, 'Gui thanh cong !');
         } else {
             $return = FunctionLib::returnAPI(1016, 'Gui that bai!');
         }
