@@ -19,17 +19,12 @@ use View;
 
 class AdminAppRegisterController extends BaseAdminController
 {
-    private $permission_view = 'sendSmsTemplate_view';
-    private $permission_full = 'sendSmsTemplate_full';
-    private $permission_delete = 'sendSmsTemplate_delete';
-    private $permission_create = 'sendSmsTemplate_create';
-    private $permission_edit = 'sendSmsTemplate_edit';
+    private $permission_view = 'appRegister_view';
+    private $permission_full = 'appRegister_full';
+    private $permission_delete = 'appRegister_delete';
+    private $permission_create = 'appRegister_create';
+    private $permission_edit = 'appRegister_edit';
 
-    private $arrMenuParent = array();
-    private $arrStatus = array();
-    private $arrCarrier = array();
-    private $arrUser = array();
-    private $arrRuleString = array();
     private $error = array();
     private $viewPermission = array();//check quyen
 
@@ -37,24 +32,6 @@ class AdminAppRegisterController extends BaseAdminController
     {
         parent::__construct();
         CGlobal::$pageAdminTitle = 'Quản lý menu';
-        $this->getDataDefault();
-    }
-
-    public function getDataDefault(){
-        $this->arrRuleString = array(
-            CGlobal::concatenation_rule_first => FunctionLib::controLanguage('concatenation_rule_first',$this->languageSite),
-            CGlobal::concatenation_rule_center => FunctionLib::controLanguage('concatenation_rule_center',$this->languageSite),
-            CGlobal::concatenation_rule_end => FunctionLib::controLanguage('concatenation_rule_end',$this->languageSite));
-
-        $this->arrStatus = array(
-            ''=>FunctionLib::controLanguage('all',$this->languageSite),
-            0=>'Processing',
-            1=>'Successful'
-        );
-
-        $this->arrCarrier = CarrierSetting::getOptionCarrier();
-
-        $this->arrUser = User::getOptionUserFullName();
     }
 
     public function getPermissionPage(){
@@ -73,18 +50,14 @@ class AdminAppRegisterController extends BaseAdminController
             return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
         }
         $page_no = (int) Request::get('page_no',1);
-        $sbmValue = Request::get('submit', 1);
-        $dataSearch['template_name'] = addslashes(Request::get('name_template_s',''));
+        $dataSearch['app_name'] = addslashes(Request::get('app_name_s',''));
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
         $data = ApiApp::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
 
-        $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
-        $optionUser = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrUser,isset($dataSearch['user_id'])&& $dataSearch['user_id']>0?$dataSearch['user_id']:0);
-        $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
 
         return view('admin.AdminAppRegister.view',array_merge([
             'data'=>$data,
@@ -92,74 +65,9 @@ class AdminAppRegisterController extends BaseAdminController
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
-            'optionStatus'=>$optionStatus,
-            'arrStatus'=>$this->arrStatus,
-            'optionUser'=>$optionUser,
         ],$this->viewPermission));
     }
 
-    public function viewDetails() {
-        $id_cs = isset($_GET['id_customer_sms']) && FunctionLib::outputId($_GET['id_customer_sms'])>0 ?FunctionLib::outputId($_GET['id_customer_sms']):0;
-        //Check phan quyen.
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission)&& !in_array($this->permission_view,$this->permission)){
-            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
-        }
-
-        if ($id_cs <=0){
-            return Redirect::route('admin.smsHistoryView');
-        }
-        $dataSearch['id_cs'] = $id_cs;
-        $page_no = (int) Request::get('page_no',1);
-        $sbmValue = Request::get('submit', 1);
-        $dataSearch['carrier_id'] = addslashes(Request::get('carrier_id',''));
-        $dataSearch['status'] = addslashes(Request::get('status',''));
-        $dataSearch['from_day'] = addslashes(Request::get('from_day',''));
-        $dataSearch['to_day'] = addslashes(Request::get('to_day',''));
-
-        $limit = CGlobal::number_limit_show;
-        $total = 0;
-        $offset = ($page_no - 1) * $limit;
-        $data = SmsSendTo::joinByCondition($dataSearch, $limit, $offset, $total);
-        $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-
-        $this->getDataDefault();
-        $this->viewPermission = $this->getPermissionPage();
-        $optionCarrier = FunctionLib::getOption(array(''=>'---'.FunctionLib::controLanguage('select_user',$this->languageSite).'---')+$this->arrCarrier,isset($dataSearch['carrier_id'])&& $dataSearch['carrier_id']>0?$dataSearch['carrier_id']:0);
-        $optionStatus = FunctionLib::getOption($this->arrStatus,isset($dataSearch['status'])&& $dataSearch['status']>0?$dataSearch['status']:'');
-        $incorrect_number_list = isset($data[0])?$data[0]['incorrect_number_list']:"";
-
-        return view('admin.AdminSendSMSHistory.viewdetails',array_merge([
-            'data'=>$data,
-            'search'=>$dataSearch,
-            'size'=>$total,
-            'start'=>($page_no - 1) * $limit,
-            'paging'=>$paging,
-            'optionStatus'=>$optionStatus,
-            'arrStatus'=>$this->arrStatus,
-            'optionCarrier'=>$optionCarrier,
-            'incorrect_number_list'=>$incorrect_number_list,
-            'id_cs'=>$id_cs,
-//            'optionRuleString'=>$optionRuleString,
-        ],$this->viewPermission));
-    }
-
-    public function getItem($ids) {
-        $id = FunctionLib::outputId($ids);
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
-            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
-        }
-        $data = array();
-        if($id > 0) {
-            $data = CarrierSetting::find($id);
-        }
-//        $optionRuleString = FunctionLib::getOption($this->arrRuleString, (isset($data['concatenation_rule'])?$data['concatenation_rule']:CGlobal::concatenation_rule_first));
-        $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminCarrierSetting.add',array_merge([
-            'data'=>$data,
-            'id'=>$id,
-//            'optionRuleString'=>$optionRuleString,
-        ],$this->viewPermission));
-    }
     public function addApp(){
         $app_name = isset($_POST['app_name'])?$_POST['app_name']:"";
         $description = isset($_POST['description'])?$_POST['description']:"";
@@ -173,20 +81,20 @@ class AdminAppRegisterController extends BaseAdminController
             "description"=>$description,
             "ip_server"=>$ip_server,
             "user_id"=>md5($this->user_id),
-            "client_id"=>md5($this->user_id),
-            "client_secret"=>bin2hex(openssl_random_pseudo_bytes(32)),
-            "created_at"=>$update_at,
+            "update_at"=>$update_at,
         );
 
-        if ($id!=0 || $id!="0"){
-            unset($data['created_date']);
+        if ($id!=0 && $id!="0" && $id>0){
             ApiApp::updateItem($id,$data);
         }else{
+            $data['client_id'] = FunctionLib::encodeBase64(FunctionLib::gen_uuid());
+            $data['client_secret'] = FunctionLib::encodeBase64(bin2hex(openssl_random_pseudo_bytes(32)));
+            $data['created_at'] =$update_at;
             ApiApp::createItem($data);
         }
         $data_full = ApiApp::getAll();
         $data_view = [
-            'view' => View::make('admin.AdminSMSTemplate.list')
+            'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
                 ->render()
         ];
@@ -194,77 +102,17 @@ class AdminAppRegisterController extends BaseAdminController
         return Response::json($data_view, 200);
     }
 
-    public function deleteTemplate(){
+    public function deleteApp(){
         $id = isset($_GET['id'])?FunctionLib::outputId($_GET['id']):0;
         if ($id>0){
             ApiApp::deleteItem($id);
         }
         $data_full = ApiApp::getAll();
         $data_view = [
-            'view' => View::make('admin.AdminSMSTemplate.list')
+            'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
                 ->render()
         ];
         return Response::json($data_view, 200);
-    }
-    public function postItem($ids) {
-        $id = FunctionLib::outputId($ids);
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_edit,$this->permission) && !in_array($this->permission_create,$this->permission)){
-            return Redirect::route('admin.dashboard',array('error'=>Define::ERROR_PERMISSION));
-        }
-        $id_hiden = (int)Request::get('id_hiden', 0);
-        $data = $_POST;
-        $data['updated_date'] = date("Y/m/d H:i",time());
-        if($this->valid($data) && empty($this->error)) {
-            $id = ($id == 0)?$id_hiden: $id;
-            if($id > 0) {
-                //cap nhat
-                if(CarrierSetting::updateItem($id, $data)) {
-                    return Redirect::route('admin.carrierSettingView');
-                }
-            }else{
-                $data['created_date']=$data['updated_date'];
-                //them moi
-                if(CarrierSetting::createItem($data)) {
-                    return Redirect::route('admin.carrierSettingView');
-                }
-            }
-        }
-
-//        $optionRuleString = FunctionLib::getOption($this->arrRuleString, isset($data['active'])? $data['active']: CGlobal::status_show);
-        $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminCarrierSetting.add',array_merge([
-            'data'=>$data,
-            'id'=>$id,
-            'error'=>$this->error,
-//            'optionRuleString'=>$optionRuleString,
-        ],$this->viewPermission));
-    }
-
-    public function deleteSystemSetting()
-    {
-        $data = array('isIntOk' => 0);
-        if(!$this->is_root && !in_array($this->permission_full,$this->permission) && !in_array($this->permission_delete,$this->permission)){
-            return Response::json($data);
-        }
-        $id = (int)Request::get('id', 0);
-        if ($id > 0 && CarrierSetting::deleteItem($id)) {
-            $data['isIntOk'] = 1;
-        }
-        return Response::json($data);
-    }
-
-
-
-    public function valid($data=array()) {
-        $arr_require = array(
-            array("key_input"=>$data['carrier_name'],"label"=>FunctionLib::controLanguage('carrier_name',$this->languageSite)),
-            array("key_input"=>$data['slipt_number'],"label"=>FunctionLib::controLanguage('slipt_number',$this->languageSite)),
-            array("key_input"=>$data['min_number'],"label"=>FunctionLib::controLanguage('min_number',$this->languageSite)),
-            array("key_input"=>$data['max_number'],"label"=>FunctionLib::controLanguage('max_number',$this->languageSite)),
-
-        );
-        FunctionLib::check_require($arr_require,$this->error);
-        return true;
     }
 }

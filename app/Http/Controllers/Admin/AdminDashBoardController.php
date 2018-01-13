@@ -40,6 +40,8 @@ class AdminDashBoardController extends BaseAdminController{
             'menu'=>$this->menuSystem,
             'data'=>$data,
             'lang'=>$this->languageSite,
-            'is_root'=>$this->is_root]);
+            'is_root'=>$this->is_root,
+            'user_role_type'=>$this->role_type
+        ]);
     }
 }

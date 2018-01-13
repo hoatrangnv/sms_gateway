@@ -128,8 +128,11 @@
                 },
 
                 tooltip: {
-                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+//                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+//                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                    pointFormat: '<b>{point.y}</b> of total<br/>' +
+                    '<b>{point.success}</b> of success <br/>' +
+                    '<b>{point.success_per:.1f}%</b> success <br/>'
                 },
                 series: [{
                     name: 'Brands',
@@ -139,7 +142,9 @@
                         foreach ($data as $v) {
                             echo "{
                             name:{$v['year']},
-                            y:{$v['total_sms_year']}
+                            y:{$v['total_sms_year']},
+                            success:{$v['total_success_sms_year']},
+                            success_per:{$v['per_success']}
                             },";
                         }
                         ?>

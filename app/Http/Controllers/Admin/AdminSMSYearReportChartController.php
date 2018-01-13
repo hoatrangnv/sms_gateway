@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSYearReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsYearReport_view';
+    private $permission_full = 'smsYearReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -47,8 +47,8 @@ class AdminSMSYearReportChartController extends BaseAdminController
     public function getDataDefault()
     {
 //        $this->arrManager = User::getOptionUserFullNameAndMail();
-        $this->arrManager_station = User::getOptionUserFullName(2);
-        $this->arrManager_customer = User::getOptionUserFullName(3);
+        $this->arrManager_station = User::getOptionUserFullMail(2);
+        $this->arrManager_customer = User::getOptionUserFullMail(3);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active', $this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active', $this->languageSite)
@@ -116,6 +116,8 @@ class AdminSMSYearReportChartController extends BaseAdminController
             $sql_where .= " AND wsr.user_id=" . $dataSearch['user_id'];
         }
 
+        if ($dataSearch['type_report'] == "") $dataSearch['type_report']="1";
+
         if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
             $id_station = join(",",array_keys($this->arrManager_station));
             $sql_where.=" AND wsr.user_id in (".$id_station.") ";
@@ -127,7 +129,7 @@ class AdminSMSYearReportChartController extends BaseAdminController
         }
 
         $sql = "
-        SELECT Sum(wsr.success_number) as total_sms_year,wsr.year from web_sms_report wsr 
+        SELECT (Sum(wsr.success_number)/Sum(wsr.success_number+wsr.fail_number))*100 as per_success,Sum(wsr.success_number) as total_success_sms_year,Sum(wsr.success_number+wsr.fail_number) as total_sms_year,wsr.year from web_sms_report wsr 
 WHERE {$sql_where} 
 GROUP BY wsr.year
         ";
@@ -154,6 +156,7 @@ GROUP BY wsr.year
         $optionCarrier = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('all', $this->languageSite) . '') + $arrCarrier, (isset($dataSearch['carrier_id']) ? $dataSearch['carrier_id'] : 0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+//        FunctionLib::debug($data);
         return view('admin.AdminSMSYearReportChart.view', array_merge([
             'data' => $data,
             'search' => $dataSearch,

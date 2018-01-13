@@ -57,7 +57,9 @@
                  </div>
             </div>
             <div class="col-xs-12">
-                <a href="{{URL::route('admin.infoEdit')}}" class=""><i class="fa fa-pencil-square-o" aria-hidden="true"></i>{{FunctionLib::viewLanguage('edit')}}</a>
+                @if($user_role_type== \App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
+                    <a href="{{URL::route('admin.infoEdit')}}" class=""><i class="fa fa-pencil-square-o" aria-hidden="true"></i>{{FunctionLib::viewLanguage('edit')}}</a>
+                    @endif
                 <div>
                     @if(isset($data['content'])){!! $data['content'] !!}@endif
                 </div>

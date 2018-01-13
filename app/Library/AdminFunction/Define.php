@@ -143,4 +143,35 @@ class Define{
         Define::SMS_STATUS_SUCCESS => 'Successful',
         Define::SMS_STATUS_REJECT => 'Reject',
         Define::SMS_STATUS_FAIL => 'Fail');
+
+    const APPLICATION_JSON = 'application/json';
+    const STATUS_CODE = 'status_code';
+    const CODE = 'code';
+    const RESPONSE = 'response';
+    const MESSAGE = 'message';
+    const SCOPE = 'scope';
+    const LIST_SMS = 'list_sms';
+    const SMS = 'sms';
+    const PHONE = 'phone';
+    const ACCESS_TOKEN = 'access_token';
+    const EXPIRES_IN = 'expires_in';
+    const TOKEN_TYPE = 'token_type';
+    const KEY_CLIENT_ID = 'client_id';
+    const KEY_CLIENT_SECRET = 'client_secret';
+    const CONTENT_TYPE = 'CONTENT_TYPE';
+    const CONTENT_TYPE_L = 'Content-Type';
+    const SIGN_KEY_API = 'SmsGat3Way@Tp@Mg&1b7s03m';
+    const SIGN_KEY_TOKEN = 'SmsGat3Way@Tok3n@nAmNv&1b7s03m';
+    const HTTP_STATUS_CODE_400 = 400;
+    const HTTP_STATUS_CODE_406 = 406 ;
+    const HTTP_STATUS_CODE_200 = 200;
+    const HTTP_STATUS_CODE_405 = 405 ;
+    const HTTP_STATUS_CODE_401 = 401  ;
+
+    const HTTP_STATUS_MESSAGE_UNAUTHORIZED = 'Access token không hợp lệ';
+    const HTTP_STATUS_MESSAGE_TOKEN_EXPIRE = 'Access token hết hạn';
+    const HTTP_STATUS_MESSAGE_BAD_REQUEST = 'Bad Request';
+    const HTTP_STATUS_MESSAGE_SUCCESS = 'Success';
+    const HTTP_STATUS_MESSAGE_INVALID_CLIENT = 'Các thông tin client là không đúng.';
+    const GMT_7_TIME_ZONE = 'Asia/Bangkok';
 }

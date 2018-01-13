@@ -17,30 +17,36 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
-class BaseApiController extends Controller{
 
-	public function __construct(){}
+class BaseApiController extends Controller
+{
 
-    public function returnResultSuccess($dataOutPut, $message = 'Success'){
+    public function __construct()
+    {
+    }
+
+    public function returnResultSuccess($dataOutPut = array(), $message = 'Success')
+    {
         return Response::json(
             array(
-                'intIsOK'=> 1,
+                'intIsOK' => 1,
                 'data' => $dataOutPut,
                 'message' => $message,
-                'code'=>  200
+                'code' => 200
             )
         );
     }
 
-    public function returnResultError($dataOutPut, $message = 'Error Exception'){
+    public function returnResultError($dataOutPut = array(), $message = 'Error Exception')
+    {
         $dataLog['data'] = $dataOutPut;
         $dataLog['message'] = $message;
         return Response::json(
             array(
-                'intIsOK'=> -1,
+                'intIsOK' => -1,
                 'data' => $dataOutPut,
                 'message' => $message,
-                'code'=>  202
+                'code' => 202
             )
         );
     }

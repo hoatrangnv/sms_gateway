@@ -16,7 +16,7 @@ class ApiApp extends BaseModel
     protected $primaryKey = 'app_id';
     public $timestamps = false;
 
-    protected $fillable = array('app_name','client_id', 'client_secret', 'user_id', 'created_at', 'description', 'ip_server');
+    protected $fillable = array('app_name','client_id', 'client_secret', 'user_id', 'created_at', 'description','update_at');
 
     public static function createItem($data){
         try {
@@ -92,11 +92,15 @@ class ApiApp extends BaseModel
     }
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){
-//        FunctionLib::debug($dataSearch);
         try{
             $query = ApiApp::where('app_id','>',0);
             if (isset($dataSearch['app_name']) && $dataSearch['app_name'] != '') {
                 $query->where('app_name','LIKE', '%' . $dataSearch['app_name'] . '%');
+            }
+
+            if (isset($dataSearch['client_id']) && $dataSearch['client_id'] != '' && isset($dataSearch['client_secret']) && $dataSearch['client_secret'] != '') {
+                $query->where('client_id','=', $dataSearch['client_id']);
+                $query->where('client_secret','=', $dataSearch['client_secret']);
             }
 
             $total = $query->count();

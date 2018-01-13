@@ -63,7 +63,7 @@
                                 <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else}
                                     class="middle" @endif>
                                     <td class="text-center middle">{{ $start+$key+1 }}</td>
-                                    <td>@if(in_array($item['user_id'],$arrUser)){{ $arrUser[$item['user_id']] }}@endif</td>
+                                    <td>@if(array_key_exists($item['user_id'],$arr_info_user)){{ $arr_info_user[$item['user_id']]['user_name'] }}@endif</td>
                                     <td>{{ $item['device_code'] }}</td>
                                     <td>{{ $item['token'] }}</td>
                                     <td>{{ $item['modem_type'] }}</td>

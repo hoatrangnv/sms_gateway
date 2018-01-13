@@ -1,9 +1,14 @@
 .img_loading{width: 32px; height: 32px; background: url("../img/ajax-loader.gif") no-repeat -1px -1px; float: left; display: none}
+.marginTop5{margin-top:5px }
+.marginTop8{margin-top:8px }
 .marginTop10{margin-top:10px }
 .marginTop20{margin-top:20px }
 .marginTop30{margin-top:30px }
+
+.marginLeft30{margin-left:30px }
 .text-middle{vertical-align: middle!important;}
 .a_control:hover{color: red}
+.msg_notify{background: red; color:#ffffff; position: absolute;top: 2px; left: -1px; border-radius: 15px; font-size: 10px; padding: 5px 5px; }
 
 /*Cpanel*/
 .no-skin small,

@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSHoursReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsHoursReport_view';
+    private $permission_full = 'smsHoursReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -45,8 +45,8 @@ class AdminSMSHoursReportChartController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager_station = User::getOptionUserFullName(2);
-        $this->arrManager_customer = User::getOptionUserFullName(3);
+        $this->arrManager_station = User::getOptionUserFullMail(2);
+        $this->arrManager_customer = User::getOptionUserFullMail(3);
         $this->hours = array(
             1 => 1,
             2 => 2,
@@ -107,7 +107,6 @@ class AdminSMSHoursReportChartController extends BaseAdminController
         $year_search = date('Y',strtotime($current_day));
 
         $arrCarrier = CarrierSetting::getOptionCarrier();
-
         $sql_where = "wsr.year=".$year_search." AND wsr.month=".$month_search." AND wsr.day=".$day_search;
         if (isset($dataSearch['carrier_id']) && $dataSearch['carrier_id']>0 && $dataSearch['carrier_id']!=""){
             $sql_where.=" AND wsr.carrier_id=".$dataSearch['carrier_id'];
@@ -117,6 +116,8 @@ class AdminSMSHoursReportChartController extends BaseAdminController
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
 
         }
+
+        if ($dataSearch['type_report'] == "") $dataSearch['type_report']="1";
 
         if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
             $id_station = join(",",array_keys($this->arrManager_station));

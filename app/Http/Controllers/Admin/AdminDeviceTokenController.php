@@ -35,7 +35,7 @@ class AdminDeviceTokenController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName(2);
+        $this->arrManager = User::getOptionUserFullMail(2);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
@@ -75,9 +75,19 @@ class AdminDeviceTokenController extends BaseAdminController
         $offset = ($page_no - 1) * $limit;
         $data = DeviceToken::searchByCondition($dataSearch, $limit, $offset, $total);
         $paging = $total > 0 ? Pagging::getNewPager(3,$page_no,$total,$limit,$dataSearch) : '';
-
+        $ids = array();
+        foreach ($data as $k=>$v){
+            $ids[$v['user_id']] = $v['user_id'];
+        }
+        $sql_user = "select user_id,user_name,user_full_name FROM ".Define::TABLE_USER." WHERE user_id in (".implode(",",$ids).") ";
+        $arr_info_user = FunctionLib::executesSQL($sql_user);
+        foreach ($arr_info_user as $k =>$v){
+            $arr_info_user[$arr_info_user[$k]->user_id] = (array)$v;
+            unset($arr_info_user[$k]);
+        }
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
+//        FunctionLib::debug(array_key_exists("5",$arr_info_user));
         return view('admin.AdminDeviceToken.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
@@ -86,6 +96,7 @@ class AdminDeviceTokenController extends BaseAdminController
             'paging'=>$paging,
             'arrUser'=>$this->arrManager,
             'optionUser'=>$optionUser,
+            'arr_info_user'=>$arr_info_user,
         ],$this->viewPermission));
     }
 

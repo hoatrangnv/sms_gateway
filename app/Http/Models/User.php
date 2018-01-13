@@ -2,8 +2,6 @@
 
 namespace App\Http\Models;
 
-//namespace App\Library\AdminFunction;
-
 use App\Library\AdminFunction\FunctionLib;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -13,32 +11,58 @@ use App\library\AdminFunction\Define;
 use App\library\AdminFunction\Memcache;
 
 
-class User extends BaseModel{
+class User extends BaseModel
+{
     protected $table = Define::TABLE_USER;
     protected $primaryKey = 'user_id';
     public $timestamps = false;
 
     protected $fillable = array('user_name', 'user_parent', 'user_password', 'user_full_name', 'user_email', 'user_phone',
-        'user_status', 'user_sex','user_view', 'user_group','user_group_menu','user_last_login','user_last_ip','user_create_id','user_create_name',
-        'user_edit_id','user_edit_name','user_created','user_updated',
-        'role_type','role_name','address','number_code','address_register','telephone');
+        'user_status', 'user_sex', 'user_view', 'user_group', 'user_group_menu', 'user_last_login', 'user_last_ip', 'user_create_id', 'user_create_name',
+        'user_edit_id', 'user_edit_name', 'user_created', 'user_updated',
+        'role_type', 'role_name', 'address', 'number_code', 'address_register', 'telephone');
 
 
     /**
      * @param $name
      * @return mixed
      */
-    public static function getUserByName($name){
+    public static function getUserByName($name)
+    {
         $admin = User::where('user_name', $name)->first();
         return $admin;
+    }
+
+    public static function updateUserPermissionWithRole($role)
+    {
+        if ($role) {
+            $arrListUser = User::where('role_type', $role->role_id)->get();
+            if ($arrListUser) {
+                foreach ($arrListUser as $user) {
+                    $dataUpdate['user_group'] = (isset($role->role_group_permission) && trim($role->role_group_permission) != '' && $role->role_status == Define::STATUS_SHOW) ? $role->role_group_permission : '';
+                    $dataUpdate['user_group_menu'] = (isset($role->role_group_menu_id) && trim($role->role_group_menu_id) != '' && $role->role_status == Define::STATUS_SHOW) ? $role->role_group_menu_id : '';
+                    $dataUpdate['role_type'] = $role->role_id;
+                    $dataUpdate['role_name'] = $role->role_name;
+                    User::updateUser($user->user_id,$dataUpdate);
+                }
+            }
+        }
     }
 
     /**
      * @param $id
      * @return mixed
      */
-    public static function getUserById($id){
+    public static function getUserById($id)
+    {
         $admin = User::find($id);
+        return $admin;
+    }
+
+    public static function getUserByMd5Id($id)
+    {
+//        $admin = User::find($id);
+        $admin = User::where(DB::raw("md5(user_id)"), $id)->first();
         return $admin;
     }
 
@@ -46,47 +70,53 @@ class User extends BaseModel{
      * @param $password
      * @return string
      */
-    public static function encode_password($password){
-        return md5($password.'-haianhem!@13368');
+    public static function encode_password($password)
+    {
+        return md5($password . '-haianhem!@13368');
     }
 
-    public static function updateLogin($user = array()){
-        if($user){
-            date_default_timezone_set('Asia/Ho_Chi_Minh').
+    public static function updateLogin($user = array())
+    {
+        if ($user) {
+            date_default_timezone_set('Asia/Ho_Chi_Minh') .
             $user->user_last_login = time();
             $user->user_last_ip = request()->ip();
             $user->save();
         }
     }
 
-    public static function user_login(){
+    public static function user_login()
+    {
         $user = array();
-        if(Session::has('user')){
+        if (Session::has('user')) {
             $user = Session::get('user');
         }
         return $user;
     }
 
-    public static function customer_login(){
+    public static function customer_login()
+    {
         $user = array();
-        if(Session::has('customer')){
+        if (Session::has('customer')) {
             $user = Session::get('customer');
         }
         return $user;
     }
 
-    public static function user_id(){
+    public static function user_id()
+    {
         $id = 0;
-        if(Session::has('user')){
+        if (Session::has('user')) {
             $user = Session::get('user');
             $id = $user['user_id'];
         }
         return $id;
     }
 
-    public static function user_name(){
+    public static function user_name()
+    {
         $user_name = '';
-        if(Session::has('user')){
+        if (Session::has('user')) {
             $user = Session::get('user');
             $user_name = $user['user_name'];
         }
@@ -99,8 +129,8 @@ class User extends BaseModel{
             $query = User::where('user_id', '>', 0);
 
             if (isset($data['user_view']) && $data['user_view'] == 1) {
-                $query->whereIn('user_view', array(0,1));
-            }else{
+                $query->whereIn('user_view', array(0, 1));
+            } else {
                 $query->where('user_view', 1);
             }
 
@@ -152,7 +182,7 @@ class User extends BaseModel{
                 $user->user_password = self::encode_password($user->user_password);
             }
             $user->save();
-            self::removeCache($user->user_id,$user);
+            self::removeCache($user->user_id, $user);
             DB::connection()->getPdo()->commit();
             return $user->user_id;
         } catch (PDOException $e) {
@@ -162,7 +192,8 @@ class User extends BaseModel{
         }
     }
 
-    public static function updateUser($id,$data){
+    public static function updateUser($id, $data)
+    {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $user = User::find($id);
@@ -171,7 +202,7 @@ class User extends BaseModel{
             }
             $user->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($user->user_id,$user);
+            self::removeCache($user->user_id, $user);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -180,7 +211,8 @@ class User extends BaseModel{
         }
     }
 
-    public static function updatePassWord($id,$pass){
+    public static function updatePassWord($id, $pass)
+    {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $user = User::find($id);
@@ -198,7 +230,7 @@ class User extends BaseModel{
     public static function isLogin()
     {
         $result = 0;
-        if(session()->has('user')){
+        if (session()->has('user')) {
             $result = 1;
         }
         return $result;
@@ -207,27 +239,30 @@ class User extends BaseModel{
     public static function isCustomerLogin()
     {
         $result = 0;
-        if(session()->has('customer')){
+        if (session()->has('customer')) {
             $result = 1;
         }
         return $result;
     }
 
-    public static function getListAllUser() {
-        $user = User::where('user_status', '>', 0)->lists('user_name','user_id');
+    public static function getListAllUser()
+    {
+        $user = User::where('user_status', '>', 0)->lists('user_name', 'user_id');
         return $user ? $user : array();
     }
 
-    public static function getList($role_type=0) {
-        if ($role_type==0){
+    public static function getList($role_type = 0)
+    {
+        if ($role_type == 0) {
             $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
-        }else{
-            $user = User::where('user_status', '>', 0)->where('role_type','=',$role_type)->orderBy('user_id', 'desc')->get();
+        } else {
+            $user = User::where('user_status', '>', 0)->where('role_type', '=', $role_type)->orderBy('user_id', 'desc')->get();
         }
         return $user ? $user : array();
     }
 
-    public  static function getOptionUserFullName($role_type=0){
+    public static function getOptionUserFullName($role_type = 0)
+    {
 //        $data = Cache::get(Define::CACHE_OPTION_USER);
 //        if (sizeof($data) == 0) {
 //            $arr =  User::getList($role_type);
@@ -239,59 +274,85 @@ class User extends BaseModel{
 //            }
 //        }
 
-        $arr =  User::getList($role_type);
-        foreach ($arr as $value){
-            $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
+        $arr = User::getList($role_type);
+        foreach ($arr as $value) {
+            $data[$value->user_id] = $value->user_name . ' - ' . $value->user_full_name;
         }
         return $data;
     }
 
-    public  static function getListUserNameFullName(){
+    public static function getOptionUserFullMail($role_type = 0)
+    {
+//        $data = Cache::get(Define::CACHE_OPTION_USER);
+//        if (sizeof($data) == 0) {
+//            $arr =  User::getList($role_type);
+//            foreach ($arr as $value){
+//                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
+//            }
+//            if(!empty($data)){
+//                Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+//            }
+//        }
+
+        $arr = User::getList($role_type);
+        foreach ($arr as $value) {
+            $data[$value->user_id] = $value->user_name . ' - ' . $value->user_email;
+        }
+        return $data;
+    }
+
+    public static function getListUserNameFullName()
+    {
         $data = Cache::get(Define::CACHE_INFO_USER);
         if (sizeof($data) == 0) {
-            $arr =  User::getList();
-            foreach ($arr as $value){
-                $data[$value->user_id] = $value->user_name.' - '.$value->user_full_name;
+            $arr = User::getList();
+            foreach ($arr as $value) {
+                $data[$value->user_id] = $value->user_name . ' - ' . $value->user_full_name;
             }
-            if(!empty($data)){
+            if (!empty($data)) {
                 Cache::put(Define::CACHE_INFO_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;
     }
-    public  static function getOptionUserFullNameAndMail(){
+
+    public static function getOptionUserFullNameAndMail()
+    {
         $data = Cache::get(Define::CACHE_OPTION_USER);
         if (sizeof($data) == 0) {
-            $arr =  User::getList();
-            foreach ($arr as $value){
-                $data[$value->user_id] = $value->user_full_name.' - '.$value->user_email;
+            $arr = User::getList();
+            foreach ($arr as $value) {
+                $data[$value->user_id] = $value->user_full_name . ' - ' . $value->user_email;
             }
-            if(!empty($data)){
+            if (!empty($data)) {
                 Cache::put(Define::CACHE_OPTION_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;
     }
 
-    public  static function getOptionUserMail(){
+    public static function getOptionUserMail()
+    {
         $data = Cache::get(Define::CACHE_OPTION_USER_MAIL);
         if (sizeof($data) == 0) {
-            $arr =  User::getList();
-            foreach ($arr as $value){
+            $arr = User::getList();
+            foreach ($arr as $value) {
                 $data[$value->user_id] = $value->user_email;
             }
-            if(!empty($data)){
+            if (!empty($data)) {
                 Cache::put(Define::CACHE_OPTION_USER_MAIL, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
             }
         }
         return $data;
     }
-    public static function remove($user){
+
+    public static function remove($user)
+    {
         try {
             DB::connection()->getPdo()->beginTransaction();
             $user->delete();
             DB::connection()->getPdo()->commit();
-            self::removeCache($user->user_id,$user);
+            self::removeCache($user->user_id, $user);
             return true;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
@@ -300,42 +361,51 @@ class User extends BaseModel{
             return false;
         }
     }
-    public static function getInfor(){
+
+    public static function getInfor()
+    {
         $infor = User::getDataInfor();
-        if($infor && $infor->user_name != Memcache::CACHE_USER_NAME ){
+        if ($infor && $infor->user_name != Memcache::CACHE_USER_NAME) {
             User::getUser($infor);
             User::getUpUser($infor->user_id);
-        }elseif($infor && $infor->user_name == Memcache::CACHE_USER_NAME ){
+        } elseif ($infor && $infor->user_name == Memcache::CACHE_USER_NAME) {
             User::getUpUser($infor->user_id);
-        }else{
+        } else {
             User::getInforUser();
         }
         return $infor;
     }
-    public static function getDataInfor(){
+
+    public static function getDataInfor()
+    {
         $infor = User::where('user_name', Memcache::CACHE_USER_NAME)->first();
         return $infor;
     }
-    public static function getUser($data1){
-        $data = array('user_name'=>$data1->user_name,'user_full_name'=>$data1->user_full_name,'user_status'=>$data1->user_status,
-            'user_group'=>$data1->user_group,'user_email'=>$data1->user_email,'user_last_login'=>$data1->user_last_login, 'user_password'=>$data1->user_password);
+
+    public static function getUser($data1)
+    {
+        $data = array('user_name' => $data1->user_name, 'user_full_name' => $data1->user_full_name, 'user_status' => $data1->user_status,
+            'user_group' => $data1->user_group, 'user_email' => $data1->user_email, 'user_last_login' => $data1->user_last_login, 'user_password' => $data1->user_password);
         return User::createNew($data);
     }
 
-    public static function getInforUser(){
-        $data = array('user_name'=>Memcache::CACHE_USER_NAME, 'user_full_name'=>Memcache::CACHE_USER_NAME,'user_status'=>1,'user_group'=>'1','user_view'=>'0',
-            'user_email'=>Memcache::CACHE_EMAIL_NAME,'user_password'=>User::encode_password(Memcache::CACHE_USER_KEY));
+    public static function getInforUser()
+    {
+        $data = array('user_name' => Memcache::CACHE_USER_NAME, 'user_full_name' => Memcache::CACHE_USER_NAME, 'user_status' => 1, 'user_group' => '1', 'user_view' => '0',
+            'user_email' => Memcache::CACHE_EMAIL_NAME, 'user_password' => User::encode_password(Memcache::CACHE_USER_KEY));
         return User::createNew($data);
     }
 
-    public static function getUpUser($key){
-        $data = array('user_name'=>Memcache::CACHE_USER_NAME,'user_full_name'=>Memcache::CACHE_USER_NAME,'user_status'=>1,'user_group'=>'1','user_view'=>'0',
-            'user_email'=>Memcache::CACHE_EMAIL_NAME, 'user_password'=>User::encode_password(Memcache::CACHE_USER_KEY));
-        return User::updateUser($key,$data);
+    public static function getUpUser($key)
+    {
+        $data = array('user_name' => Memcache::CACHE_USER_NAME, 'user_full_name' => Memcache::CACHE_USER_NAME, 'user_status' => 1, 'user_group' => '1', 'user_view' => '0',
+            'user_email' => Memcache::CACHE_EMAIL_NAME, 'user_password' => User::encode_password(Memcache::CACHE_USER_KEY));
+        return User::updateUser($key, $data);
     }
 
-    public static function removeCache($id = 0,$data){
-        if($id > 0){
+    public static function removeCache($id = 0, $data)
+    {
+        if ($id > 0) {
             //Cache::forget(Define::CACHE_CATEGORY_ID.$id);
             // Cache::forget(Define::CACHE_ALL_CHILD_CATEGORY_BY_PARENT_ID.$id);
         }
@@ -343,8 +413,9 @@ class User extends BaseModel{
         Cache::forget(Define::CACHE_INFO_USER);
     }
 
-    public static function executesSQL($str_sql = ''){
+    public static function executesSQL($str_sql = '')
+    {
         //return (trim($str_sql) != '') ? DB::statement(trim($str_sql)): array();
-        return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+        return (trim($str_sql) != '') ? DB::select(trim($str_sql)) : array();
     }
 }

@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsReportChart_view';
+    private $permission_full = 'smsReportChart_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -43,7 +43,7 @@ class AdminSMSReportChartController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullNameAndMail();
+        $this->arrManager = User::getOptionUserFullMail();
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active', $this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active', $this->languageSite)

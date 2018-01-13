@@ -60,6 +60,7 @@
                             </div>
                             <div class="panel-footer text-right">
                             <span class="">
+                                <a class="btn btn-warning btn-sm" href="{{URL::route('admin.smsHistoryView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
                             <button class="btn btn-primary btn-sm" type="submit"><i
                                         class="fa fa-search"></i>{{FunctionLib::viewLanguage('search')}}</button>
                         </span>

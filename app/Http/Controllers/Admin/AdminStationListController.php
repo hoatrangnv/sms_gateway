@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Response;
 
 class AdminStationListController extends BaseAdminController
 {
-    private $permission_view = 'stationSetting_view';
-    private $permission_full = 'stationSetting_full';
+    private $permission_view = 'stationList_view';
+    private $permission_full = 'stationList_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -35,7 +35,7 @@ class AdminStationListController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName(2);
+        $this->arrManager = User::getOptionUserFullMail(2);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)

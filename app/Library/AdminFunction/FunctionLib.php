@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use App\library\AdminFunction\Define;
 use App\library\AdminFunction\CGlobal;
 use Illuminate\Support\Facades\DB;
+use Psy\TabCompletion\Matcher\FunctionDefaultParametersMatcher;
 
 class FunctionLib {
 
@@ -1032,6 +1033,21 @@ class FunctionLib {
         return false;
     }
 
+    public static function checkNumberPhoneAPI(&$stringFone = ''){
+        if(trim($stringFone) != ''){
+            $stringFone = str_replace(' ', '', $stringFone);
+            $stringFone = str_replace('-', '', $stringFone);
+            $stringFone = str_replace('.', '', $stringFone);
+            $pattern = '/^\d+$/';
+            if (preg_match($pattern, $stringFone)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        return false;
+    }
+
     /**
      * Ghep chuỗi theo type
      * @param $string
@@ -1143,5 +1159,80 @@ html;
 
     public static function executesSQL($str_sql = ''){
         return (trim($str_sql) != '') ? DB::select(trim($str_sql)): array();
+    }
+
+    public static function gen_uuid() {
+        $uuid = array(
+            'time_low'  => 0,
+            'time_mid'  => 0,
+            'time_hi'  => 0,
+            'clock_seq_hi' => 0,
+            'clock_seq_low' => 0,
+            'node'   => array()
+        );
+
+        $uuid['time_low'] = mt_rand(0, 0xffff) + (mt_rand(0, 0xffff) << 16);
+        $uuid['time_mid'] = mt_rand(0, 0xffff);
+        $uuid['time_hi'] = (4 << 12) | (mt_rand(0, 0x1000));
+        $uuid['clock_seq_hi'] = (1 << 7) | (mt_rand(0, 128));
+        $uuid['clock_seq_low'] = mt_rand(0, 255);
+
+        for ($i = 0; $i < 6; $i++) {
+            $uuid['node'][$i] = mt_rand(0, 255);
+        }
+
+        $uuid = sprintf('%08x%04x%04x%02x%02x%02x%02x%02x%02x%02x%02x',
+            $uuid['time_low'],
+            $uuid['time_mid'],
+            $uuid['time_hi'],
+            $uuid['clock_seq_hi'],
+            $uuid['clock_seq_low'],
+            $uuid['node'][0],
+            $uuid['node'][1],
+            $uuid['node'][2],
+            $uuid['node'][3],
+            $uuid['node'][4],
+            $uuid['node'][5]
+        );
+
+        return $uuid;
+    }
+
+    public static function encodeBase64($string){
+        return base64_encode($string.'_'.Define::SIGN_KEY_API);
+    }
+    public static function decodeBase64($strings){
+        $string = "";
+        if(trim($strings) != ''){
+            $resultDecode = base64_decode($strings);
+            $result = explode('_',$resultDecode);
+            if(!empty($result)){
+                $string = isset($result[0])?$result[0] : "";
+            }
+        }
+        return $string;
+    }
+
+    public static function responeJson($data){
+        return response(json_encode($data))
+            ->header(Define::CONTENT_TYPE_L, Define::APPLICATION_JSON);
+    }
+
+    public static function encodeToken($client_id,$client_secret,$partner_id,$ttlMillis = Memcache::CACHE_TIME_TO_LIVE_ONE_DAY){
+        date_default_timezone_set(Define::GMT_7_TIME_ZONE);
+        $expMillis = time()+$ttlMillis;
+        $client_id = self::randomString(5).'+'.md5($client_id.Define::SIGN_KEY_TOKEN);
+        $client_secret = self::randomString(5).'+'.md5($client_secret.Define::SIGN_KEY_TOKEN);
+        $partner_id = self::randomString(5).'+'.md5($partner_id.Define::SIGN_KEY_TOKEN);
+        $token = base64_encode($client_id."_".$client_secret."_".$partner_id."_".$expMillis);
+        return $token;
+    }
+
+    public static function returnAPI($code,$mess){
+        $r = array(
+            Define::STATUS_CODE=>$code,
+            Define::MESSAGE=>$mess
+        );
+        return $r;
     }
 }

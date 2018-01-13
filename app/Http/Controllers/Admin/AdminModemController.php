@@ -37,7 +37,7 @@ class AdminModemController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->arrManager = User::getOptionUserFullName(2);
+        $this->arrManager = User::getOptionUserFullMail(2);
         $this->arrDevice = DeviceToken::getOptionDevice();
 
         $this->arrStatus = array(

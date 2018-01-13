@@ -141,4 +141,4 @@ Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','use
 /*SMS App register*/
 Route::get('registerApp/view',array('as' => 'admin.registerAppView','uses' => Admin.'\AdminAppRegisterController@view'));
 Route::post('registerApp/addApp',array('as' => 'admin.registerAppAdd','uses' => Admin.'\AdminAppRegisterController@addApp'));
-//Route::get('smsTeplate/deleteTemplate',array('as' => 'admin.deleteTemplate','uses' => Admin.'\AdminSMSTemplateController@deleteTemplate'));
+Route::get('registerApp/deleteApp',array('as' => 'admin.deleteApp','uses' => Admin.'\AdminAppRegisterController@deleteApp'));

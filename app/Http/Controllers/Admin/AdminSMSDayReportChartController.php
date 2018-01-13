@@ -17,8 +17,8 @@ use Symfony\Component\Translation\Dumper\FileDumper;
 
 class AdminSMSDayReportChartController extends BaseAdminController
 {
-    private $permission_view = 'stationReport_view';
-    private $permission_full = 'stationReport_full';
+    private $permission_view = 'smsDayReport_view';
+    private $permission_full = 'smsDayReport_full';
 //    private $permission_delete = 'carrierSetting_delete';
 //    private $permission_create = 'carrierSetting_create';
 //    private $permission_edit = 'carrierSetting_edit';
@@ -46,8 +46,8 @@ class AdminSMSDayReportChartController extends BaseAdminController
     public function getDataDefault()
     {
 //        $this->arrManager_station = User::getOptionUserFullNameAndMail();
-        $this->arrManager_station = User::getOptionUserFullName(2);
-        $this->arrManager_customer = User::getOptionUserFullName(3);
+        $this->arrManager_station = User::getOptionUserFullMail(2);
+        $this->arrManager_customer = User::getOptionUserFullMail(3);
         $this->arrStatus = array(
             CGlobal::active => FunctionLib::controLanguage('active',$this->languageSite),
             CGlobal::not_active => FunctionLib::controLanguage('not_active',$this->languageSite)
@@ -118,6 +118,8 @@ class AdminSMSDayReportChartController extends BaseAdminController
             $sql_where.=" AND wsr.user_id=".$dataSearch['user_id'];
         }
 
+        if ($dataSearch['type_report'] == "") $dataSearch['type_report']="1";
+
         if ($dataSearch['type_report'] == "1" && $dataSearch['user_id'] == ""){
             $id_station = join(",",array_keys($this->arrManager_station));
             $sql_where.=" AND wsr.user_id in (".$id_station.") ";
@@ -149,9 +151,9 @@ GROUP BY wsr.day,wsr.month,wsr.year
         $optionUser_customer = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$this->arrManager_customer, (isset($dataSearch['station_account2']) && $dataSearch['station_account2']!=""?$dataSearch['station_account2']:0));
         $optionTypeReort = FunctionLib::getOption($this->arrTypeReport, (isset($dataSearch['type_report'])?$dataSearch['type_report']:"1"));
 
-        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year'])?$dataSearch['year']:$current_year));
+        $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year']) && $dataSearch['year']>0?$dataSearch['year']:$current_year));
         $optionCarrier = FunctionLib::getOption(array(''=>''.FunctionLib::controLanguage('all',$this->languageSite).'')+$arrCarrier, (isset($dataSearch['carrier_id'])?$dataSearch['carrier_id']:0));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month'])?$dataSearch['month']:$current_month));
+        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month']) && $dataSearch['month']>0?$dataSearch['month']:(int)$current_month));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminSMSDayReportChart.view',array_merge([
