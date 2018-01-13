@@ -24,18 +24,20 @@
                         @endforeach
                     </div>
                 @endif
-                @if(!$permission_change_pass)
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <i>Mật khẩu hiện tại</i>
+                @if(!$is_root)
+                    @if(!$permission_change_pass)
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <i>Mật khẩu hiện tại</i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <input type="password" class="form-control input-sm" name="old_password"
-                                   value="@if(isset($data['old_password'])){{$data['old_password']}}@endif">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <input type="password" class="form-control input-sm" name="old_password"
+                                       value="@if(isset($data['old_password'])){{$data['old_password']}}@endif">
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
                 <div class="clearfix"></div>
                 <div class="col-sm-2">
