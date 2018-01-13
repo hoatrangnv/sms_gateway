@@ -76,7 +76,7 @@
                                 <tbody>
                                 @foreach ($data as $key => $item)
                                     <tr>
-                                        <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
+                                        <td class="text-center text-middle">{!! $stt + $key+1 !!}<br/><b>[{!! $item['sms_log_id'] !!}]</b></td>
                                         @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                             <td>@if(isset($infoListUser[$item['user_customer_id']])){!! $infoListUser[$item['user_customer_id']] !!} @endif</td>
                                         @endif

@@ -19,6 +19,7 @@
     "///": "NAMNV +++++++++++++++++++++++++++++++++++++++",
     "concatenation_rule": "Concatenation Rule",
     "concatenation_strings": "Concatenation Strings",
+	"concatenation_strings_setting": "Choose setting default",
     "time_check_connect": "Time to check connection to station (second)",
     "notice_1": "(*) Enter strings separated by commas",
     "no": "No.",

@@ -36,11 +36,11 @@
                         </div>
 
                         <div class="form-group col-lg-3">
-                            <label for="banner_name">{{FunctionLib::viewLanguage('from_date')}}</label>
+                            <label for="banner_name">{{FunctionLib::viewLanguage('from_day')}}</label>
                             <input type="text" class="form-control" id="from_date" name="from_date"  data-date-format="dd-mm-yyyy" value="@if(isset($data['from_date'])){{$data['from_date']}}@endif">
                         </div>
                         <div class="form-group col-lg-3">
-                            <label for="banner_name">{{FunctionLib::viewLanguage('to_date')}}</label>
+                            <label for="banner_name">{{FunctionLib::viewLanguage('to_day')}}</label>
                             <input type="text" class="form-control" id="to_date" name="to_date"  data-date-format="dd-mm-yyyy" value="@if(isset($data['to_date'])){{$data['to_date']}}@endif">
                         </div>
 
@@ -84,7 +84,7 @@
                         <tbody>
                         @foreach ($data as $key => $item)
                             <tr>
-                                <td class="text-center text-middle">{!! $stt + $key+1 !!}</td>
+                                <td class="text-center text-middle">{!! $stt + $key+1 !!} <br/><b>[{!! $item['sms_log_id'] !!}]</b></td>
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                 <td>@if(isset($infoListUser[$item['user_customer_id']])){!! $infoListUser[$item['user_customer_id']] !!} @endif</td>
                                 @endif

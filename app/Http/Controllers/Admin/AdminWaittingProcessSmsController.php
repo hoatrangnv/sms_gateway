@@ -37,6 +37,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     private $infoListModem = array();
     private $arrCarrier = array();
     private $arrDuplicateString = array();
+    private $arrOptionType = array();
 
     public function __construct()
     {
@@ -57,6 +58,9 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             1 => FunctionLib::controLanguage('the_first_of_sms'),
             2 => FunctionLib::controLanguage('the_end_of_sms'),
             3 => FunctionLib::controLanguage('the_random_of_sms'));
+        $this->arrOptionType = array(
+            1 => FunctionLib::controLanguage('concatenation_strings'),
+            2 => FunctionLib::controLanguage('concatenation_strings_setting'));
     }
 
     public function getPermissionPage()
@@ -133,23 +137,29 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if ($sms_log_id > 0) {
             $data = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
         }
-        //FunctionLib::debug($data);
+        $choose_type = Request::get('choose_type', 2);
+        $concatenation_strings_1 = Request::get('concatenation_strings', '');
+
         $this->getDataDefault();
         $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, 1);
+        $optionChooseType = FunctionLib::getOption($this->arrOptionType, $choose_type);
 
         //get chuỗi setup
         $userId = ($type_page == 2) ? $this->user_id : 0;
         $systemSetting = SystemSetting::getSystemSetting($userId);
-        $concatenation_strings = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
+        $concatenation_strings = ($choose_type == 2)?((isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : ''): $concatenation_strings_1;
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.editSms', array_merge([
             'data' => $data,
             'id' => $sms_log_id,
             'type_page' => $type_page,
+            'choose_type' => $choose_type,
             'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
+            'concatenation_strings_1' => $concatenation_strings_1,
+            'optionChooseType' => $optionChooseType,
         ], $this->viewPermission));
     }
 
@@ -159,7 +169,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
-        $concatenation_strings = Request::get('concatenation_strings', '');
+        $choose_type = Request::get('choose_type', 2);
+        $concatenation_strings = ($choose_type == 2)? Request::get('concatenation_strings', ''): Request::get('concatenation_strings_1', '');
         $concatenation_rule = Request::get('concatenation_rule', 1);
         if (trim($concatenation_strings) == '') {
             $this->error[] = FunctionLib::controLanguage('concatenation_strings', $this->languageSite) . ' null';
@@ -176,7 +187,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataUpdate['content_grafted'] = $string_send;
                     SmsSendTo::updateItem($sms_log->sms_sendTo_id, $dataUpdate);
                 }
-                return Redirect::route('admin.waittingSmsEdit', array('id' => $ids, 'type_page' => $type_page));
+                return Redirect::route('admin.waittingSmsEdit', array('id' => $ids, 'choose_type' => $choose_type, 'type_page' => $type_page, 'concatenation_strings' => $concatenation_strings));
             }
         }
 
@@ -186,6 +197,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         }
         //FunctionLib::debug($data);
         $this->getDataDefault();
+        $optionChooseType = FunctionLib::getOption($this->arrOptionType, $choose_type);
         $optionDuplicateString = FunctionLib::getOption($this->arrDuplicateString, $concatenation_rule);
 
         $this->viewPermission = $this->getPermissionPage();
@@ -194,9 +206,11 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'error' => $this->error,
             'id' => $sms_log_id,
             'type_page' => $type_page,
+            'choose_type' => $choose_type,
             'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
+            'optionChooseType' => $optionChooseType,
         ], $this->viewPermission));
     }
 

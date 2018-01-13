@@ -29,18 +29,25 @@
                 <div style="float: left; width: 35%">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="name" class="control-label alert-danger">{{FunctionLib::viewLanguage('perform_concatenate_strings_or_edit_each_sms')}}</label>
-                            <br>
-                            <input name=”choose_type”  type="radio" value=2 checked class="radio2"/> Chọn mặc đinh từ cài đặt
-                            <br>
-                            <input name=”choose_type” type="radio" value=1 class="radio2"/> {{FunctionLib::viewLanguage('concatenation_strings')}}
-
-                            <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings)){{$concatenation_strings}}@endif</textarea>
+                            <label for="name" class="control-label alert-danger">{{FunctionLib::viewLanguage('perform_concatenate_strings_or_edit_each_sms')}} {{$choose_type}}</label>
+                            <select name="choose_type" id="choose_type" class="form-control input-sm" onchange="onchangeRadio(this)">
+                                {!!$optionChooseType!!}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div id="div_type_1" @if($choose_type == 2) style="display: none" @endif>
+                                <textarea type="text" id="concatenation_strings_1" name="concatenation_strings_1"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings_1)){{$concatenation_strings_1}}@endif</textarea>
+                            </div>
+                            <div id="div_type_2" @if($choose_type == 1) style="display: none" @endif>
+                                <textarea type="text" id="concatenation_strings" name="concatenation_strings"  class="form-control input-sm" rows="8">@if(isset($concatenation_strings)){{$concatenation_strings}}@endif</textarea>
+                            </div>
                             <label for="name" class="control-label" style="font-size: 9px">{{FunctionLib::viewLanguage('notice_1')}}</label>
                             <br>
-                            <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#concatenation_strings" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
+                            <div id="div_type_3" @if($choose_type == 2) style="display: none" @endif>
+                            <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#concatenation_strings_1" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
                                 <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
                             </a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -101,16 +108,33 @@
     </div><!-- /.page-content -->
 </div>
 <script>
-    $(document).ready(function() {
-        $('.radio2').click(function () {
-            var choose_type  = $(this).val();
+    function onchangeRadio(event){
+        //$('.radio2').click(function () {
+            var choose_type  = $(event).val();
             if(parseInt(choose_type) == 1){
-                $('#concatenation_strings').val('');
+                $('#div_type_1').show();
+                $('#div_type_3').show();
+                $('#div_type_2').hide();
             }else{
-                $('#concatenation_strings').val('');
+                $('#div_type_2').show();
+                $('#div_type_1').hide();
+                $('#div_type_3').hide();
                 SmsAdmin.getSettingContentAttach();
             }
-        });
+        //});
+    }
+    $(document).ready(function() {
+        /*var choose_type  = $(this).val();
+        if(parseInt(choose_type) == 1){
+            $('#div_type_1').show();
+            $('#div_type_3').show();
+            $('#div_type_2').hide();
+        }else{
+            $('#div_type_2').show();
+            $('#div_type_1').hide();
+            $('#div_type_3').hide();
+            SmsAdmin.getSettingContentAttach();
+        }*/
     });
 </script>
 <!--Popup anh khac de chen vao noi dung bai viet-->

@@ -128,7 +128,7 @@ class SmsLog extends BaseModel
 
             $total = $query->count();
             $query->orderBy('status', 'asc')
-                ->orderBy('list_modem', 'asc')->orderBy('user_manager_id', 'asc');
+                ->orderBy('list_modem', 'asc')->orderBy('user_manager_id', 'asc')->orderBy('sms_log_id', 'desc');
 
             //get field can lay du lieu
             $fields = (isset($dataSearch['field_get']) && trim($dataSearch['field_get']) != '') ? explode(',', trim($dataSearch['field_get'])) : array();
