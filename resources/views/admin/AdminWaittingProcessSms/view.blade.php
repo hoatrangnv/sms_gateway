@@ -64,7 +64,7 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thin-border-bottom">
                         <tr class="">
-                            <th width="4%" class="text-center">TT</th>
+                            <th width="4%" class="text-center">ID</th>
                             @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                             <th width="25%">{{FunctionLib::viewLanguage('station_account')}}</th>
                             @endif
@@ -84,7 +84,7 @@
                         <tbody>
                         @foreach ($data as $key => $item)
                             <tr>
-                                <td class="text-center text-middle">{!! $stt + $key+1 !!} <br/><b>[{!! $item['sms_log_id'] !!}]</b></td>
+                                <td class="text-center text-middle">{!! $item['sms_log_id'] !!}</td>
                                 @if($user_role_type==\App\Library\AdminFunction\Define::ROLE_TYPE_SUPER_ADMIN)
                                 <td>@if(isset($infoListUser[$item['user_customer_id']])){!! $infoListUser[$item['user_customer_id']] !!} @endif</td>
                                 @endif

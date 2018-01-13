@@ -178,14 +178,19 @@ class AdminWaittingProcessSmsController extends BaseAdminController
 
         if (empty($this->error) && $sms_log_id > 0) {
             $arrString = explode(',', $concatenation_strings);
+            $numberTotal = count($arrString);
+            $numberStart = 0;
             $dataSmsLog = SmsSendTo::getListSmsSendToBySmsLogId($sms_log_id);
             if ($dataSmsLog) {
                 foreach ($dataSmsLog as $sms_log) {
-                    $string_ghep = $arrString[rand(0, (count($arrString) - 1))];
+                    //$string_ghep = $arrString[rand(0, (count($arrString) - 1))];
+                    $numberStart = ($numberStart < $numberTotal)? $numberStart: 0;
+                    $string_ghep = $arrString[$numberStart];
                     $string_send = $sms_log->content_grafted;
                     FunctionLib::stringConcatenation($string_send, $string_ghep, $concatenation_rule);
                     $dataUpdate['content_grafted'] = $string_send;
                     SmsSendTo::updateItem($sms_log->sms_sendTo_id, $dataUpdate);
+                    $numberStart ++;
                 }
                 return Redirect::route('admin.waittingSmsEdit', array('id' => $ids, 'choose_type' => $choose_type, 'type_page' => $type_page, 'concatenation_strings' => $concatenation_strings));
             }
@@ -418,7 +423,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['modem_history'] = $modem_id;//??????? Cộng chuỗi ghi nhận modem đã được chọn xử lý gửi gói tin
                     $dataPacket['sms_deadline'] = $infoSmsLog->sms_deadline;
                     $dataPacket['created_date'] = FunctionLib::getDateTime();
-                    $dataPacket['status'] = Define::SMS_STATUS_PROCESSING;
+                    $dataPacket['status'] = null;
                     SmsPacket::createItem($dataPacket);
 
                     //web_sms_sendto
