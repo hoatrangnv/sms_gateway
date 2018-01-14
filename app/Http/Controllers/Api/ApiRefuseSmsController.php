@@ -54,7 +54,7 @@ class ApiRefuseSmsController extends BaseApiController{
                 if($modem_id > 0){
                     $arrHistory[] = $modem_id;
                     $dataUpdate['modem_id'] = $modem_id;
-                    $dataUpdate['status'] = '';
+                    $dataUpdate['status'] = null;
                     $dataUpdate['modem_history'] = implode(',',$arrHistory);
                     if(DB::table(Define::TABLE_SMS_PACKET)->where('sms_log_id', $sms_log_id)->update($dataUpdate)){
                         SmsLog::updateItem($sms_log_id,array('list_modem'=>$modem_id));
