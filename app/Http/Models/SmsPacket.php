@@ -15,7 +15,7 @@ class SmsPacket extends BaseModel
     public $timestamps = false;
 
     protected $fillable = array('type', 'sms_log_id', 'send_successful', 'send_fail', 'user_manager_id',
-        'modem_id', 'sms_max','sms_error_max','time_delay_from','time_delay_to','status'
+        'modem_id', 'sms_max','sms_error_max','time_delay_from','time_delay_to','status','modem_history','sms_deadline'
         ,'created_date','updated_date');
 
     public static function searchByCondition($dataSearch = array(), $limit =0, $offset=0, &$total){

@@ -123,11 +123,10 @@ class SystemSetting extends BaseModel
 
     public static function getSystemSetting($user_id) {
         if($user_id > 0){
-            $data = DB::table(Define::TABLE_USER_SETTING)->where('user_setting_id', '>', 0)->orderBy('user_id', 'desc')->get();
+            $data = DB::table(Define::TABLE_USER_SETTING)->where('user_id', '=', $user_id)->orderBy('user_id', 'desc')->get();
         }else{
             $data = DB::table(Define::TABLE_SYSTEM_SETTING)->where('system_setting_id', '>', 0)->orderBy('system_setting_id', 'desc')->get();
         }
-
         return isset($data[0]) ? $data[0]: array();
     }
 }

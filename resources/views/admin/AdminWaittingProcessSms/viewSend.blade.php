@@ -82,7 +82,7 @@
                                         @endif
                                         <td class="text-center text-middle">{!! $item['carrier_name'] !!}</td>
                                         <td class="text-center text-middle">{!! $item['total_sms'] !!}</td>
-                                        <td class="text-center text-middle"></td>
+                                        <td class="text-center text-middle">{!! $item['sms_deadline'] !!}</td>
                                         <td class="text-center text-middle">
                                             <?php $optionListModem = FunctionLib::getOption(array(-1=>'')+$infoListModem, $item['list_modem'])?>
                                             <select name="list_modem_{{$item['sms_log_id']}}" id="list_modem_{{$item['sms_log_id']}}" class="form-control input-sm">

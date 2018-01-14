@@ -147,7 +147,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
         //get chuỗi setup
         $userId = ($type_page == 2) ? $this->user_id : 0;
         $systemSetting = SystemSetting::getSystemSetting($userId);
-        $concatenation_strings = ($choose_type == 2)?((isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : ''): $concatenation_strings_1;
+        $concatenation_strings = (isset($systemSetting->concatenation_strings) && trim($systemSetting->concatenation_strings) != '') ? $systemSetting->concatenation_strings : '';
 
         $this->viewPermission = $this->getPermissionPage();
         return view('admin.AdminWaittingProcessSms.editSms', array_merge([
@@ -155,9 +155,9 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'id' => $sms_log_id,
             'type_page' => $type_page,
             'choose_type' => $choose_type,
-            'concatenation_strings' => $concatenation_strings,
             'arrCarrier' => $this->arrCarrier,
             'optionDuplicateString' => $optionDuplicateString,
+            'concatenation_strings' => $concatenation_strings,
             'concatenation_strings_1' => $concatenation_strings_1,
             'optionChooseType' => $optionChooseType,
         ], $this->viewPermission));
@@ -423,6 +423,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
                     $dataPacket['modem_history'] = $modem_id;//??????? Cộng chuỗi ghi nhận modem đã được chọn xử lý gửi gói tin
                     $dataPacket['sms_deadline'] = $infoSmsLog->sms_deadline;
                     $dataPacket['created_date'] = FunctionLib::getDateTime();
+                    $dataPacket['updated_date'] = FunctionLib::getDateTime();
                     $dataPacket['status'] = null;
                     SmsPacket::createItem($dataPacket);
 
