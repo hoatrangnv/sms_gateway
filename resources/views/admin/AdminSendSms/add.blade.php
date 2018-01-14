@@ -42,7 +42,7 @@
                             <label for="name" class="control-label">{{functionlib::viewlanguage('sms_content')}}</label>
                             <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5">@if(isset($data['sms_content'])){{$data['sms_content']}}@endif</textarea>
                             <br>
-                            <a  style="display: none" href="#" class="btn btn-warning btn-sm mg-t20" onclick="Admin.getInfoSettingTemplate('{{FunctionLib::inputId(12)}}')">
+                            <a href="#" class="btn btn-warning btn-sm mg-t20" onclick="Admin.getInfoSettingTemplate('{{FunctionLib::inputId($user_id)}}')">
                                 <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('get_content_from_template_sms')}}
                             </a>
                         </div>
@@ -55,8 +55,8 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="form-group col-sm-12 text-left">
-                        <a class="btn btn-warning" href="{{URL::route('admin.menuView')}}"><i class="fa fa-reply"></i> {{FunctionLib::viewLanguage('back')}}</a>
-                        <button  class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
+                        <button class="btn btn-danger" type="submit" name="submit" value="2"><i class="fa fa-file-excel-o"></i> Xuất Excel</button>
+                        <button  class="btn btn-primary" type="submit" name="submit" value="1"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('save')}}</button>
                     </div>
                     <input type="hidden" id="id_hiden" name="id_hiden" value="{{$id}}"/>
                 </div>
@@ -71,7 +71,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Cài đặt người dùng</h4>
+                <h4 class="modal-title" id="myModalLabel">List SMS template</h4>
             </div>
             <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/ajax-loader.gif" width="20" style="display: none" id="img_loading_district">
             <div class="modal-body" id="sys_show_infor">
