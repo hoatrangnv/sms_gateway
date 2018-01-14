@@ -73,6 +73,21 @@ var Admin = {
             }
         });
     },
+    getInfoSettingTemplate: function (user_id) {
+        $('#sys_showPopupInfoSetting').modal('show');
+        $('#img_loading').show();
+        $('#sys_show_infor').html('');
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/user/getInfoSettingUser',
+            data: {user_id: user_id},
+            dataType: 'json',
+            success: function (res) {
+                $('#img_loading').hide();
+                $('#sys_show_infor').html(res.html);
+            }
+        });
+    },
     submitInfoSettingUser: function () {
         $('#img_loading').show();
         var formData = $('#form_user_setting').serialize();

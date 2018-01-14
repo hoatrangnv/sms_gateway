@@ -41,6 +41,10 @@
                         <div class="form-group">
                             <label for="name" class="control-label">{{functionlib::viewlanguage('sms_content')}}</label>
                             <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5">@if(isset($data['sms_content'])){{$data['sms_content']}}@endif</textarea>
+                            <br>
+                            <a  style="display: none" href="#" class="btn btn-warning btn-sm mg-t20" onclick="Admin.getInfoSettingTemplate('{{FunctionLib::inputId(12)}}')">
+                                <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('get_content_from_template_sms')}}
+                            </a>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -61,7 +65,21 @@
         </div>
     </div><!-- /.page-content -->
 </div>
+<!--Popup anh khac de chen vao noi dung bai viet-->
+<div class="modal fade" id="sys_showPopupInfoSetting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Cài đặt người dùng</h4>
+            </div>
+            <img src="{{Config::get('config.WEB_ROOT')}}assets/admin/img/ajax-loader.gif" width="20" style="display: none" id="img_loading_district">
+            <div class="modal-body" id="sys_show_infor">
 
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function(){
         var checkin = $('#send_sms_deadline').datepicker({ });

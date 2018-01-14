@@ -362,7 +362,6 @@ class AdminUserController extends BaseAdminController{
         $dataUserCarrierSetting = UserCarrierSetting::getListAllByUserId($user_id);
 
         //show data
-
         if(empty($arrInfoUser)){
             $data['user_full_name'] = $infoUser['user_full_name'];
             $data['role_type'] = $infoUser['role_type'];
