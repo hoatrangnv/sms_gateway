@@ -28,7 +28,7 @@ class AdminSystemSettingController extends BaseAdminController
     private $permission_create = 'systemSetting_create';
     private $permission_edit = 'systemSetting_edit';
     private $permission_client_api_edit = 'permission_client_api_edit';
-    private $permission_customer_api_edit = '$permission_customer_api_edit';
+    private $permission_customer_api_edit = 'permission_customer_api_edit';
 
     private $arrMenuParent = array();
     private $arrRuleString = array();
