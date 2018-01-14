@@ -367,8 +367,8 @@ class AdminSendSmsController extends BaseAdminController
         $arrData['intReturn'] = 1;
         $arrData['msg'] = '';
 
-        //$dataSearch['user_id'] = $user_id;
-        $dataSearch['user_id'] = 12;
+        $dataSearch['user_id'] = $user_id;
+        //$dataSearch['user_id'] = 12;
         $limit = 100;
         $total = 0;
         $offset = 0;
