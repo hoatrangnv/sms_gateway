@@ -97,6 +97,9 @@ class ApiApp extends BaseModel
             if (isset($dataSearch['app_name']) && $dataSearch['app_name'] != '') {
                 $query->where('app_name','LIKE', '%' . $dataSearch['app_name'] . '%');
             }
+            if (isset($dataSearch['user_id']) && trim($dataSearch['user_id'] !="")){
+                $query->where('user_id','=', $dataSearch['user_id']);
+            }
 
             if (isset($dataSearch['client_id']) && $dataSearch['client_id'] != '' && isset($dataSearch['client_secret']) && $dataSearch['client_secret'] != '') {
                 $query->where('client_id','=', $dataSearch['client_id']);

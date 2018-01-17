@@ -51,6 +51,7 @@ class AdminAppRegisterController extends BaseAdminController
         }
         $page_no = (int) Request::get('page_no',1);
         $dataSearch['app_name'] = addslashes(Request::get('app_name_s',''));
+        $dataSearch['user_id'] = md5($this->user_id);
         $limit = CGlobal::number_limit_show;
         $total = 0;
         $offset = ($page_no - 1) * $limit;
