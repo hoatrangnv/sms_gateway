@@ -3,10 +3,10 @@
     <table class="table table-bordered">
         <thead class="thin-border-bottom">
         <tr class="">
-            <th class="text-center w10 center">{{FunctionLib::viewLanguage('no')}}</th>
-            <th class="center w50" width="w50">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</th>
-            <th class="center w200">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</th>
-            <th class="center w100">{{FunctionLib::viewLanguage('action')}}</th>
+            <th class="text-center center" style="width: 10%">{{FunctionLib::viewLanguage('no')}}</th>
+            <th class="center" style="width: 30%">{{FunctionLib::viewLanguage('app_name')}}</th>
+            <th class="center" style="width: 40%">{{FunctionLib::viewLanguage('description')}}</th>
+            <th class="center" style="width: 20%">{{FunctionLib::viewLanguage('action')}}</th>
         </tr>
         </thead>
         <tbody id="list_app">

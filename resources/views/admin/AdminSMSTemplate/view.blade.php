@@ -40,11 +40,11 @@
                         <table class="table table-bordered">
                             <thead class="thin-border-bottom">
                             <tr class="">
-                                <th class="text-center w10 center">{{FunctionLib::viewLanguage('no')}}</th>
-                                <th class="center w50">{{FunctionLib::viewLanguage('template_name')}}</th>
-                                <th class="center w200">{{FunctionLib::viewLanguage('content')}}</th>
-                                <th class="center w150">{{FunctionLib::viewLanguage('update')}}</th>
-                                <th class="center w100">{{FunctionLib::viewLanguage('action')}}</th>
+                                <th class="text-center center" style="width: 10%">{{FunctionLib::viewLanguage('no')}}</th>
+                                <th class="center" style="width: 20%">{{FunctionLib::viewLanguage('template_name')}}</th>
+                                <th class="center" style="width: 30%">{{FunctionLib::viewLanguage('content')}}</th>
+                                <th class="center" style="width: 20%">{{FunctionLib::viewLanguage('update')}}</th>
+                                <th class="center" style="width: 20%">{{FunctionLib::viewLanguage('action')}}</th>
                             </tr>
                             </thead>
                             <tbody id="list_sms_template">
