@@ -24,14 +24,18 @@ use PHPExcel_Worksheet_PageSetup;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Fill;
 use PHPExcel_Style_Border;
+use PHPExcel_Settings;
+use Illuminate\Support\Facades\Input;
+use Symfony\Component\VarDumper\Cloner\Data;
+use Illuminate\Support\Facades\DB;
 
-class AdminSendSmsController extends BaseAdminController
+class AdminSendSmsCleverController extends BaseAdminController
 {
-    private $permission_view = 'sendSms_view';
-    private $permission_full = 'sendSms_full';
-    private $permission_delete = 'sendSms_delete';
-    private $permission_create = 'sendSms_create';
-    private $permission_edit = 'sendSms_edit';
+    private $permission_view = 'sendSmsClever_view';
+    private $permission_full = 'sendSmsClever_full';
+    private $permission_delete = 'sendSmsClever_delete';
+    private $permission_create = 'sendSmsClever_create';
+    private $permission_edit = 'sendSmsClever_edit';
     private $arrStatus = array();
     private $error = array();
     private $viewPermission = array();//check quyen
@@ -39,7 +43,7 @@ class AdminSendSmsController extends BaseAdminController
     public function __construct()
     {
         parent::__construct();
-        CGlobal::$pageAdminTitle = 'Send SMS';
+        CGlobal::$pageAdminTitle = 'Send SMS Clever';
     }
 
     public function getDataDefault()
@@ -68,7 +72,7 @@ class AdminSendSmsController extends BaseAdminController
         }
         $data = array();
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSendSms.add', array_merge([
+        return view('admin.AdminSendSmsClever.add', array_merge([
             'data' => $data,
             'id' => 0,
             'error' => $this->error,
@@ -240,7 +244,7 @@ class AdminSendSmsController extends BaseAdminController
         }
 
         $this->viewPermission = $this->getPermissionPage();
-        return view('admin.AdminSendSms.add', array_merge([
+        return view('admin.AdminSendSmsClever.add', array_merge([
             'data' => $data,
             'id' => 0,
             'error' => $this->error,
@@ -249,8 +253,9 @@ class AdminSendSmsController extends BaseAdminController
         ], $this->viewPermission));
     }
 
-    public function exportData($data) {
-        if(empty($data)){
+    public function exportData($data)
+    {
+        if (empty($data)) {
             return;
         }
         //FunctionLib::debug($data);
@@ -269,7 +274,7 @@ class AdminSendSmsController extends BaseAdminController
         $sheet->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
         $sheet->getStyle('A1')->getFont()->setSize(16)->setBold(true)->getColor()->setRGB('000000');
         $sheet->mergeCells('A1:D1');
-        $sheet->setCellValue("A1", "List SMS sent ".date('d-m-Y H:i'));
+        $sheet->setCellValue("A1", "List SMS sent " . date('d-m-Y H:i'));
         $sheet->getRowDimension("1")->setRowHeight(32);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
             ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
@@ -277,18 +282,23 @@ class AdminSendSmsController extends BaseAdminController
         // setting header
         $position_hearder = 3;
         $sheet->getRowDimension($position_hearder)->setRowHeight(30);
-        $val10 = 10; $val18 = 18; $val35 = 35;$val45 = 60; $val25 = 25;$val55 = 55;
+        $val10 = 10;
+        $val18 = 18;
+        $val35 = 35;
+        $val45 = 60;
+        $val25 = 25;
+        $val55 = 55;
         $ary_cell = array(
-            'A'=>array('w'=>$val10,'val'=>'STT','align'=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
-            'B'=>array('w'=>$val18,'val'=>'Phone number','align'=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
-            'C'=>array('w'=>$val45,'val'=>'Content SMS','align'=>PHPExcel_Style_Alignment::HORIZONTAL_LEFT),
-            'D'=>array('w'=>$val18,'val'=>'Carrier name','align'=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'A' => array('w' => $val10, 'val' => 'STT', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'B' => array('w' => $val18, 'val' => 'Phone number', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'C' => array('w' => $val45, 'val' => 'Content SMS', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT),
+            'D' => array('w' => $val18, 'val' => 'Carrier name', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
         );
 
         //build header title
-        foreach($ary_cell as $col => $attr){
+        foreach ($ary_cell as $col => $attr) {
             $sheet->getColumnDimension($col)->setWidth($attr['w']);
-            $sheet->setCellValue("$col{$position_hearder}",$attr['val']);
+            $sheet->setCellValue("$col{$position_hearder}", $attr['val']);
             $sheet->getStyle($col)->getAlignment()->setWrapText(true);
             $sheet->getStyle($col . $position_hearder)->applyFromArray(
                 array(
@@ -297,11 +307,11 @@ class AdminSendSmsController extends BaseAdminController
                         'color' => array('rgb' => '05729C'),
                         'style' => array('font-weight' => 'bold')
                     ),
-                    'font'  => array(
-                        'bold'  => true,
+                    'font' => array(
+                        'bold' => true,
                         'color' => array('rgb' => 'FFFFFF'),
-                        'size'  => 10,
-                        'name'  => 'Verdana'
+                        'size' => 10,
+                        'name' => 'Verdana'
                     ),
                     'borders' => array(
                         'allborders' => array(
@@ -316,9 +326,9 @@ class AdminSendSmsController extends BaseAdminController
             );
         }
         //hien thị dũ liệu
-        $rowCount = $position_hearder+1; // hang bat dau xuat du lieu
+        $rowCount = $position_hearder + 1; // hang bat dau xuat du lieu
         $i = 1;
-        $break="\r";
+        $break = "\r";
         foreach ($data as $k => $v) {
             $sheet->getRowDimension($rowCount)->setRowHeight(30);//chiều cao của row
 
@@ -352,6 +362,74 @@ class AdminSendSmsController extends BaseAdminController
         exit();
     }
 
+    public function importSmsToExcel()
+    {
+        //phpinfo();die();
+        require(dirname(__FILE__) . '/../../../Library/ClassPhpExcel/PHPExcel/IOFactory.php');
+        $rowsExcel = [];
+        if (Input::hasFile('file_excel_sms_clever')) {
+            $file = Input::file('file_excel_sms_clever');
+            $ext = $file->getClientOriginalExtension();
+            switch ($ext) {
+                case 'xls':
+                case 'xlsx':
+                    $objPHPExcel = PHPExcel_IOFactory::load($file);
+                    $objPHPExcel->setActiveSheetIndex(0);
+                    $rowsExcel = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                    break;
+                default:
+                    $error[] = "Invalid file type";
+            }
+        } else {
+            $error[] = "Not found file input";
+        }
+
+        if (empty($rowsExcel))
+            return true;
+        $arrDataInput = array();
+        if (!empty($rowsExcel)) {
+            unset($rowsExcel[1]);
+            foreach ($rowsExcel as $key => $val) {
+                if (isset($val['A']) && trim($val['A']) != '') { //phone number
+                    $arrDataInput[trim($val['A'])] = '';
+                    $content_sms = '';
+                    if (isset($val['B']) && trim($val['B']) != '') {
+                        $content_sms = $content_sms . ' ' . trim($val['B']);
+                    }
+                    if (isset($val['C']) && trim($val['C']) != '') {
+                        $content_sms = $content_sms . ' ' . trim($val['C']);
+                    }
+                    if (isset($val['D']) && trim($val['D']) != '') {
+                        $content_sms = $content_sms . ' ' . trim($val['D']);
+                    }
+                    if (isset($val['E']) && trim($val['E']) != '') {
+                        $content_sms = $content_sms . ' ' . trim($val['E']);
+                    }
+                    if (isset($val['F']) && trim($val['F']) != '') {
+                        $content_sms = $content_sms . ' ' . trim($val['F']);
+                    }
+                    $arrDataInput[trim($val['A'])] = $content_sms;
+                }
+            }
+        }
+
+        if(!empty($arrDataInput)){
+            $arr_numberFone = array_keys($arrDataInput);
+            if (!empty($arr_numberFone)) {
+                foreach ($arr_numberFone as $k => $number) {
+                    $checkNumber = FunctionLib::checkNumberPhone($number);
+                    if ($checkNumber > 0) {
+                        $dataPhone[] = trim($checkNumber);
+                    } else {
+                        $this->error[] = trim($number) . ' not number phone';
+                    }
+                }
+            } else {
+                $this->error[] = FunctionLib::controLanguage('phone_number', $this->languageSite) . ' null';
+            }
+        }
+    }
+
     //ajax
     public function getInfoSettingTemplate()
     {
@@ -368,7 +446,7 @@ class AdminSendSmsController extends BaseAdminController
         $offset = 0;
         $data = SmsTemplate::searchByCondition($dataSearch, $limit, $offset, $total);
 
-        $html = view('admin.AdminSendSms.listSmsTemp', [
+        $html = view('admin.AdminSendSmsClever.listSmsTemp', [
             'data' => $data,
             'user_id' => $user_ids,
         ])->render();
