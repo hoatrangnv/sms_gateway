@@ -47,6 +47,7 @@ class Define{
     const TABLE_SMS_LOG = 'web_sms_log';
     const TABLE_SMS_REPORT = 'web_sms_report';
     const TABLE_SMS_SENDTO = 'web_sms_sendto';
+    const TABLE_SMS_CLEVER = 'web_sms_clever_sendto';
     const TABLE_USER_CARRIER_SETTING = 'web_user_carrier_setting';
     const TABLE_USER_SETTING = 'web_user_setting';
     const TABLE_SMS_PACKET = 'web_sms_packet';

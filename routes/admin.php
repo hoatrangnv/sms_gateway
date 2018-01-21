@@ -76,7 +76,7 @@ Route::post('sendSms', array('as' => 'admin.sendSms','uses' => Admin.'\AdminSend
 Route::get('sendSms/getInfoSettingTemplate', array('as' => 'admin.sendSmsTem','uses' => Admin.'\AdminSendSmsController@getInfoSettingTemplate'));//ajax
 
 /*send SMS thông minh*/
-Route::get('sendSmsClever', array('as' => 'admin.sendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@getSendSms'));
+Route::get('sendSmsClever', array('as' => 'admin.getSendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@getSendSms'));
 Route::post('sendSmsClever', array('as' => 'admin.sendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@postSendSms'));
 Route::get('sendSmsClever/getDataToExcel', array('as' => 'admin.getDataToExcel','uses' => Admin.'\AdminSendSmsCleverController@getDataToExcel'));//ajax get data
 
