@@ -21,7 +21,7 @@
     <div class="page-content">
         <!-- PAGE CONTENT BEGINS -->
         {{Form::open(array('method' => 'POST','role'=>'form','files' => true))}}
-        <input type="hidden" id="" name="count_sms_number_hd"  class="form-control input-sm" value="@if(isset($data['count_sms_number'])){{$data['count_sms_number']}}@endif">
+        <input type="hidden" id="" name="sms_max_hd"  class="form-control input-sm" value="@if(isset($data['sms_max'])){{$data['sms_max']}}@endif">
         <input type="hidden" id="" name="sms_error_max_hd"  class="form-control input-sm" value="@if(isset($data['sms_error_max'])){{$data['sms_error_max']}}@endif">
         <input type="hidden" id="" name="time_delay_from_hd"  class="form-control input-sm" value="@if(isset($data['time_delay_from'])){{$data['time_delay_from']}}@endif">
         <input type="hidden" id="" name="time_delay_to_hd"  class="form-control input-sm" value="@if(isset($data['time_delay_to'])){{$data['time_delay_to']}}@endif">
@@ -33,9 +33,9 @@
             </div>
         @endif
         <div class="form-group">
-            <label for="count_sms_number" class="control-label col-sm-2">{{FunctionLib::viewLanguage('number_of_loop_max_each_com')}}</label>
+            <label for="sms_max" class="control-label col-sm-2">{{FunctionLib::viewLanguage('number_of_loop_max_each_com')}}</label>
             <div class="col-sm-2">
-                <input type="number" id="count_sms_number" name="count_sms_number"  class="form-control input-sm" value="@if(isset($data['count_sms_number'])){{$data['count_sms_number']}}@endif">
+                <input type="number" id="sms_max" name="sms_max"  class="form-control input-sm" value="@if(isset($data['sms_max'])){{$data['sms_max']}}@endif">
             </div>
             <span style="font-style: italic; margin-top: 5px">({{FunctionLib::viewLanguage('in_one_day')}})</span>
         </div>

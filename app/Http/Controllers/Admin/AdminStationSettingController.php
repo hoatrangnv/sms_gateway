@@ -80,7 +80,7 @@ class AdminStationSettingController extends BaseAdminController
         }
         $data['updated_date'] = date("Y/m/d H:i",time());
         if($this->valid($data) && empty($this->error)) {
-            if ($data['count_sms_number_hd'] != $data['count_sms_number'] || $data['sms_error_max_hd'] != $data['sms_error_max'] || $data['time_delay_from_hd'] != $data['time_delay_from'] || $data['time_delay_to_hd'] != $data['time_delay_to']){
+            if ($data['sms_max_hd'] != $data['sms_max'] || $data['sms_error_max_hd'] != $data['sms_error_max'] || $data['time_delay_from_hd'] != $data['time_delay_from'] || $data['time_delay_to_hd'] != $data['time_delay_to']){
 
                 $sql_modem = "select modem_id from ".Define::TABLE_MODEM." WHERE user_id=".$this->user_id;
                 $data_modem = FunctionLib::executesSQL($sql_modem);
@@ -88,12 +88,11 @@ class AdminStationSettingController extends BaseAdminController
                     $packet = SmsPacket::updateOrCreate(
                         [
                             "user_manager_id"=>$this->user_id,
-                            "modem_id"=>$v->modem_id,
-                            "status"=>null
+                            "modem_id"=>$v->modem_id
                         ],
                         [
                             "type"=>"2",
-                            "sms_max"=>$data['count_sms_number'],
+                            "sms_max"=>$data['sms_max'],
                             "sms_error_max"=>$data['sms_error_max'],
                             "time_delay_from"=> $data['time_delay_from'],
                             "time_delay_to"=> $data['time_delay_to'],
