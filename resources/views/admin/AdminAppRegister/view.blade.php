@@ -40,10 +40,10 @@
                         <table class="table table-bordered">
                             <thead class="thin-border-bottom">
                             <tr class="">
-                                <th class="text-center center" style="width: 10%">{{FunctionLib::viewLanguage('no')}}</th>
-                                <th class="center" style="width: 30%">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</th>
-                                <th class="center" style="width: 40%">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</th>
-                                <th class="center" style="width: 20%">{{FunctionLib::viewLanguage('action')}}</th>
+                                <th class="text-center center" style="width: 10%; font-weight: normal!important;">{{FunctionLib::viewLanguage('no')}}</th>
+                                <th class="center" style="width: 30%; font-weight: normal!important;">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('app_name')}}</th>
+                                <th class="center" style="width: 40%; font-weight: normal!important;">{{\App\Library\AdminFunction\FunctionLib::viewLanguage('description')}}</th>
+                                <th class="center" style="width: 20%; font-weight: normal!important;">{{FunctionLib::viewLanguage('action')}}</th>
                             </tr>
                             </thead>
                             <tbody id="list_app">
