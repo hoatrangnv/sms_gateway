@@ -520,4 +520,54 @@ class AdminSendSmsCleverController extends BaseAdminController
         return $arrDataInput;
     }
 
+    //ajax get nội dung gửi SMS
+    public function getContentSms()
+    {
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+            return Response::json($data);
+        }
+        $sms_clever_id = (int)Request::get('sms_clever_id', 0);
+        $sms_sendTo = SmsCleverSendTo::find($sms_clever_id);
+        if (!empty($sms_sendTo)) {
+            $data['isIntOk'] = 1;
+            $data['sms_clever_id'] = $sms_clever_id;
+            $data['content'] = (isset($sms_sendTo->content) && trim($sms_sendTo->content) != '') ? $sms_sendTo->content : '';
+        }
+        return Response::json($data);
+    }
+
+    //ajax
+    public function submitContentSms()
+    {
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+            return Response::json($data);
+        }
+        $sms_clever_id = (int)Request::get('sms_clever_id', 0);
+        $content_clever = Request::get('content_clever', '');
+
+        if ($sms_clever_id > 0 && trim($content_clever) != '') {
+            $dataUpdate['content_grafted'] = $content_clever;
+            SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
+            $data['isIntOk'] = 1;
+        }
+        return Response::json($data);
+    }
+
+    //ajax
+    public function remove($ids){
+        $id = FunctionLib::outputId($ids);
+        $data['success'] = 0;
+        if(!$this->is_root && !in_array($this->permission_full, $this->permission)){
+            return Response::json($data);
+        }
+        $user = SmsCleverSendTo::find($id);
+        if($user){
+            if(SmsCleverSendTo::deleteItem($user)){
+                $data['success'] = 1;
+            }
+        }
+        return Response::json($data);
+    }
 }

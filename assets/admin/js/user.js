@@ -96,6 +96,7 @@ var SmsAdmin = {
             }
         });
     },
+
     submitContentGraftedSms: function() {
         var _token = $('input[name="_token"]').val();
         var content_grafted = $('#content_grafted').val();
@@ -104,6 +105,39 @@ var SmsAdmin = {
             type: "GET",
             url: WEB_ROOT + '/manager/waittingSms/submitContentGraftedSms',
             data: {sms_sendTo_id:sms_sendTo_id, content_grafted:content_grafted, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    },
+    getContentSmsClever: function(sms_clever_id) {
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/sendSmsClever/getContentSms',
+            data: {sms_clever_id:sms_clever_id, _token:_token},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#sys_showContentSms').modal('show');
+                    $('#content_clever').val(res.content);
+                    $('#sms_clever_id_popup').val(res.sms_clever_id);
+                }
+            }
+        });
+    },
+    submitContentSmsClever: function() {
+        var _token = $('input[name="_token"]').val();
+        var content_clever = $('#content_clever').val();
+        var sms_clever_id = $('#sms_clever_id_popup').val();
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT + '/manager/sendSmsClever/submitContentSms',
+            data: {sms_clever_id:sms_clever_id, content_clever:content_clever, _token:_token},
             dataType: 'json',
             success: function(res) {
                 if(res.isIntOk == 1){

@@ -79,6 +79,9 @@ Route::get('sendSms/getInfoSettingTemplate', array('as' => 'admin.sendSmsTem','u
 Route::get('sendSmsClever', array('as' => 'admin.getSendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@getSendSms'));
 Route::post('sendSmsClever', array('as' => 'admin.sendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@postSendSms'));
 Route::get('sendSmsClever/getDataToExcel', array('as' => 'admin.getDataToExcel','uses' => Admin.'\AdminSendSmsCleverController@getDataToExcel'));//ajax get data
+Route::get('sendSmsClever/getContentSms', array('as' => 'admin.getContentSms','uses' => Admin.'\AdminSendSmsCleverController@getContentSms'));//ajax
+Route::get('sendSmsClever/submitContentSms', array('as' => 'admin.submitContentSms','uses' => Admin.'\AdminSendSmsCleverController@submitContentSms'));//ajax
+Route::post('sendSmsClever/remove/{id}',array('as' => 'admin.sendSmsCleverRemove','uses' => Admin.'\AdminSendSmsCleverController@remove'));
 
 /*thông sms chờ xử lý*/
 Route::match(['GET','POST'], 'waittingSms/view',array('as' => 'admin.waittingSmsView','uses' => Admin.'\AdminWaittingProcessSmsController@view'));
