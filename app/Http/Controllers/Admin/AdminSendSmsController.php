@@ -34,19 +34,12 @@ class AdminSendSmsController extends BaseAdminController
     private $permission_edit = 'sendSms_edit';
     private $arrStatus = array();
     private $error = array();
-    private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
 
     public function __construct()
     {
         parent::__construct();
-        $this->arrMenuParent = MenuSystem::getAllParentMenu();
         CGlobal::$pageAdminTitle = 'Send SMS';
-        FunctionLib::link_js(array(
-            'lib/highcharts/highcharts.js',
-            'lib/highcharts/highcharts-3d.js',
-            'lib/highcharts/exporting.js',
-        ));
     }
 
     public function getDataDefault()
@@ -358,6 +351,7 @@ class AdminSendSmsController extends BaseAdminController
         $objWriter->save("php://output");
         exit();
     }
+
     //ajax
     public function getInfoSettingTemplate()
     {

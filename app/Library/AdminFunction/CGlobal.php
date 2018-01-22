@@ -37,6 +37,7 @@ class CGlobal{
     const number_show_10 = 10;
     const number_show_5 = 5;
     const number_show_8 = 8;
+    const number_show_1000 = 1000;
 
     const status_show = 1;
     const status_hide = 0;

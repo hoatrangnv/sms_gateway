@@ -104,6 +104,11 @@ class ArrayPermission{
         'sendSms_create' => array('name_permit'=>'Tạo sendSms','group_permit'=>'Quyền sendSms'),
         'sendSms_edit' => array('name_permit'=>'Sửa sendSms','group_permit'=>'Quyền sendSms'),
 
+        'sendSmsClever_full' => array('name_permit'=>'Full SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_delete' => array('name_permit'=>'Xóa SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_create' => array('name_permit'=>'Tạo SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_edit' => array('name_permit'=>'Sửa SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
+
         'stationReport_full' => array('name_permit'=>'Full reportChart','group_permit'=>'Quyền reportChart'),
         'stationReport_view' => array('name_permit'=>'Xem reportChart','group_permit'=>'Quyền reportChart'),
 
