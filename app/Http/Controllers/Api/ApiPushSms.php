@@ -176,10 +176,10 @@ class ApiPushSms extends BaseApiController
                     $return = array(
                         Define::STATUS_CODE => Define::HTTP_STATUS_CODE_200,
                         Define::MESSAGE => 'Gui thanh cong',
-                        'success_number_list' => implode(",", $dataPhone_succ),
-                        'success_number' => count($dataPhone_succ),
-                        'incorrect_number_list' => implode(",", $dataPhone_err),
-                        'incorrect_number' => count($dataPhone_err)
+                        'correct_phone_list' => implode(",", $dataPhone_succ),
+                        'success_sms_number' => count($dataInsertSmsSendTo),
+                        'incorrect_phone_list' => implode(",", $dataPhone_err),
+                        'incorrect_phone_number' => count($dataPhone_err)
                     );
 //                    $return = FunctionLib::returnAPI(Define::HTTP_STATUS_CODE_200, implode(",",$dataPhone_err));
                 } else {
@@ -314,10 +314,10 @@ class ApiPushSms extends BaseApiController
                     $return = array(
                         Define::STATUS_CODE => Define::HTTP_STATUS_CODE_200,
                         Define::MESSAGE => 'Gui thanh cong',
-                        'success_number_list' => implode(",", $list_correct),
-                        'success_number' => $num_correct,
-                        'incorrect_number_list' => implode(",", $list_incorrect),
-                        'incorrect_number' => $num_incorrect
+                        'correct_phone_list' => implode(",", $list_correct),
+                        'success_sms_number' => count($list_send),
+                        'incorrect_phone_list' => implode(",", $list_incorrect),
+                        'incorrect_phone_number' => $num_incorrect
                     );
                 }else{
                     $return = FunctionLib::returnAPI(1014, 'Các tham số truyền vào bị lỗi');
