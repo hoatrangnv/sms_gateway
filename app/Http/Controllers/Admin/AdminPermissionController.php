@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Models\Permission;
+use App\Library\AdminFunction\Define;
 use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\ArrayPermission;
 use App\Library\AdminFunction\Pagging;
@@ -176,11 +177,12 @@ class AdminPermissionController extends BaseAdminController
         //die('tạm dừng chức năng này');
         $arrPermit = ArrayPermission::$arrPermit;
 
-        /*DB::table('permission')->truncate();
-        DB::table('group_user')->truncate();
-        DB::table('group_user_permission')->truncate();*/
+        DB::table(Define::TABLE_PERMISSION)->truncate();
+        DB::table(Define::TABLE_GROUP_USER)->truncate();
+        DB::table(Define::TABLE_GROUP_USER_PERMISSION)->truncate();
         foreach($arrPermit as $permit=> $infor){
-            $arrInsert = array('permission_code'=>$permit,
+            $arrInsert = array(
+                'permission_code'=>$permit,
                 'permission_name'=>$infor['name_permit'],
                 'permission_group_name'=>$infor['group_permit'],
                 'permission_status'=>1);

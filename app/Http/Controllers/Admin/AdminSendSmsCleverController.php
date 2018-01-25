@@ -78,6 +78,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             'data' => $data,
             'id' => 0,
             'key_action' => 0,
+            'nameFileUpload' => '',
             'error' => $this->error,
             'user_id' => $this->user_id,
             'arrStatus' => $this->arrStatus,

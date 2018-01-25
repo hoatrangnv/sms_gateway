@@ -27,7 +27,6 @@ use PHPExcel_Style_Border;
 
 class AdminSendSmsController extends BaseAdminController
 {
-    private $permission_view = 'sendSms_view';
     private $permission_full = 'sendSms_full';
     private $permission_delete = 'sendSms_delete';
     private $permission_create = 'sendSms_create';
