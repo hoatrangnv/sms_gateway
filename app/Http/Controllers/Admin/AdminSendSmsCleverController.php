@@ -91,8 +91,9 @@ class AdminSendSmsCleverController extends BaseAdminController
         }
         $key_action = date('Ydmhis', time());
         $data = $_POST;
+        $nameFileUpload = '';
         if ((int)trim($data['submit']) == 1) {//import excel in table SmsCleverSendTo
-            $dataExcel = $this->importSmsToExcel();
+            $dataExcel = $this->importSmsToExcel($nameFileUpload);
             if (empty($dataExcel)){
                 $this->viewPermission = $this->getPermissionPage();
                 $this->error[] = 'No File Inport';
@@ -278,6 +279,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             'data' => $data,
             'dataSendClever' => $dataSendClever,
             'totalClever' => $totalClever,
+            'nameFileUpload' => $nameFileUpload,
             'id' => 0,
             'key_action' => ($totalClever > 0) ? $key_action3 : 0,
             'error' => $this->error,
@@ -471,12 +473,13 @@ class AdminSendSmsCleverController extends BaseAdminController
         exit();
     }
 
-    public function importSmsToExcel()
+    public function importSmsToExcel(&$nameFileUpload)
     {
         require(dirname(__FILE__) . '/../../../Library/ClassPhpExcel/PHPExcel/IOFactory.php');
         $rowsExcel = [];
         if (Input::hasFile('file_excel_sms_clever')) {
             $file = Input::file('file_excel_sms_clever');
+            $nameFileUpload = Input::file('file_excel_sms_clever')->getClientOriginalName();
             $ext = $file->getClientOriginalExtension();
             switch ($ext) {
                 case 'xls':

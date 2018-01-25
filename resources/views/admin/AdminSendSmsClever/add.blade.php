@@ -31,9 +31,12 @@
                             <div class="form-group">
                                 <input type="file" id="csv_file" style="display: none;" name="file_excel_sms_clever"
                                        accept="text/csv">
+                                <div class="col-sm-4">
                                 <button type="button" class="btn btn-warning" onClick="$('#csv_file').click();"><i
                                             class="fa fa-cloud-upload"></i>{{FunctionLib::viewLanguage('csv_upload')}}
-                                </button>
+                                </button><br/>
+                                @if($nameFileUpload != '')File upload:<b>{{$nameFileUpload}}</b>@endif
+                                </div>
                                 <button class="btn btn-primary" type="submit" name="submit" value="1"><i
                                             class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('Inport Excel')}}
                                 </button>
