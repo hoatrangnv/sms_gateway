@@ -551,7 +551,7 @@ class AdminSendSmsCleverController extends BaseAdminController
         $content_clever = Request::get('content_clever', '');
 
         if ($sms_clever_id > 0 && trim($content_clever) != '') {
-            $dataUpdate['content_grafted'] = $content_clever;
+            $dataUpdate['content'] = $content_clever;
             SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
             $data['isIntOk'] = 1;
         }

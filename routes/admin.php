@@ -80,7 +80,7 @@ Route::get('sendSmsClever', array('as' => 'admin.getSendSmsClever','uses' => Adm
 Route::post('sendSmsClever', array('as' => 'admin.sendSmsClever','uses' => Admin.'\AdminSendSmsCleverController@postSendSms'));
 Route::get('sendSmsClever/getDataToExcel', array('as' => 'admin.getDataToExcel','uses' => Admin.'\AdminSendSmsCleverController@getDataToExcel'));//ajax get data
 Route::get('sendSmsClever/getContentSms', array('as' => 'admin.getContentSms','uses' => Admin.'\AdminSendSmsCleverController@getContentSms'));//ajax
-Route::get('sendSmsClever/submitContentSms', array('as' => 'admin.submitContentSms','uses' => Admin.'\AdminSendSmsCleverController@submitContentSms'));//ajax
+Route::post('sendSmsClever/submitContentSms', array('as' => 'admin.submitContentSms','uses' => Admin.'\AdminSendSmsCleverController@submitContentSms'));//ajax
 Route::post('sendSmsClever/remove/{id}',array('as' => 'admin.sendSmsCleverRemove','uses' => Admin.'\AdminSendSmsCleverController@remove'));
 
 /*thông sms chờ xử lý*/

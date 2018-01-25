@@ -135,7 +135,7 @@ var SmsAdmin = {
         var content_clever = $('#content_clever').val();
         var sms_clever_id = $('#sms_clever_id_popup').val();
         $.ajax({
-            type: "GET",
+            type: "Post",
             url: WEB_ROOT + '/manager/sendSmsClever/submitContentSms',
             data: {sms_clever_id:sms_clever_id, content_clever:content_clever, _token:_token},
             dataType: 'json',
