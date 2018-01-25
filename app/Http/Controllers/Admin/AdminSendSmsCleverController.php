@@ -43,6 +43,9 @@ class AdminSendSmsCleverController extends BaseAdminController
     {
         parent::__construct();
         CGlobal::$pageAdminTitle = 'Send SMS Clever';
+        FunctionLib::link_js(array(
+            'admin/js/user.js'
+        ));
     }
 
     public function getDataDefault()
