@@ -61,10 +61,10 @@ class ArrayPermission{
         'sendSms_create' => array('name_permit'=>'Tạo','group_permit'=>'Quyền gửi Sms'),
         'sendSms_edit' => array('name_permit'=>'Sửa','group_permit'=>'Quyền gửi Sms'),
 
-        'sendSmsClever_full' => array('name_permit'=>'Full SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
-        'sendSmsClever_delete' => array('name_permit'=>'Xóa SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
-        'sendSmsClever_create' => array('name_permit'=>'Tạo SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
-        'sendSmsClever_edit' => array('name_permit'=>'Sửa SMS thông minh','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_full' => array('name_permit'=>'Full quyền','group_permit'=>'Quyền SMS thông minh'),//done
+        'sendSmsClever_delete' => array('name_permit'=>'Xóa','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_create' => array('name_permit'=>'Tạo','group_permit'=>'Quyền SMS thông minh'),
+        'sendSmsClever_edit' => array('name_permit'=>'Sửa','group_permit'=>'Quyền SMS thông minh'),
 
         'stationReport_full' => array('name_permit'=>'Full reportChart','group_permit'=>'Quyền reportChart'),
         'stationReport_view' => array('name_permit'=>'Xem reportChart','group_permit'=>'Quyền reportChart'),
@@ -95,6 +95,18 @@ class ArrayPermission{
         'carrierSetting_delete' => array('name_permit'=>'Xóa','group_permit'=>'Quản lý nhà mạng'),
         'carrierSetting_create' => array('name_permit'=>'Tạo','group_permit'=>'Quản lý nhà mạng'),
         'carrierSetting_edit' => array('name_permit'=>'Sửa','group_permit'=>'Quản lý nhà mạng'),
+
+        'waittingSmsProcess_full' => array('name_permit'=>'Full quyền','group_permit'=>'SMS chờ xử lý'),//done
+        'waittingSmsProcess_view' => array('name_permit'=>'Xem','group_permit'=>'SMS chờ xử lý'),
+        'waittingSmsProcess_delete' => array('name_permit'=>'Xóa','group_permit'=>'SMS chờ xử lý'),
+        'waittingSmsProcess_create' => array('name_permit'=>'Tạo','group_permit'=>'SMS chờ xử lý'),
+        'waittingSmsProcess_edit' => array('name_permit'=>'Sửa','group_permit'=>'SMS chờ xử lý'),
+
+        'waittingSmsSend_full' => array('name_permit'=>'Full quyền','group_permit'=>'SMS chờ gửi'),//done
+        'waittingSmsSend_view' => array('name_permit'=>'Xem','group_permit'=>'SMS chờ gửi'),
+        'waittingSmsSend_delete' => array('name_permit'=>'Xóa','group_permit'=>'SMS chờ gửi'),
+        'waittingSmsSend_create' => array('name_permit'=>'Tạo','group_permit'=>'SMS chờ gửi'),
+        'waittingSmsSend_edit' => array('name_permit'=>'Sửa','group_permit'=>'SMS chờ gửi'),
 
         'stationList_view' => array('name_permit'=>'Xem','group_permit'=>'Danh sách trạm'),//done
         'stationList_full' => array('name_permit'=>'Full quyền','group_permit'=>'Danh sách trạm'),

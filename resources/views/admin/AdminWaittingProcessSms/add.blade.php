@@ -76,7 +76,7 @@
                                     <td class="text-center text-middle">{!! $item['phone_receive'] !!}</td>
                                     <td>{!! $item['content_grafted'] !!}</td>
                                     <td class="text-center text-middle">
-                                        @if($is_root || $permission_full ==1|| $permission_edit ==1  )
+                                        @if($is_root || $permission_full ==1|| $permission_edit ==1 || $permission_Send_full ==1|| $permission_Send_edit ==1  )
                                            <a href="{{URL::route('admin.smsEdit',array('id' => FunctionLib::inputId($item['sms_sendTo_id'])))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>
                                         @endif
                                         <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
