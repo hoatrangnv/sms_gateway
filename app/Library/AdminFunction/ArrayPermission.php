@@ -24,31 +24,35 @@ class ArrayPermission{
         'permission_create' => array('name_permit'=>'Tạo tạo quyền','group_permit'=>'Tạo quyền'),
         'permission_edit' => array('name_permit'=>'Sửa tạo quyền','group_permit'=>'Tạo quyền'),
 
-        'waittingSms_full' => array('name_permit'=>'Full waittingSms','group_permit'=>'Quyền waittingSms'),
+        'menu_full' => array('name_permit'=>'Full menu','group_permit'=>'Quyền menu'),
+        'menu_view' => array('name_permit'=>'Xem menu','group_permit'=>'Quyền menu'),
+        'menu_delete' => array('name_permit'=>'Xóa menu','group_permit'=>'Quyền menu'),
+        'menu_create' => array('name_permit'=>'Tạo menu','group_permit'=>'Quyền menu'),
+        'menu_edit' => array('name_permit'=>'Sửa menu','group_permit'=>'Quyền menu'),
+
+        /*'waittingSms_full' => array('name_permit'=>'Full waittingSms','group_permit'=>'Quyền waittingSms'),
         'waittingSms_view' => array('name_permit'=>'Xem waittingSms','group_permit'=>'Quyền waittingSms'),
         'waittingSms_delete' => array('name_permit'=>'Xóa waittingSms','group_permit'=>'Quyền waittingSms'),
         'waittingSms_create' => array('name_permit'=>'Tạo waittingSms','group_permit'=>'Quyền waittingSms'),
-        'waittingSms_edit' => array('name_permit'=>'Sửa waittingSms','group_permit'=>'Quyền waittingSms'),
+        'waittingSms_edit' => array('name_permit'=>'Sửa waittingSms','group_permit'=>'Quyền waittingSms'),*/
 
         'systemSetting_full' => array('name_permit'=>'Full quyền','group_permit'=>'Cài đặt hệ thống'),//done
         'systemSetting_view' => array('name_permit'=>'Xem ','group_permit'=>'Cài đặt hệ thống'),
         'systemSetting_delete' => array('name_permit'=>'Xóa ','group_permit'=>'Cài đặt hệ thống'),
         'systemSetting_create' => array('name_permit'=>'Tạo ','group_permit'=>'Cài đặt hệ thống'),
         'systemSetting_edit' => array('name_permit'=>'Sửa ','group_permit'=>'Cài đặt hệ thống'),
-        'permission_client_api_edit' => array('name_permit'=>'Sửa Client Api','group_permit'=>'Quyền Api'),
-        'permission_customer_api_edit' => array('name_permit'=>'Sửa Customer Api','group_permit'=>'Quyền Api'),
 
-        'stationSetting_full' => array('name_permit'=>'Full quyền','group_permit'=>'Cài đặt trạm'),
+        'stationSetting_full' => array('name_permit'=>'Full quyền','group_permit'=>'Cài đặt trạm'),//done
         'stationSetting_view' => array('name_permit'=>'Xem','group_permit'=>'Cài đặt trạm'),
         'stationSetting_delete' => array('name_permit'=>'Xóa','group_permit'=>'Cài đặt trạm'),
         'stationSetting_create' => array('name_permit'=>'Tạo','group_permit'=>'Cài đặt trạm'),
         'stationSetting_edit' => array('name_permit'=>'Sửa','group_permit'=>'Cài đặt trạm'),
 
-        'sendSmsHistory_full' => array('name_permit'=>'Full sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
-        'sendSmsHistory_view' => array('name_permit'=>'Xem sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
-        'sendSmsHistory_delete' => array('name_permit'=>'Xóa sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
-        'sendSmsHistory_create' => array('name_permit'=>'Tạo sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
-        'sendSmsHistory_edit' => array('name_permit'=>'Sửa sendSmsHistory','group_permit'=>'Quyền sendSmsHistory'),
+        'sendSmsHistory_full' => array('name_permit'=>'Full quyền','group_permit'=>'Lịch sử gửi tin'),//done
+        'sendSmsHistory_view' => array('name_permit'=>'Xem','group_permit'=>'Lịch sử gửi tin'),
+        'sendSmsHistory_delete' => array('name_permit'=>'Xóa','group_permit'=>'Lịch sử gửi tin'),
+        'sendSmsHistory_create' => array('name_permit'=>'Tạo','group_permit'=>'Lịch sử gửi tin'),
+        'sendSmsHistory_edit' => array('name_permit'=>'Sửa','group_permit'=>'Lịch sử gửi tin'),
 
         'sendSmsTemplate_full' => array('name_permit'=>'Full quyền','group_permit'=>'Tin nhắn mẫu'),//done
         'sendSmsTemplate_view' => array('name_permit'=>'Xem','group_permit'=>'Tin nhắn mẫu'),
@@ -66,11 +70,11 @@ class ArrayPermission{
         'sendSmsClever_create' => array('name_permit'=>'Tạo','group_permit'=>'Quyền SMS thông minh'),
         'sendSmsClever_edit' => array('name_permit'=>'Sửa','group_permit'=>'Quyền SMS thông minh'),
 
-        'stationReport_full' => array('name_permit'=>'Full reportChart','group_permit'=>'Quyền reportChart'),
+        /*'stationReport_full' => array('name_permit'=>'Full reportChart','group_permit'=>'Quyền reportChart'),
         'stationReport_view' => array('name_permit'=>'Xem reportChart','group_permit'=>'Quyền reportChart'),
 
         'reportChart_full' => array('name_permit'=>'Full stationSetting','group_permit'=>'Quyền stationSetting'),
-        'reportChart_view' => array('name_permit'=>'Xem stationSetting','group_permit'=>'Quyền stationSetting'),
+        'reportChart_view' => array('name_permit'=>'Xem stationSetting','group_permit'=>'Quyền stationSetting'),*/
 
         'modem_full' => array('name_permit'=>'Full quyền','group_permit'=>'Thông kê trạm'),//done
         'modem_view' => array('name_permit'=>'Xem','group_permit'=>'Thông kê trạm'),
@@ -78,11 +82,7 @@ class ArrayPermission{
         'modem_create' => array('name_permit'=>'Tạo','group_permit'=>'Thông kê trạm'),
         'modem_edit' => array('name_permit'=>'Sửa','group_permit'=>'Thông kê trạm'),
 
-        'menu_full' => array('name_permit'=>'Full menu','group_permit'=>'Quyền menu'),
-        'menu_view' => array('name_permit'=>'Xem menu','group_permit'=>'Quyền menu'),
-        'menu_delete' => array('name_permit'=>'Xóa menu','group_permit'=>'Quyền menu'),
-        'menu_create' => array('name_permit'=>'Tạo menu','group_permit'=>'Quyền menu'),
-        'menu_edit' => array('name_permit'=>'Sửa menu','group_permit'=>'Quyền menu'),
+
 
         'deviceToken_full' => array('name_permit'=>'Full quyền','group_permit'=>'Cài đặt thiết bị'),//done
         'deviceToken_view' => array('name_permit'=>'Xem','group_permit'=>'Cài đặt thiết bị'),
@@ -108,8 +108,33 @@ class ArrayPermission{
         'waittingSmsSend_create' => array('name_permit'=>'Tạo','group_permit'=>'SMS chờ gửi'),
         'waittingSmsSend_edit' => array('name_permit'=>'Sửa','group_permit'=>'SMS chờ gửi'),
 
-        'stationList_view' => array('name_permit'=>'Xem','group_permit'=>'Danh sách trạm'),//done
+
         'stationList_full' => array('name_permit'=>'Full quyền','group_permit'=>'Danh sách trạm'),
+        'stationList_view' => array('name_permit'=>'Xem','group_permit'=>'Danh sách trạm'),//done
+
+        'smsReportChart_full' => array('name_permit'=>'Full quyền','group_permit'=>'Biểu đồ gửi tin'),
+        'smsReportChart_view' => array('name_permit'=>'Xem','group_permit'=>'Biểu đồ gửi tin'),//done
+
+        'smsHoursReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo giờ'),
+        'smsHoursReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo giờ'),//done
+
+        'smsMonthReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo tháng'),
+        'smsMonthReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo tháng'),//done
+
+        'smsYearReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo năm'),
+        'smsYearReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo năm'),//done
+
+        'smsGraphReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Biểu đồ tỉ lệ thành công'),
+        'smsGraphReport_view' => array('name_permit'=>'Xem','group_permit'=>'Biểu đồ tỉ lệ thành công'),//done
+
+        'appRegister_full' => array('name_permit'=>'Full quyền','group_permit'=>'Thông tin ứng dụng'),//done
+        'appRegister_view' => array('name_permit'=>'Xem','group_permit'=>'Thông tin ứng dụng'),
+        'appRegister_delete' => array('name_permit'=>'Xóa','group_permit'=>'Thông tin ứng dụng'),
+        'appRegister_create' => array('name_permit'=>'Tạo','group_permit'=>'Thông tin ứng dụng'),
+        'appRegister_edit' => array('name_permit'=>'Sửa','group_permit'=>'Thông tin ứng dụng'),
+
+        'permission_client_api_edit' => array('name_permit'=>'Sửa Client Api','group_permit'=>'Quyền Api'),//done
+        'permission_customer_api_edit' => array('name_permit'=>'Sửa Customer Api','group_permit'=>'Quyền Api'),
 
     );
 
