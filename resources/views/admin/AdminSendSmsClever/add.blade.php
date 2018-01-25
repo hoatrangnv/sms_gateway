@@ -52,10 +52,9 @@
 
                         @if(isset($dataSendClever) && count($dataSendClever) > 0)
                             <div class="col-xs-12">
-                                <div class="span clearfix"> @if($totalClever >0) Có tổng số <b>{{$totalClever}}</b>
-                                    item @endif </div>
-                                <br>
-                                <div class="col-xs-12" style="height: 300px; overflow-x: hidden;">
+                                <div class="col-xs-12" style="height: 300px; overflow-x: hidden;" id="showListSmsClever">
+                                    <div class="span clearfix"> @if($totalClever >0) Có tổng số <b>{{$totalClever}}</b> item @endif </div>
+                                    <br>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover">
                                             <thead class="thin-border-bottom">
@@ -88,16 +87,10 @@
                                                             <span class="img_loading"
                                                                   id="img_loading_{{$item['sms_clever_id']}}"></span>
                                                             @if($is_root || $permission_full ==1|| $permission_edit ==1  )
-                                                                <a href="javascript:void(0)" class="sys_delete_user"
-                                                                   data-content="Xóa Sms" data-placement="bottom"
-                                                                   data-trigger="hover" data-rel="popover"
-                                                                   data-url="sendSmsClever/remove/"
-                                                                   data-id="{{FunctionLib::inputId($item['sms_clever_id'])}}">
-                                                                    <i class="fa fa-trash fa-2x"></i>
-                                                                </a>
+                                                                    <a href="#"
+                                                                       onclick="SmsAdmin.removeSmsClever('{{FunctionLib::inputId($item['sms_clever_id'])}}')"
+                                                                       title="Xóa item"><i class="fa fa-trash fa-2x"></i></a>
                                                             @endif
-                                                            {{--<a href="javascript:void(0);" onclick="SmsAdmin.changeUserWaittingProcessSms()" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>
-                                                            <a href="{{URL::route('admin.waittingSmsEdit',array('id' => FunctionLib::inputId(0),'type_page'=>1))}}" title="Sửa item"><i class="fa fa-edit fa-2x"></i></a>--}}
                                                         @endif
                                                     </td>
                                                 </tr>

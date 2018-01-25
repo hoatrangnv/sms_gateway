@@ -116,10 +116,11 @@ var SmsAdmin = {
     },
     getContentSmsClever: function(sms_clever_id) {
         var _token = $('input[name="_token"]').val();
+        var key_action = $('#key_action').val();
         $.ajax({
             type: "GET",
             url: WEB_ROOT + '/manager/sendSmsClever/getContentSms',
-            data: {sms_clever_id:sms_clever_id, _token:_token},
+            data: {sms_clever_id:sms_clever_id, key_action:key_action, _token:_token},
             dataType: 'json',
             success: function(res) {
                 if(res.isIntOk == 1){
@@ -134,15 +135,31 @@ var SmsAdmin = {
         var _token = $('input[name="_token"]').val();
         var content_clever = $('#content_clever').val();
         var sms_clever_id = $('#sms_clever_id_popup').val();
+        var key_action = $('#key_action').val();
         $.ajax({
             type: "Post",
             url: WEB_ROOT + '/manager/sendSmsClever/submitContentSms',
-            data: {sms_clever_id:sms_clever_id, content_clever:content_clever, _token:_token},
+            data: {sms_clever_id:sms_clever_id, content_clever:content_clever,key_action:key_action,  _token:_token},
             dataType: 'json',
             success: function(res) {
                 if(res.isIntOk == 1){
                     $('#sys_showContentSms').modal('hide');
-                    window.location.reload();
+                    $('#showListSmsClever').html(res.html);
+                }
+            }
+        });
+    },
+    removeSmsClever: function(sms_clever_id) {
+        var _token = $('input[name="_token"]').val();
+        var key_action = $('#key_action').val();
+        $.ajax({
+            type: "Post",
+            url: WEB_ROOT + '/manager/sendSmsClever/remove',
+            data: {sms_clever_id:sms_clever_id, _token:_token, key_action:key_action},
+            dataType: 'json',
+            success: function(res) {
+                if(res.isIntOk == 1){
+                    $('#showListSmsClever').html(res.html);
                 }
             }
         });

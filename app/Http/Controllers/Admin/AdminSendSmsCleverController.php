@@ -446,7 +446,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             $sheet->SetCellValue('A' . $rowCount, $i);
 
             $sheet->getStyle('B' . $rowCount)->getAlignment()->applyFromArray(array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,));
-            $sheet->SetCellValue('B' . $rowCount, $v['phone_number']);
+            $sheet->SetCellValue('B' . $rowCount, $v['phone_receive']);
 
             $sheet->getStyle('C' . $rowCount)->getAlignment()->applyFromArray(array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,));
             $sheet->SetCellValue('C' . $rowCount, $v['content']);
@@ -548,29 +548,52 @@ class AdminSendSmsCleverController extends BaseAdminController
             return Response::json($data);
         }
         $sms_clever_id = (int)Request::get('sms_clever_id', 0);
-        $content_clever = Request::get('content_clever', '');
-
+        $content_clever = Request::get('content_clever', 0);
+        $key_action = Request::get('key_action', 0);
         if ($sms_clever_id > 0 && trim($content_clever) != '') {
             $dataUpdate['content'] = $content_clever;
-            SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
-            $data['isIntOk'] = 1;
+            $id = SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
+            if($id > 0){
+                //get lại view
+                $dataSearch['key_action'] = $key_action;
+                $dataSearch['user_customer_id'] = $this->user_id;
+                $limit = CGlobal::number_show_1000;
+                $offset = $totalClever = 0;
+                $dataSendClever = SmsCleverSendTo::searchByCondition($dataSearch, $limit, $offset, $totalClever);
+                $html =  view('admin.AdminSendSmsClever.viewListAjax',[
+                    'dataSendClever'=>$dataSendClever
+                ])->render();
+                $data['isIntOk'] = 1;
+                $data['html'] = $html;
+            }
         }
-        return Response::json($data);
+        return response()->json( $data );
     }
 
     //ajax
-    public function remove($ids){
+    public function remove(){
+        $ids = Request::get('sms_clever_id', '');
         $id = FunctionLib::outputId($ids);
-        $data['success'] = 0;
+        $key_action = Request::get('key_action', 0);
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
         if(!$this->is_root && !in_array($this->permission_full, $this->permission)){
             return Response::json($data);
         }
-        $user = SmsCleverSendTo::find($id);
-        if($user){
-            if(SmsCleverSendTo::deleteItem($user)){
-                $data['success'] = 1;
+        if($id > 0){
+            if(SmsCleverSendTo::deleteItem($id)){
+                //get lại view
+                $dataSearch['key_action'] = $key_action;
+                $dataSearch['user_customer_id'] = $this->user_id;
+                $limit = CGlobal::number_show_1000;
+                $offset = $totalClever = 0;
+                $dataSendClever = SmsCleverSendTo::searchByCondition($dataSearch, $limit, $offset, $totalClever);
+                $html =  view('admin.AdminSendSmsClever.viewListAjax',[
+                    'dataSendClever'=>$dataSendClever
+                ])->render();
+                $data['isIntOk'] = 1;
+                $data['html'] = $html;
             }
         }
-        return Response::json($data);
+        return response()->json( $data );
     }
 }
