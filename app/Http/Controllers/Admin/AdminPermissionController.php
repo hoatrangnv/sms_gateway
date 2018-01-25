@@ -178,9 +178,9 @@ class AdminPermissionController extends BaseAdminController
         //die('tạm dừng chức năng này');
         $arrPermit = ArrayPermission::$arrPermit;
 
-        DB::table(Define::TABLE_PERMISSION)->truncate();
+        /*DB::table(Define::TABLE_PERMISSION)->truncate();
         DB::table(Define::TABLE_GROUP_USER)->truncate();
-        DB::table(Define::TABLE_GROUP_USER_PERMISSION)->truncate();
+        DB::table(Define::TABLE_GROUP_USER_PERMISSION)->truncate();*/
         foreach($arrPermit as $permit=> $infor){
             $arrInsert = array(
                 'permission_code'=>$permit,
