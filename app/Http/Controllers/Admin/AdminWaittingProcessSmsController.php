@@ -24,14 +24,19 @@ use Illuminate\Support\Facades\Session;
 
 class AdminWaittingProcessSmsController extends BaseAdminController
 {
-    private $permission_view = 'waittingSms_view';
-    private $permission_full = 'waittingSms_full';
-    private $permission_delete = 'waittingSms_delete';
-    private $permission_create = 'waittingSms_create';
-    private $permission_edit = 'waittingSms_edit';
-    private $arrStatus = array();
+    private $permission_view = 'waittingSmsProcess_view';
+    private $permission_full = 'waittingSmsProcess_full';
+    private $permission_delete = 'waittingSmsProcess_delete';
+    private $permission_create = 'waittingSmsProcess_create';
+    private $permission_edit = 'waittingSmsProcess_edit';
+
+    private $permission_Send_view = 'waittingSmsSend_view';
+    private $permission_Send_full = 'waittingSmsSend_full';
+    private $permission_Send_delete = 'waittingSmsSend_delete';
+    private $permission_Send_create = 'waittingSmsSend_create';
+    private $permission_Send_edit = 'waittingSmsSend_edit';
+
     private $error = array();
-    private $arrMenuParent = array();
     private $viewPermission = array();//check quyen
     private $infoListUser = array();
     private $infoListModem = array();
@@ -72,6 +77,11 @@ class AdminWaittingProcessSmsController extends BaseAdminController
             'permission_create' => in_array($this->permission_create, $this->permission) ? 1 : 0,
             'permission_delete' => in_array($this->permission_delete, $this->permission) ? 1 : 0,
             'permission_full' => in_array($this->permission_full, $this->permission) ? 1 : 0,
+
+            'permission_Send_edit' => in_array($this->permission_Send_edit, $this->permission) ? 1 : 0,
+            'permission_Send_create' => in_array($this->permission_Send_create, $this->permission) ? 1 : 0,
+            'permission_Send_delete' => in_array($this->permission_Send_delete, $this->permission) ? 1 : 0,
+            'permission_Send_full' => in_array($this->permission_Send_full, $this->permission) ? 1 : 0,
         ];
     }
 
@@ -130,7 +140,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)
+            && !in_array($this->permission_Send_full, $this->permission) && !in_array($this->permission_Send_edit, $this->permission) && !in_array($this->permission_Send_create, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
         $data = array();
@@ -166,7 +177,8 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function postItem($type_page, $ids)
     {
         $sms_log_id = FunctionLib::outputId($ids);
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_edit, $this->permission) && !in_array($this->permission_create, $this->permission)
+            && !in_array($this->permission_Send_full, $this->permission) && !in_array($this->permission_Send_edit, $this->permission) && !in_array($this->permission_Send_create, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
         $choose_type = Request::get('choose_type', 2);
@@ -269,7 +281,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getSettingContentAttach()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => 'Error update');
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_Send_full, $this->permission)) {
             return Response::json($data);
         }
         $type_page = (int)Request::get('type_page', 1);
@@ -286,7 +298,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function getContentGraftedSms()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_Send_full, $this->permission)) {
             return Response::json($data);
         }
         $sms_sendTo_id = (int)Request::get('sms_sendTo_id', 0);
@@ -304,7 +316,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function submitContentGraftedSms()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_Send_full, $this->permission)) {
             return Response::json($data);
         }
         $sms_sendTo_id = (int)Request::get('sms_sendTo_id', 0);
@@ -328,7 +340,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function viewSend()
     {
         //Check phan quyen.
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission) && !in_array($this->permission_view, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_Send_full, $this->permission) && !in_array($this->permission_Send_view, $this->permission)) {
             return Redirect::route('admin.dashboard', array('error' => Define::ERROR_PERMISSION));
         }
         CGlobal::$pageAdminTitle = 'SMS Waitting Send';
@@ -376,7 +388,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function changeModemWaittingSendSms()
     {
         $data = array('isIntOk' => 0, 'msg' => 'Error update');
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_Send_full, $this->permission)) {
             return Response::json($data);
         }
         $modem_id = (int)Request::get('list_modem', 0);
@@ -450,7 +462,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
     public function refuseModem()
     {
         $data = array('isIntOk' => 0, 'data' => array(), 'msg' => ' Cập nhật lôi');
-        if (!$this->is_root && !in_array($this->permission_full, $this->permission)) {
+        if (!$this->is_root && !in_array($this->permission_Send_view, $this->permission)) {
             return Response::json($data);
         }
         $sms_log_id = (int)Request::get('sms_log_id', 0);

@@ -91,7 +91,7 @@
                                             <span class="img_loading" id="img_loading_{{$item['sms_log_id']}}"></span>
                                         </td>
                                         <td class="text-center text-middle">
-                                            @if($is_root || $permission_full ==1|| $permission_edit ==1  )
+                                            @if($is_root || $permission_Send_full ==1|| $permission_Send_edit ==1  )
                                                 @if($item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_PROCESSING && $item['list_modem'] == 0
                                                 || $item['status'] == \App\Library\AdminFunction\Define::SMS_STATUS_REJECT && $item['list_modem'] != 0)
                                                     <a href="javascript:void(0);" onclick="SmsAdmin.changeModemWaittingSendSms({{$item['sms_log_id']}},{{$item['total_sms']}})" title="Chuyển đổi"><i class="fa fa-sign-in fa-2x"></i></a>&nbsp;&nbsp;&nbsp;

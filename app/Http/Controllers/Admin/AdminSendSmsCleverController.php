@@ -43,6 +43,9 @@ class AdminSendSmsCleverController extends BaseAdminController
     {
         parent::__construct();
         CGlobal::$pageAdminTitle = 'Send SMS Clever';
+        FunctionLib::link_js(array(
+            'admin/js/user.js'
+        ));
     }
 
     public function getDataDefault()
@@ -75,6 +78,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             'data' => $data,
             'id' => 0,
             'key_action' => 0,
+            'nameFileUpload' => '',
             'error' => $this->error,
             'user_id' => $this->user_id,
             'arrStatus' => $this->arrStatus,
@@ -88,8 +92,9 @@ class AdminSendSmsCleverController extends BaseAdminController
         }
         $key_action = date('Ydmhis', time());
         $data = $_POST;
+        $nameFileUpload = '';
         if ((int)trim($data['submit']) == 1) {//import excel in table SmsCleverSendTo
-            $dataExcel = $this->importSmsToExcel();
+            $dataExcel = $this->importSmsToExcel($nameFileUpload);
             if (empty($dataExcel)){
                 $this->viewPermission = $this->getPermissionPage();
                 $this->error[] = 'No File Inport';
@@ -275,6 +280,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             'data' => $data,
             'dataSendClever' => $dataSendClever,
             'totalClever' => $totalClever,
+            'nameFileUpload' => $nameFileUpload,
             'id' => 0,
             'key_action' => ($totalClever > 0) ? $key_action3 : 0,
             'error' => $this->error,
@@ -443,7 +449,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             $sheet->SetCellValue('A' . $rowCount, $i);
 
             $sheet->getStyle('B' . $rowCount)->getAlignment()->applyFromArray(array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,));
-            $sheet->SetCellValue('B' . $rowCount, $v['phone_number']);
+            $sheet->SetCellValue('B' . $rowCount, $v['phone_receive']);
 
             $sheet->getStyle('C' . $rowCount)->getAlignment()->applyFromArray(array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,));
             $sheet->SetCellValue('C' . $rowCount, $v['content']);
@@ -468,12 +474,13 @@ class AdminSendSmsCleverController extends BaseAdminController
         exit();
     }
 
-    public function importSmsToExcel()
+    public function importSmsToExcel(&$nameFileUpload)
     {
         require(dirname(__FILE__) . '/../../../Library/ClassPhpExcel/PHPExcel/IOFactory.php');
         $rowsExcel = [];
         if (Input::hasFile('file_excel_sms_clever')) {
             $file = Input::file('file_excel_sms_clever');
+            $nameFileUpload = Input::file('file_excel_sms_clever')->getClientOriginalName();
             $ext = $file->getClientOriginalExtension();
             switch ($ext) {
                 case 'xls':
@@ -545,29 +552,52 @@ class AdminSendSmsCleverController extends BaseAdminController
             return Response::json($data);
         }
         $sms_clever_id = (int)Request::get('sms_clever_id', 0);
-        $content_clever = Request::get('content_clever', '');
-
+        $content_clever = Request::get('content_clever', 0);
+        $key_action = Request::get('key_action', 0);
         if ($sms_clever_id > 0 && trim($content_clever) != '') {
-            $dataUpdate['content_grafted'] = $content_clever;
-            SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
-            $data['isIntOk'] = 1;
+            $dataUpdate['content'] = $content_clever;
+            $id = SmsCleverSendTo::updateItem($sms_clever_id, $dataUpdate);
+            if($id > 0){
+                //get lại view
+                $dataSearch['key_action'] = $key_action;
+                $dataSearch['user_customer_id'] = $this->user_id;
+                $limit = CGlobal::number_show_1000;
+                $offset = $totalClever = 0;
+                $dataSendClever = SmsCleverSendTo::searchByCondition($dataSearch, $limit, $offset, $totalClever);
+                $html =  view('admin.AdminSendSmsClever.viewListAjax',[
+                    'dataSendClever'=>$dataSendClever
+                ])->render();
+                $data['isIntOk'] = 1;
+                $data['html'] = $html;
+            }
         }
-        return Response::json($data);
+        return response()->json( $data );
     }
 
     //ajax
-    public function remove($ids){
+    public function remove(){
+        $ids = Request::get('sms_clever_id', '');
         $id = FunctionLib::outputId($ids);
-        $data['success'] = 0;
+        $key_action = Request::get('key_action', 0);
+        $data = array('isIntOk' => 0, 'data' => array(), 'msg' => '');
         if(!$this->is_root && !in_array($this->permission_full, $this->permission)){
             return Response::json($data);
         }
-        $user = SmsCleverSendTo::find($id);
-        if($user){
-            if(SmsCleverSendTo::deleteItem($user)){
-                $data['success'] = 1;
+        if($id > 0){
+            if(SmsCleverSendTo::deleteItem($id)){
+                //get lại view
+                $dataSearch['key_action'] = $key_action;
+                $dataSearch['user_customer_id'] = $this->user_id;
+                $limit = CGlobal::number_show_1000;
+                $offset = $totalClever = 0;
+                $dataSendClever = SmsCleverSendTo::searchByCondition($dataSearch, $limit, $offset, $totalClever);
+                $html =  view('admin.AdminSendSmsClever.viewListAjax',[
+                    'dataSendClever'=>$dataSendClever
+                ])->render();
+                $data['isIntOk'] = 1;
+                $data['html'] = $html;
             }
         }
-        return Response::json($data);
+        return response()->json( $data );
     }
 }

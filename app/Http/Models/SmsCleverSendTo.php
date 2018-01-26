@@ -40,7 +40,7 @@ class SmsCleverSendTo extends BaseModel
             $item->save();
 
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_clever_id,$item);
+            //self::removeCache($item->sms_clever_id,$item);
             return $item->sms_clever_id;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
@@ -49,6 +49,7 @@ class SmsCleverSendTo extends BaseModel
     }
 
     public static function updateItem($id,$data){
+
         try {
             DB::connection()->getPdo()->beginTransaction();
             $checkData = new SmsCleverSendTo();
@@ -59,8 +60,8 @@ class SmsCleverSendTo extends BaseModel
             }
             $item->update();
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_clever_id,$item);
-            return true;
+            //self::removeCache($item->sms_clever_id,$item);
+            return $item->sms_clever_id;
         } catch (PDOException $e) {
             //var_dump($e->getMessage());
             DB::connection()->getPdo()->rollBack();
@@ -90,7 +91,7 @@ class SmsCleverSendTo extends BaseModel
                 $item->delete();
             }
             DB::connection()->getPdo()->commit();
-            self::removeCache($item->sms_clever_id,$item);
+            //self::removeCache($item->sms_clever_id,$item);
             return true;
         } catch (PDOException $e) {
             DB::connection()->getPdo()->rollBack();
