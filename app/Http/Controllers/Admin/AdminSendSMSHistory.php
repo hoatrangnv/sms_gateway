@@ -112,7 +112,7 @@ INNER JOIN web_user u on wsc.user_customer_id = u.user_id ";
             $sql.=" AND UNIX_TIMESTAMP(wsc.created_date) >= UNIX_TIMESTAMP('".$from."') AND UNIX_TIMESTAMP(wsc.created_date) <= UNIX_TIMESTAMP('".$to."') ";
         }
 
-        $sql.=" GROUP BY wsc.sms_customer_id";
+        $sql.=" GROUP BY wsc.sms_customer_id ORDER BY sms_customer_id DESC";
 //        FunctionLib::debug($sql);
         $data = SmsCustomer::executesSQL($sql);
         $arr = array();
