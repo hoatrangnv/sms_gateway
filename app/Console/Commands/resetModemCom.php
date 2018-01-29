@@ -6,11 +6,9 @@
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
-use App\Library\AdminFunction\FunctionLib;
 use App\Library\AdminFunction\Define;
 use Illuminate\Support\Facades\DB;
 use App\Http\Models\ModemCom;
-use App\Http\Models\UserSetting;
 
 class resetModemCom extends Command{
     protected $signature = 'resetModemCom';
@@ -28,10 +26,13 @@ class resetModemCom extends Command{
             ->where('is_active', '=', Define::STATUS_SHOW)
             ->get(array('modem_com_id'));
         if($data){
+            $total_update = 0;
             foreach ($data as $k=>$modem_com){
-                ModemCom::updateItem($modem_com->modem_com_id,$dataUpdate);
+                if(ModemCom::updateItem($modem_com->modem_com_id,$dataUpdate)){
+                    $total_update ++;
+                }
             }
-            echo count($data).' đã cập nhật xong';
+            echo 'Co tong: '.count($total_update).' da cap nhat xong';
         }
     }
 }
