@@ -23,16 +23,13 @@ class resetModemCom extends Command{
         $dataUpdate['success_number'] = 0;
         $dataUpdate['error_number'] = 0;
         $data = DB::table(Define::TABLE_MODEM_COM)
-            ->where('is_active', '=', Define::STATUS_SHOW)
+            //->where('is_active', '=', Define::STATUS_SHOW)
             ->get(array('modem_com_id'));
         if($data){
-            $total_update = 0;
             foreach ($data as $k=>$modem_com){
-                if(ModemCom::updateItem($modem_com->modem_com_id,$dataUpdate)){
-                    $total_update ++;
-                }
+                ModemCom::updateItem($modem_com->modem_com_id,$dataUpdate);
             }
-            echo 'Co tong: '.count($total_update).' da cap nhat xong';
+            echo 'Co tong: '.count($data).' da cap nhat xong';
         }
     }
 }
