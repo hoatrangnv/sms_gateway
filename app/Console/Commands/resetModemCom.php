@@ -23,7 +23,7 @@ class resetModemCom extends Command{
         $dataUpdate['success_number'] = 0;
         $dataUpdate['error_number'] = 0;
         $data = DB::table(Define::TABLE_MODEM_COM)
-            //->where('is_active', '=', Define::STATUS_SHOW)
+            ->where('is_active', '=', Define::STATUS_SHOW)
             ->get(array('modem_com_id'));
         if($data){
             foreach ($data as $k=>$modem_com){
