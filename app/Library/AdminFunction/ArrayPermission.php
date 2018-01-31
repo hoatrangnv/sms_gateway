@@ -118,6 +118,9 @@ class ArrayPermission{
         'smsHoursReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo giờ'),
         'smsHoursReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo giờ'),//done
 
+        'smsDayReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo ngày'),
+        'smsDayReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo ngày'),//done
+
         'smsMonthReport_full' => array('name_permit'=>'Full quyền','group_permit'=>'Sản lượng SMS theo tháng'),
         'smsMonthReport_view' => array('name_permit'=>'Xem','group_permit'=>'Sản lượng SMS theo tháng'),//done
 
