@@ -119,14 +119,7 @@ class AdminSendSmsCleverController extends BaseAdminController
             $arr_numberFone = array_keys($dataExcel);
 
             if (!empty($arr_numberFone)) {
-                foreach ($arr_numberFone as $k => $number) {
-                    $checkNumber = FunctionLib::checkNumberPhone($number);
-                    if ($checkNumber > 0) {
-                        $dataPhone[] = trim($checkNumber);
-                    } else {
-                        $this->error[] = trim($number) . ' not number phone';
-                    }
-                }
+                $dataPhone = $arr_numberFone;
             } else {
                 $this->error[] = FunctionLib::controLanguage('phone_number', $this->languageSite) . ' null';
             }
@@ -149,7 +142,6 @@ class AdminSendSmsCleverController extends BaseAdminController
                         }
                     }
                 }
-
                 //check số có phù hợp với nhà mạng
                 if (!empty($carrier)) {
                     $arrMsg = array();
@@ -503,24 +495,27 @@ class AdminSendSmsCleverController extends BaseAdminController
             unset($rowsExcel[1]);
             foreach ($rowsExcel as $key => $val) {
                 if (isset($val['A']) && trim($val['A']) != '') { //phone number
-                    $arrDataInput[trim($val['A'])] = '';
-                    $content_sms = '';
-                    if (isset($val['B']) && trim($val['B']) != '') {
-                        $content_sms = $content_sms . ' ' . trim($val['B']);
+                    $checkNumber = FunctionLib::checkNumberPhone(trim($val['A']));
+                    if($checkNumber > 0){
+                        $arrDataInput[$checkNumber] = '';
+                        $content_sms = '';
+                        if (isset($val['B']) && trim($val['B']) != '') {
+                            $content_sms = $content_sms . ' ' . trim($val['B']);
+                        }
+                        if (isset($val['C']) && trim($val['C']) != '') {
+                            $content_sms = $content_sms . ' ' . trim($val['C']);
+                        }
+                        if (isset($val['D']) && trim($val['D']) != '') {
+                            $content_sms = $content_sms . ' ' . trim($val['D']);
+                        }
+                        if (isset($val['E']) && trim($val['E']) != '') {
+                            $content_sms = $content_sms . ' ' . trim($val['E']);
+                        }
+                        if (isset($val['F']) && trim($val['F']) != '') {
+                            $content_sms = $content_sms . ' ' . trim($val['F']);
+                        }
+                        $arrDataInput[$checkNumber] = $content_sms;
                     }
-                    if (isset($val['C']) && trim($val['C']) != '') {
-                        $content_sms = $content_sms . ' ' . trim($val['C']);
-                    }
-                    if (isset($val['D']) && trim($val['D']) != '') {
-                        $content_sms = $content_sms . ' ' . trim($val['D']);
-                    }
-                    if (isset($val['E']) && trim($val['E']) != '') {
-                        $content_sms = $content_sms . ' ' . trim($val['E']);
-                    }
-                    if (isset($val['F']) && trim($val['F']) != '') {
-                        $content_sms = $content_sms . ' ' . trim($val['F']);
-                    }
-                    $arrDataInput[trim($val['A'])] = $content_sms;
                 }
             }
         }
