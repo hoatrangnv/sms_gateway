@@ -123,9 +123,12 @@ class ApiApp extends BaseModel
             throw new PDOException();
         }
     }
-    public static function getAll(){
+    public static function getAll($dataSearch = array()){
         try{
             $query = ApiApp::where('app_id','>',0);
+            if (isset($dataSearch['user_id']) && trim($dataSearch['user_id'] !="")){
+                $query->where('user_id','=', $dataSearch['user_id']);
+            }
             $query->orderBy('app_id', 'desc');
             //get field can lay du lieu
             $result = $query->get();

@@ -96,7 +96,8 @@ class AdminAppRegisterController extends BaseAdminController
             $data['created_at'] =$update_at;
             ApiApp::createItem($data);
         }
-        $data_full = ApiApp::getAll();
+        $data_full = ApiApp::getAll(array("user_id"=>md5($this->user_id)));
+
         $data_view = [
             'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
@@ -111,7 +112,7 @@ class AdminAppRegisterController extends BaseAdminController
         if ($id>0){
             ApiApp::deleteItem($id);
         }
-        $data_full = ApiApp::getAll();
+        $data_full = ApiApp::getAll(array("user_id"=>md5($this->user_id)));
         $data_view = [
             'view' => View::make('admin.AdminAppRegister.list')
                 ->with('data', $data_full)
