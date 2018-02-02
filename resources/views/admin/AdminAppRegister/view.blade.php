@@ -128,7 +128,7 @@
                             </label>
                             <div class="col-sm-10">
                                 <label>
-                                    http://domain-name/oauth2/token
+                                    {{$endPoint}}
                                 </label>
                             </div>
                         </div>

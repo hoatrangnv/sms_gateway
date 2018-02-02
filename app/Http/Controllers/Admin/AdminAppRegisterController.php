@@ -60,12 +60,15 @@ class AdminAppRegisterController extends BaseAdminController
 
         $this->viewPermission = $this->getPermissionPage();
 
+        $endPoint = FunctionLib::checkHttps().$_SERVER['SERVER_NAME'].'/oauth2/token';
+
         return view('admin.AdminAppRegister.view',array_merge([
             'data'=>$data,
             'search'=>$dataSearch,
             'size'=>$total,
             'start'=>($page_no - 1) * $limit,
             'paging'=>$paging,
+            'endPoint'=>$endPoint,
         ],$this->viewPermission));
     }
 

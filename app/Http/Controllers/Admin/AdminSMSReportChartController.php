@@ -197,7 +197,7 @@ class AdminSMSReportChartController extends BaseAdminController
         $total = 0;
         $optionUser = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('select_user', $this->languageSite) . '') + $this->arrManager, (isset($dataSearch['station_account']) ? $dataSearch['station_account'] : 0));
         $optionYear = FunctionLib::getOption($arrYear, (isset($dataSearch['year']) ? $dataSearch['year'] : $current_year));
-        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month']) ? $dataSearch['month'] : $current_month));
+        $optionMonth = FunctionLib::getOption($arrMonth, (isset($dataSearch['month']) && $dataSearch['month'] !="" ? $dataSearch['month'] : $current_month));
         $optionCarrier = FunctionLib::getOption(array('' => '' . FunctionLib::controLanguage('all', $this->languageSite) . '') + $arrCarrier, (isset($dataSearch['carrier_id']) ? $dataSearch['carrier_id'] : 0));
         $this->getDataDefault();
         $this->viewPermission = $this->getPermissionPage();
@@ -211,7 +211,7 @@ class AdminSMSReportChartController extends BaseAdminController
             }
             $arrData[$k] = $value;
         }
-//        FunctionLib::debug($arrPieChart1);
+//        FunctionLib::debug($dataSearch['month']);
         return view('admin.AdminSMSReportChart.view', array_merge([
             'data' => $data,
             'arrDay' => $arrDay,
