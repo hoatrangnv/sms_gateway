@@ -47,7 +47,8 @@ class AdminSendSMSHistory extends BaseAdminController
         $this->arrStatus = array(
             ''=>FunctionLib::controLanguage('all',$this->languageSite),
             '0'=>'Processing',
-            '1'=>'Successful'
+            '1'=>'Successful',
+            '-1'=>'Fail'
         );
 
         $this->arrCarrier = CarrierSetting::getOptionCarrier();

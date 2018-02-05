@@ -85,7 +85,20 @@
                             <th width="w100">{{FunctionLib::viewLanguage('status')}}</th>
                         </tr>
                         </thead>
-
+                        <tbody>
+                        @foreach ($data as $key => $item)
+                            <tr @if($item['user_status'] == -1)class="red bg-danger middle" {else}
+                                class="middle" @endif>
+                                <td class="text-center middle">{{ $start+$key+1 }}</td>
+                                <td>{{ $item['carrier_name'] }}</td>
+                                <td class="center">{{ $item['send_date_at'] }}</td>
+                                <td class="center">{{ $item['phone_receive']}}</td>
+                                <td>{{ $item['content']}}</td>
+                                <td class="center">{{ $item['cost'] }}</td>
+                                <td @if($item['status'] == 1) class="green bg-success middle center" @else class="red bg-danger middle center" @endif>@if(array_key_exists($item['status'],$arrStatus)){{$arrStatus[$item['status']]}} @else {{$arrStatus[-1]}} @endif</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
                     </table>
                     <div class="text-right">
                         {!! $paging !!}
