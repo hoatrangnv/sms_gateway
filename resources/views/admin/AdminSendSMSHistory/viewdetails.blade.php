@@ -101,7 +101,7 @@
                         </tbody>
                     </table>
                     <div class="text-right">
-                        {!! $paging !!}
+
                     </div>
                 @else
                     <div class="alert">
