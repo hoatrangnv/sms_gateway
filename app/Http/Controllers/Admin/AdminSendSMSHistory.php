@@ -109,7 +109,7 @@ INNER JOIN web_user u on wsc.user_customer_id = u.user_id ";
 
         if ($dataSearch['from_day'] !="" && $dataSearch['to_day'] != ""){
             $from = date('Y-m-d',strtotime($dataSearch['from_day']));
-            $to = date('Y-m-d',strtotime($dataSearch['to_day']));
+            $to = date('Y-m-d 23:59:59',strtotime($dataSearch['to_day']));
             $sql.=" AND UNIX_TIMESTAMP(wsc.created_date) >= UNIX_TIMESTAMP('".$from."') AND UNIX_TIMESTAMP(wsc.created_date) <= UNIX_TIMESTAMP('".$to."') ";
         }
 

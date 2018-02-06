@@ -176,7 +176,8 @@
 	"to_year": "Đến năm",
 	"to_day": "Đến ngày",
 	"all": "Tất cả",
-	
+	"packet_id": "ID gói tin",
+
 	"enter_strings_separated_by_comma": "Nhập các chuỗi ký tự ngăn cách nhau bởi dấu phẩy",
 	"upload_from_file_excel": "Tải từ file excel",
 	"the_first_of_sms":"Vào đầu tin nhắn",

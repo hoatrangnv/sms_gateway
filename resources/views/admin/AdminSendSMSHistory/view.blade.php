@@ -58,6 +58,7 @@
                         <thead class="thin-border-bottom">
                         <tr class="">
                             <th class="w10" class="text-center">{{FunctionLib::viewLanguage('no')}}</th>
+                            <th width="w10">{{FunctionLib::viewLanguage('packet_id')}}</th>
                             <th width="w50">{{FunctionLib::viewLanguage('customer_account')}}</th>
                             <th width="w100">{{FunctionLib::viewLanguage('send_sms_deadline')}}</th>
                             <th width="w100">{{FunctionLib::viewLanguage('total_sms')}}</th>
@@ -72,6 +73,7 @@
                         @foreach ($data as $key => $item)
                             <tr class="middle">
                                 <td class="text-center middle">{{ $start+$key+1 }}</td>
+                                <td>{{ $item['sms_customer_id'] }}</td>
                                 <td>{{ $item['user_full_name'] }}</td>
                                 <td>{{ $item['sms_deadline'] }}</td>
                                 <td>{{ $item['total_sms'] }}</td>
