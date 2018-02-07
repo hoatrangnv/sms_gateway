@@ -316,6 +316,23 @@ class User extends BaseModel
         return $data;
     }
 
+    public static function getListUserRoleAdmin()
+    {
+        $data = Cache::get(Define::CACHE_INFO_USER_ADMIN);
+        if (sizeof($data) == 0) {
+            $arr = User::getList();
+            foreach ($arr as $value) {
+                if($value->role_type == Define::ROLE_TYPE_ADMIN){
+                    $data[$value->user_id] = $value->user_name . ' - ' . $value->user_full_name;
+                }
+            }
+            if (!empty($data)) {
+                Cache::put(Define::CACHE_INFO_USER_ADMIN, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
+            }
+        }
+        return $data;
+    }
+
     public static function getOptionUserFullNameAndMail()
     {
         $data = Cache::get(Define::CACHE_OPTION_USER);
@@ -411,6 +428,7 @@ class User extends BaseModel
         }
         Cache::forget(Define::CACHE_OPTION_USER);
         Cache::forget(Define::CACHE_INFO_USER);
+        Cache::forget(Define::CACHE_INFO_USER_ADMIN);
     }
 
     public static function executesSQL($str_sql = '')
