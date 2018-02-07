@@ -55,7 +55,7 @@ class AdminWaittingProcessSmsController extends BaseAdminController
 
     public function getDataDefault()
     {
-        $this->infoListUser = User::getListUserNameFullName();
+        $this->infoListUser = User::getListUserRoleAdmin();
         $user_id = ($this->role_type == Define::ROLE_TYPE_SUPER_ADMIN)?0:$this->user_id;
         $this->infoListModem = Modem::getListModemName($user_id);
         $this->arrCarrier = CarrierSetting::getOptionCarrier();
