@@ -238,7 +238,9 @@ class AdminSendSmsCleverController extends BaseAdminController
                 'arrStatus' => $this->arrStatus,
             ], $this->viewPermission));
 
-        } elseif ((int)trim($data['submit']) == 3) {//input data send
+        } elseif ((int)trim($data['submit']) == 4){//excel mẫu
+            $this->exportExcelForm();
+        }elseif ((int)trim($data['submit']) == 3) {//input data send
             $key_get = $data['key_action'];
             $send_sms_deadline = $data['send_sms_deadline'];
             if ($key_get > 0) {
@@ -357,6 +359,91 @@ class AdminSendSmsCleverController extends BaseAdminController
         }
     }
 
+    /**
+     * File excel mẫu
+     */
+    public function exportExcelForm()
+    {
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        // Set Orientation, size and scaling
+        $sheet->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
+        $sheet->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+        $sheet->getPageSetup()->setFitToPage(true);
+        $sheet->getPageSetup()->setFitToWidth(1);
+        $sheet->getPageSetup()->setFitToHeight(0);
+
+        // Set font
+        /*$sheet->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
+        $sheet->getStyle('A1')->getFont()->setSize(16)->setBold(true)->getColor()->setRGB('000000');
+        $sheet->mergeCells('A1:D1');
+        $sheet->setCellValue("A1", "SMS Form Clever " . date('d-m-Y H:i'));
+        $sheet->getRowDimension("1")->setRowHeight(32);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+            ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);*/
+
+        // setting header
+        $position_hearder = 1;
+        $sheet->getRowDimension($position_hearder)->setRowHeight(30);
+        $val10 = 18;
+        $val35 = 35;
+        $ary_cell = array(
+            'A' => array('w' => $val10, 'val' => 'Phone number', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'B' => array('w' => $val35, 'val' => 'Content SMS 1', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'C' => array('w' => $val35, 'val' => 'Content SMS 2', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'D' => array('w' => $val35, 'val' => 'Content SMS 3', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'E' => array('w' => $val35, 'val' => 'Content SMS 4', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+            'F' => array('w' => $val35, 'val' => 'Content SMS 5', 'align' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER),
+        );
+
+        //build header title
+        foreach ($ary_cell as $col => $attr) {
+            $sheet->getColumnDimension($col)->setWidth($attr['w']);
+            $sheet->setCellValue("$col{$position_hearder}", $attr['val']);
+            $sheet->getStyle($col)->getAlignment()->setWrapText(true);
+            $sheet->getStyle($col . $position_hearder)->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '05729C'),
+                        'style' => array('font-weight' => 'bold')
+                    ),
+                    'font' => array(
+                        'bold' => true,
+                        'color' => array('rgb' => 'FFFFFF'),
+                        'size' => 10,
+                        'name' => 'Verdana'
+                    ),
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('rgb' => '333333')
+                        )
+                    ),
+                    'alignment' => array(
+                        'horizontal' => $attr['align'],
+                    )
+                )
+            );
+        }
+        //hien thị dũ liệu
+        $rowCount = $position_hearder + 1; // hang bat dau xuat du lieu
+        $i = 1;
+
+        // output file
+        ob_clean();
+        $filename = "SMS_Form_Clever_" . "_" . date("_d/m_") . '.xls';
+        @header("Cache-Control: ");
+        @header("Pragma: ");
+        @header("Content-type: application/octet-stream");
+        @header("Content-Disposition: attachment; filename=\"{$filename}\"");
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save("php://output");
+        exit();
+    }
     public function exportData($data)
     {
         if (empty($data)) {

@@ -35,11 +35,10 @@
                                 <button type="button" class="btn btn-warning" onClick="$('#csv_file').click();"><i
                                             class="fa fa-cloud-upload"></i>{{FunctionLib::viewLanguage('csv_upload')}}
                                 </button><br/>
-                                @if($nameFileUpload != '')File upload:<b>{{$nameFileUpload}}</b>@endif
+                                @if(isset($nameFileUpload) && $nameFileUpload != '')File upload:<b>{{$nameFileUpload}}</b>@endif
                                 </div>
-                                <button class="btn btn-primary" type="submit" name="submit" value="1"><i
-                                            class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('Inport Excel')}}
-                                </button>
+                                <button class="btn btn-primary" type="submit" name="submit" value="1"><i class="fa fa-floppy-o"></i> {{FunctionLib::viewLanguage('Inport Excel')}}</button>
+                                <button class="btn btn-success" type="submit" name="submit" value="4"><i class="fa fa-download"></i> {{FunctionLib::viewLanguage('Export Excel Form')}}</button>
                             </div>
                         </div>
                         <div class="col-sm-6">

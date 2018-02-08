@@ -32,9 +32,10 @@
                             <label for="name" class="control-label">{{FunctionLib::viewLanguage('phone_number')}}</label>
                             <textarea type="text" id="phone_number" name="phone_number"  class="form-control input-sm " rows="5">@if(isset($data['phone_number'])){{$data['phone_number']}}@endif</textarea>
                             <br>
-                            <a href="#" class="btn btn-success btn-sm mg-t20" onclick="showModal(this)" element="#phone_number" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
+                            <a href="#" class="btn btn-success mg-t20" onclick="showModal(this)" element="#phone_number" data-toggle="modal" ajax_url="/manager/systemSetting/importString" data-target="#modal-csv-upload">
                                 <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('import_excel')}}
                             </a>
+                            <button class="btn btn-warning" type="submit" name="submit" value="3"><i class="fa fa-download"></i> {{FunctionLib::viewLanguage('Export Excel Form')}}</button>
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -42,7 +43,7 @@
                             <label for="name" class="control-label">{{functionlib::viewlanguage('sms_content')}}</label>
                             <textarea type="text"id="sms_content" name="sms_content"  class="form-control input-sm" rows="5">@if(isset($data['sms_content'])){{$data['sms_content']}}@endif</textarea>
                             <br>
-                            <a href="#" class="btn btn-warning btn-sm mg-t20" onclick="Admin.getInfoSettingTemplate('{{FunctionLib::inputId($user_id)}}')">
+                            <a href="#" class="btn btn-warning mg-t20" onclick="Admin.getInfoSettingTemplate('{{FunctionLib::inputId($user_id)}}')">
                                 <i class="fa fa-cloud"></i> {{FunctionLib::viewLanguage('get_content_from_template_sms')}}
                             </a>
                         </div>
