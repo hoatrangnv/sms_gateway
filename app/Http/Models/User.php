@@ -254,7 +254,7 @@ class User extends BaseModel
     public static function getList($role_type = 0)
     {
         if ($role_type == 0) {
-            $user = User::where('user_status', '>', 0)->orderBy('user_id', 'desc')->get();
+            $user = User::where('user_status', '>', 0)->whereIn('role_type', [2,3])->orderBy('user_id', 'desc')->get();
         } else {
             $user = User::where('user_status', '>', 0)->where('role_type', '=', $role_type)->orderBy('user_id', 'desc')->get();
         }
@@ -306,12 +306,14 @@ class User extends BaseModel
         $data = Cache::get(Define::CACHE_INFO_USER);
         if (sizeof($data) == 0) {
             $arr = User::getList();
+
             foreach ($arr as $value) {
                 $data[$value->user_id] = $value->user_name . ' - ' . $value->user_full_name;
             }
-            if (!empty($data)) {
-                Cache::put(Define::CACHE_INFO_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
-            }
+        }
+
+        if (!empty($data)) {
+            Cache::put(Define::CACHE_INFO_USER, $data, Define::CACHE_TIME_TO_LIVE_ONE_MONTH);
         }
         return $data;
     }
